@@ -18,6 +18,7 @@ let tripleJ = RadioStation(
     id: "ABC TRIPLE J",
     title: "Triple J",
     description: "ABC Youth Station",
+    //url: URL(string: "https://live-radio01.mediahubaustralia.com/2RNW/aac/")!
     url: URL(string: "https://mediaserviceslive.akamaized.net/hls/live/2038308/triplejnsw/masterlq.m3u8")!
 )
 

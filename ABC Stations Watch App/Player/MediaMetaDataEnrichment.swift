@@ -27,7 +27,6 @@ final class RadioMetadataEnricher: NSObject, AVPlayerItemMetadataOutputPushDeleg
     func set(enrichmentSource: AVPlayerItem) {
         let output = AVPlayerItemMetadataOutput()
         metadataOutput = output
-
         output.setDelegate(self, queue: DispatchQueue.main)
         enrichmentSource.add(output)
     }
@@ -40,6 +39,8 @@ final class RadioMetadataEnricher: NSObject, AVPlayerItemMetadataOutputPushDeleg
     // Delegate method used to extract enrichment data
     private var trackTitle: String?
     func metadataOutput(_: AVPlayerItemMetadataOutput, didOutputTimedMetadataGroups group: [AVTimedMetadataGroup], from _: AVPlayerItemTrack?) {
-        trackTitle = group.first?.items.first(where: { item in item.commonKey == AVMetadataKey.commonKeyTitle })?.value as? String
+        Task {
+            trackTitle = try? await group.first?.items.first(where: { item in item.commonKey == AVMetadataKey.commonKeyTitle })?.load(.stringValue)
+        }
     }
 }
