@@ -9,9 +9,18 @@ import SwiftUI
 
 @main
 struct ABC_Stations_Watch_AppApp: App {
+    let nowPlaying = NowPlayingControlsController()
+    
+    init() {
+        nowPlaying.bind(toPlayer: .shared!)
+    }
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootView(store: .init(
+                initialState: .init(route: .stations, stations: .init()),
+                reducer: Root())
+            )
         }
     }
 }

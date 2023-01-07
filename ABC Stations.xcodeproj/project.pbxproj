@@ -8,17 +8,32 @@
 
 /* Begin PBXBuildFile section */
 		26CFB87B296906440028EC29 /* ABC_StationsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26CFB87A296906440028EC29 /* ABC_StationsApp.swift */; };
-		26CFB87D296906440028EC29 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26CFB87C296906440028EC29 /* ContentView.swift */; };
 		26CFB87F296906460028EC29 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 26CFB87E296906460028EC29 /* Assets.xcassets */; };
-		26CFB882296906460028EC29 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 26CFB881296906460028EC29 /* Preview Assets.xcassets */; };
+		26CFB88A296906920028EC29 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 26CFB889296906920028EC29 /* ComposableArchitecture */; };
+		26CFB88C296906920028EC29 /* Dependencies in Frameworks */ = {isa = PBXBuildFile; productRef = 26CFB88B296906920028EC29 /* Dependencies */; };
+		26CFB88E296906AA0028EC29 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26CFB88D296906AA0028EC29 /* Player.swift */; };
+		26CFB891296906F20028EC29 /* RadioStation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26CFB890296906F20028EC29 /* RadioStation.swift */; };
+		26CFB894296907BE0028EC29 /* MediaMetaDataEnrichment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26CFB893296907BE0028EC29 /* MediaMetaDataEnrichment.swift */; };
+		26CFB89729693FAB0028EC29 /* ABCStations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26CFB89629693FAB0028EC29 /* ABCStations.swift */; };
+		26CFB89A296940D10028EC29 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26CFB899296940D10028EC29 /* RootView.swift */; };
+		26CFB89D296942720028EC29 /* StationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26CFB89C296942720028EC29 /* StationsView.swift */; };
+		26CFB8A0296944680028EC29 /* PlayerDependency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26CFB89F296944680028EC29 /* PlayerDependency.swift */; };
+		26CFB8A429694C450028EC29 /* NowPlayingControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26CFB8A329694C450028EC29 /* NowPlayingControls.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		26CFB877296906440028EC29 /* ABC Stations Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ABC Stations Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		26CFB87A296906440028EC29 /* ABC_StationsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ABC_StationsApp.swift; sourceTree = "<group>"; };
-		26CFB87C296906440028EC29 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		26CFB87E296906460028EC29 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		26CFB881296906460028EC29 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		26CFB88D296906AA0028EC29 /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
+		26CFB890296906F20028EC29 /* RadioStation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioStation.swift; sourceTree = "<group>"; };
+		26CFB893296907BE0028EC29 /* MediaMetaDataEnrichment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaMetaDataEnrichment.swift; sourceTree = "<group>"; };
+		26CFB89629693FAB0028EC29 /* ABCStations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ABCStations.swift; sourceTree = "<group>"; };
+		26CFB899296940D10028EC29 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		26CFB89C296942720028EC29 /* StationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationsView.swift; sourceTree = "<group>"; };
+		26CFB89F296944680028EC29 /* PlayerDependency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerDependency.swift; sourceTree = "<group>"; };
+		26CFB8A129694AE30028EC29 /* ABC-Stations-Watch-App-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "ABC-Stations-Watch-App-Info.plist"; sourceTree = SOURCE_ROOT; };
+		26CFB8A329694C450028EC29 /* NowPlayingControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingControls.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -26,6 +41,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				26CFB88A296906920028EC29 /* ComposableArchitecture in Frameworks */,
+				26CFB88C296906920028EC29 /* Dependencies in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -52,19 +69,74 @@
 			isa = PBXGroup;
 			children = (
 				26CFB87A296906440028EC29 /* ABC_StationsApp.swift */,
-				26CFB87C296906440028EC29 /* ContentView.swift */,
-				26CFB87E296906460028EC29 /* Assets.xcassets */,
-				26CFB880296906460028EC29 /* Preview Content */,
+				26CFB8A129694AE30028EC29 /* ABC-Stations-Watch-App-Info.plist */,
+				26CFB8A229694C320028EC29 /* Now Playing Controls */,
+				26CFB89E296944520028EC29 /* Dependencies */,
+				26CFB89B296940D60028EC29 /* Views */,
+				26CFB898296940690028EC29 /* Resources */,
+				26CFB89529693F930028EC29 /* Stations */,
+				26CFB88F296906E30028EC29 /* Player */,
+				26CFB892296906F80028EC29 /* Models */,
 			);
 			path = "ABC Stations Watch App";
 			sourceTree = "<group>";
 		};
-		26CFB880296906460028EC29 /* Preview Content */ = {
+		26CFB88F296906E30028EC29 /* Player */ = {
 			isa = PBXGroup;
 			children = (
-				26CFB881296906460028EC29 /* Preview Assets.xcassets */,
+				26CFB88D296906AA0028EC29 /* Player.swift */,
+				26CFB893296907BE0028EC29 /* MediaMetaDataEnrichment.swift */,
 			);
-			path = "Preview Content";
+			path = Player;
+			sourceTree = "<group>";
+		};
+		26CFB892296906F80028EC29 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				26CFB890296906F20028EC29 /* RadioStation.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		26CFB89529693F930028EC29 /* Stations */ = {
+			isa = PBXGroup;
+			children = (
+				26CFB89629693FAB0028EC29 /* ABCStations.swift */,
+			);
+			path = Stations;
+			sourceTree = "<group>";
+		};
+		26CFB898296940690028EC29 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				26CFB87E296906460028EC29 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		26CFB89B296940D60028EC29 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				26CFB899296940D10028EC29 /* RootView.swift */,
+				26CFB89C296942720028EC29 /* StationsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		26CFB89E296944520028EC29 /* Dependencies */ = {
+			isa = PBXGroup;
+			children = (
+				26CFB89F296944680028EC29 /* PlayerDependency.swift */,
+			);
+			path = Dependencies;
+			sourceTree = "<group>";
+		};
+		26CFB8A229694C320028EC29 /* Now Playing Controls */ = {
+			isa = PBXGroup;
+			children = (
+				26CFB8A329694C450028EC29 /* NowPlayingControls.swift */,
+			);
+			path = "Now Playing Controls";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -83,6 +155,10 @@
 			dependencies = (
 			);
 			name = "ABC Stations Watch App";
+			packageProductDependencies = (
+				26CFB889296906920028EC29 /* ComposableArchitecture */,
+				26CFB88B296906920028EC29 /* Dependencies */,
+			);
 			productName = "ABC Stations Watch App";
 			productReference = 26CFB877296906440028EC29 /* ABC Stations Watch App.app */;
 			productType = "com.apple.product-type.application";
@@ -111,6 +187,9 @@
 				Base,
 			);
 			mainGroup = 26CFB86E296906440028EC29;
+			packageReferences = (
+				26CFB888296906920028EC29 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
+			);
 			productRefGroup = 26CFB878296906440028EC29 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -125,7 +204,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				26CFB882296906460028EC29 /* Preview Assets.xcassets in Resources */,
 				26CFB87F296906460028EC29 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -137,7 +215,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				26CFB87D296906440028EC29 /* ContentView.swift in Sources */,
+				26CFB88E296906AA0028EC29 /* Player.swift in Sources */,
+				26CFB8A429694C450028EC29 /* NowPlayingControls.swift in Sources */,
+				26CFB894296907BE0028EC29 /* MediaMetaDataEnrichment.swift in Sources */,
+				26CFB89A296940D10028EC29 /* RootView.swift in Sources */,
+				26CFB89D296942720028EC29 /* StationsView.swift in Sources */,
+				26CFB89729693FAB0028EC29 /* ABCStations.swift in Sources */,
+				26CFB8A0296944680028EC29 /* PlayerDependency.swift in Sources */,
+				26CFB891296906F20028EC29 /* RadioStation.swift in Sources */,
 				26CFB87B296906440028EC29 /* ABC_StationsApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -200,6 +285,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				WATCHOS_DEPLOYMENT_TARGET = 9.1;
 			};
 			name = Debug;
 		};
@@ -251,6 +337,7 @@
 				MTL_FAST_MATH = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				WATCHOS_DEPLOYMENT_TARGET = 9.1;
 			};
 			name = Release;
 		};
@@ -261,19 +348,21 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"ABC Stations Watch App/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = QCHSD48ZLT;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "ABC-Stations-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "ABC Stations";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "";
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = .watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = .abcstations.au.com.syeboddeus.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -291,19 +380,21 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"ABC Stations Watch App/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = QCHSD48ZLT;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "ABC-Stations-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "ABC Stations";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "";
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = .watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = .abcstations.au.com.syeboddeus.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -337,6 +428,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		26CFB888296906920028EC29 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.48.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		26CFB889296906920028EC29 /* ComposableArchitecture */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 26CFB888296906920028EC29 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
+			productName = ComposableArchitecture;
+		};
+		26CFB88B296906920028EC29 /* Dependencies */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 26CFB888296906920028EC29 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
+			productName = Dependencies;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 26CFB86F296906440028EC29 /* Project object */;
 }
