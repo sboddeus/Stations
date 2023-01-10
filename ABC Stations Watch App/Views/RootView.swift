@@ -3,10 +3,12 @@ import SwiftUI
 import ComposableArchitecture
 import AVFoundation
 import WatchKit
+import WatchDEBUG
 
 struct Root: ReducerProtocol {
     struct State: Equatable {
         enum Route: Int, Equatable {
+            case debug
             case stations
             case nowPlaying
         }
@@ -54,6 +56,8 @@ struct RootView: View {
                 send: Root.Action.setRoute
             )
         ) {
+            DEBUG().tag(Root.State.Route.debug)
+            
             StationsView(
                 store: self.store.scope(
                     state: \.stations,

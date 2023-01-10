@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		26560A1F296BCC8B00B7566F /* ABC_StationsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26560A1E296BCC8B00B7566F /* ABC_StationsApp.swift */; };
+		26560A21296BCC8B00B7566F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26560A20296BCC8B00B7566F /* ContentView.swift */; };
+		26560A23296BCC8C00B7566F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 26560A22296BCC8C00B7566F /* Assets.xcassets */; };
+		26560A26296BCC8C00B7566F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 26560A25296BCC8C00B7566F /* Preview Assets.xcassets */; };
+		26560A2B296BCCB900B7566F /* ABC Stations Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 26CFB877296906440028EC29 /* ABC Stations Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		26560A31296CD77400B7566F /* WatchDEBUG in Frameworks */ = {isa = PBXBuildFile; productRef = 26560A30296CD77400B7566F /* WatchDEBUG */; };
 		26CFB87B296906440028EC29 /* ABC_StationsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26CFB87A296906440028EC29 /* ABC_StationsApp.swift */; };
 		26CFB87F296906460028EC29 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 26CFB87E296906460028EC29 /* Assets.xcassets */; };
 		26CFB88A296906920028EC29 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 26CFB889296906920028EC29 /* ComposableArchitecture */; };
@@ -21,7 +27,38 @@
 		26CFB8A429694C450028EC29 /* NowPlayingControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26CFB8A329694C450028EC29 /* NowPlayingControls.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		26560A2C296BCCB900B7566F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 26CFB86F296906440028EC29 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 26CFB876296906440028EC29;
+			remoteInfo = "ABC Stations Watch App";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		26560A2E296BCCB900B7566F /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				26560A2B296BCCB900B7566F /* ABC Stations Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		26560A1C296BCC8B00B7566F /* ABC Stations.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ABC Stations.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		26560A1E296BCC8B00B7566F /* ABC_StationsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ABC_StationsApp.swift; sourceTree = "<group>"; };
+		26560A20296BCC8B00B7566F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		26560A22296BCC8C00B7566F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		26560A25296BCC8C00B7566F /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		26560A2F296CD72200B7566F /* WatchDEBUG */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = WatchDEBUG; path = ../WatchDEBUG; sourceTree = "<group>"; };
+		26560A32296CDFD500B7566F /* ABC-Stations-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "ABC-Stations-Info.plist"; sourceTree = SOURCE_ROOT; };
 		26CFB877296906440028EC29 /* ABC Stations Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ABC Stations Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		26CFB87A296906440028EC29 /* ABC_StationsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ABC_StationsApp.swift; sourceTree = "<group>"; };
 		26CFB87E296906460028EC29 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -37,23 +74,61 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		26560A19296BCC8B00B7566F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		26CFB874296906440028EC29 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				26CFB88A296906920028EC29 /* ComposableArchitecture in Frameworks */,
 				26CFB88C296906920028EC29 /* Dependencies in Frameworks */,
+				26560A31296CD77400B7566F /* WatchDEBUG in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		26560A1D296BCC8B00B7566F /* ABC Stations */ = {
+			isa = PBXGroup;
+			children = (
+				26560A32296CDFD500B7566F /* ABC-Stations-Info.plist */,
+				26560A1E296BCC8B00B7566F /* ABC_StationsApp.swift */,
+				26560A20296BCC8B00B7566F /* ContentView.swift */,
+				26560A22296BCC8C00B7566F /* Assets.xcassets */,
+				26560A24296BCC8C00B7566F /* Preview Content */,
+			);
+			path = "ABC Stations";
+			sourceTree = "<group>";
+		};
+		26560A24296BCC8C00B7566F /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				26560A25296BCC8C00B7566F /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		26560A2A296BCCB900B7566F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		26CFB86E296906440028EC29 = {
 			isa = PBXGroup;
 			children = (
+				26560A2F296CD72200B7566F /* WatchDEBUG */,
 				26CFB879296906440028EC29 /* ABC Stations Watch App */,
+				26560A1D296BCC8B00B7566F /* ABC Stations */,
 				26CFB878296906440028EC29 /* Products */,
+				26560A2A296BCCB900B7566F /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -61,6 +136,7 @@
 			isa = PBXGroup;
 			children = (
 				26CFB877296906440028EC29 /* ABC Stations Watch App.app */,
+				26560A1C296BCC8B00B7566F /* ABC Stations.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -142,6 +218,25 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		26560A1B296BCC8B00B7566F /* ABC Stations */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 26560A27296BCC8D00B7566F /* Build configuration list for PBXNativeTarget "ABC Stations" */;
+			buildPhases = (
+				26560A18296BCC8B00B7566F /* Sources */,
+				26560A19296BCC8B00B7566F /* Frameworks */,
+				26560A1A296BCC8B00B7566F /* Resources */,
+				26560A2E296BCCB900B7566F /* Embed Watch Content */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				26560A2D296BCCB900B7566F /* PBXTargetDependency */,
+			);
+			name = "ABC Stations";
+			productName = "ABC Stations";
+			productReference = 26560A1C296BCC8B00B7566F /* ABC Stations.app */;
+			productType = "com.apple.product-type.application";
+		};
 		26CFB876296906440028EC29 /* ABC Stations Watch App */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 26CFB885296906460028EC29 /* Build configuration list for PBXNativeTarget "ABC Stations Watch App" */;
@@ -158,6 +253,7 @@
 			packageProductDependencies = (
 				26CFB889296906920028EC29 /* ComposableArchitecture */,
 				26CFB88B296906920028EC29 /* Dependencies */,
+				26560A30296CD77400B7566F /* WatchDEBUG */,
 			);
 			productName = "ABC Stations Watch App";
 			productReference = 26CFB877296906440028EC29 /* ABC Stations Watch App.app */;
@@ -173,6 +269,9 @@
 				LastSwiftUpdateCheck = 1420;
 				LastUpgradeCheck = 1420;
 				TargetAttributes = {
+					26560A1B296BCC8B00B7566F = {
+						CreatedOnToolsVersion = 14.2;
+					};
 					26CFB876296906440028EC29 = {
 						CreatedOnToolsVersion = 14.2;
 					};
@@ -195,11 +294,21 @@
 			projectRoot = "";
 			targets = (
 				26CFB876296906440028EC29 /* ABC Stations Watch App */,
+				26560A1B296BCC8B00B7566F /* ABC Stations */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		26560A1A296BCC8B00B7566F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				26560A26296BCC8C00B7566F /* Preview Assets.xcassets in Resources */,
+				26560A23296BCC8C00B7566F /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		26CFB875296906440028EC29 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -211,6 +320,15 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		26560A18296BCC8B00B7566F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				26560A21296BCC8B00B7566F /* ContentView.swift in Sources */,
+				26560A1F296BCC8B00B7566F /* ABC_StationsApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		26CFB873296906440028EC29 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -229,7 +347,80 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		26560A2D296BCCB900B7566F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 26CFB876296906440028EC29 /* ABC Stations Watch App */;
+			targetProxy = 26560A2C296BCCB900B7566F /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		26560A28296BCC8D00B7566F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_ASSET_PATHS = "\"ABC Stations/Preview Content\"";
+				DEVELOPMENT_TEAM = QCHSD48ZLT;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "ABC-Stations-Info.plist";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = au.com.sboddeus.abcstations;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		26560A29296BCC8D00B7566F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_ASSET_PATHS = "\"ABC Stations/Preview Content\"";
+				DEVELOPMENT_TEAM = QCHSD48ZLT;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "ABC-Stations-Info.plist";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = au.com.sboddeus.abcstations;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		26CFB883296906460028EC29 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -346,8 +537,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = QCHSD48ZLT;
 				ENABLE_PREVIEWS = YES;
@@ -355,15 +547,16 @@
 				INFOPLIST_FILE = "ABC-Stations-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "ABC Stations";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = au.com.sboddeus.abcstations;
 				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = .abcstations.au.com.syeboddeus.watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = au.com.sboddeus.abcstations.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -378,8 +571,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = QCHSD48ZLT;
 				ENABLE_PREVIEWS = YES;
@@ -387,15 +581,16 @@
 				INFOPLIST_FILE = "ABC-Stations-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "ABC Stations";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = au.com.sboddeus.abcstations;
 				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = .abcstations.au.com.syeboddeus.watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = au.com.sboddeus.abcstations.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -409,6 +604,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		26560A27296BCC8D00B7566F /* Build configuration list for PBXNativeTarget "ABC Stations" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				26560A28296BCC8D00B7566F /* Debug */,
+				26560A29296BCC8D00B7566F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		26CFB872296906440028EC29 /* Build configuration list for PBXProject "ABC Stations" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -441,6 +645,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		26560A30296CD77400B7566F /* WatchDEBUG */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = WatchDEBUG;
+		};
 		26CFB889296906920028EC29 /* ComposableArchitecture */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 26CFB888296906920028EC29 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;

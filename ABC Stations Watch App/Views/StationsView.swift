@@ -1,9 +1,3 @@
-//
-//  StationsView.swift
-//  ABC Stations Watch App
-//
-//  Created by Sye Boddeus on 7/1/2023.
-//
 
 import SwiftUI
 import ComposableArchitecture
