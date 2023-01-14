@@ -13,6 +13,13 @@
 		26560A26296BCC8C00B7566F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 26560A25296BCC8C00B7566F /* Preview Assets.xcassets */; };
 		26560A2B296BCCB900B7566F /* ABC Stations Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 26CFB877296906440028EC29 /* ABC Stations Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		26560A31296CD77400B7566F /* WatchDEBUG in Frameworks */ = {isa = PBXBuildFile; productRef = 26560A30296CD77400B7566F /* WatchDEBUG */; };
+		269FF1DE2973542F0087615B /* CreateStationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269FF1DD2973542F0087615B /* CreateStationView.swift */; };
+		269FF1E1297356050087615B /* SwiftUINavigation in Frameworks */ = {isa = PBXBuildFile; productRef = 269FF1E0297356050087615B /* SwiftUINavigation */; };
+		269FF1E3297356050087615B /* _SwiftUINavigationState in Frameworks */ = {isa = PBXBuildFile; productRef = 269FF1E2297356050087615B /* _SwiftUINavigationState */; };
+		26BA230929734E5F0033793F /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BA230529734E5F0033793F /* Helpers.swift */; };
+		26BA230A29734E5F0033793F /* Directory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BA230629734E5F0033793F /* Directory.swift */; };
+		26BA230B29734E5F0033793F /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BA230729734E5F0033793F /* File.swift */; };
+		26BA230C29734E5F0033793F /* FileSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BA230829734E5F0033793F /* FileSystem.swift */; };
 		26CFB87B296906440028EC29 /* ABC_StationsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26CFB87A296906440028EC29 /* ABC_StationsApp.swift */; };
 		26CFB87F296906460028EC29 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 26CFB87E296906460028EC29 /* Assets.xcassets */; };
 		26CFB88A296906920028EC29 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 26CFB889296906920028EC29 /* ComposableArchitecture */; };
@@ -59,6 +66,11 @@
 		26560A25296BCC8C00B7566F /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		26560A2F296CD72200B7566F /* WatchDEBUG */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = WatchDEBUG; path = ../WatchDEBUG; sourceTree = "<group>"; };
 		26560A32296CDFD500B7566F /* ABC-Stations-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "ABC-Stations-Info.plist"; sourceTree = SOURCE_ROOT; };
+		269FF1DD2973542F0087615B /* CreateStationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateStationView.swift; sourceTree = "<group>"; };
+		26BA230529734E5F0033793F /* Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
+		26BA230629734E5F0033793F /* Directory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Directory.swift; sourceTree = "<group>"; };
+		26BA230729734E5F0033793F /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
+		26BA230829734E5F0033793F /* FileSystem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSystem.swift; sourceTree = "<group>"; };
 		26CFB877296906440028EC29 /* ABC Stations Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ABC Stations Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		26CFB87A296906440028EC29 /* ABC_StationsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ABC_StationsApp.swift; sourceTree = "<group>"; };
 		26CFB87E296906460028EC29 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -85,8 +97,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				269FF1E1297356050087615B /* SwiftUINavigation in Frameworks */,
 				26CFB88A296906920028EC29 /* ComposableArchitecture in Frameworks */,
 				26CFB88C296906920028EC29 /* Dependencies in Frameworks */,
+				269FF1E3297356050087615B /* _SwiftUINavigationState in Frameworks */,
 				26560A31296CD77400B7566F /* WatchDEBUG in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -121,6 +135,17 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		26BA230429734DD50033793F /* FileSystem */ = {
+			isa = PBXGroup;
+			children = (
+				26BA230829734E5F0033793F /* FileSystem.swift */,
+				26BA230629734E5F0033793F /* Directory.swift */,
+				26BA230729734E5F0033793F /* File.swift */,
+				26BA230529734E5F0033793F /* Helpers.swift */,
+			);
+			path = FileSystem;
+			sourceTree = "<group>";
+		};
 		26CFB86E296906440028EC29 = {
 			isa = PBXGroup;
 			children = (
@@ -153,6 +178,7 @@
 				26CFB89529693F930028EC29 /* Stations */,
 				26CFB88F296906E30028EC29 /* Player */,
 				26CFB892296906F80028EC29 /* Models */,
+				26BA230429734DD50033793F /* FileSystem */,
 			);
 			path = "ABC Stations Watch App";
 			sourceTree = "<group>";
@@ -195,6 +221,7 @@
 			children = (
 				26CFB899296940D10028EC29 /* RootView.swift */,
 				26CFB89C296942720028EC29 /* StationsView.swift */,
+				269FF1DD2973542F0087615B /* CreateStationView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -254,6 +281,8 @@
 				26CFB889296906920028EC29 /* ComposableArchitecture */,
 				26CFB88B296906920028EC29 /* Dependencies */,
 				26560A30296CD77400B7566F /* WatchDEBUG */,
+				269FF1E0297356050087615B /* SwiftUINavigation */,
+				269FF1E2297356050087615B /* _SwiftUINavigationState */,
 			);
 			productName = "ABC Stations Watch App";
 			productReference = 26CFB877296906440028EC29 /* ABC Stations Watch App.app */;
@@ -288,6 +317,7 @@
 			mainGroup = 26CFB86E296906440028EC29;
 			packageReferences = (
 				26CFB888296906920028EC29 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
+				269FF1DF297356050087615B /* XCRemoteSwiftPackageReference "swiftui-navigation" */,
 			);
 			productRefGroup = 26CFB878296906440028EC29 /* Products */;
 			projectDirPath = "";
@@ -334,14 +364,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				26CFB88E296906AA0028EC29 /* Player.swift in Sources */,
+				26BA230B29734E5F0033793F /* File.swift in Sources */,
 				26CFB8A429694C450028EC29 /* NowPlayingControls.swift in Sources */,
 				26CFB894296907BE0028EC29 /* MediaMetaDataEnrichment.swift in Sources */,
+				26BA230929734E5F0033793F /* Helpers.swift in Sources */,
+				269FF1DE2973542F0087615B /* CreateStationView.swift in Sources */,
 				26CFB89A296940D10028EC29 /* RootView.swift in Sources */,
 				26CFB89D296942720028EC29 /* StationsView.swift in Sources */,
 				26CFB89729693FAB0028EC29 /* ABCStations.swift in Sources */,
 				26CFB8A0296944680028EC29 /* PlayerDependency.swift in Sources */,
+				26BA230A29734E5F0033793F /* Directory.swift in Sources */,
 				26CFB891296906F20028EC29 /* RadioStation.swift in Sources */,
 				26CFB87B296906440028EC29 /* ABC_StationsApp.swift in Sources */,
+				26BA230C29734E5F0033793F /* FileSystem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -362,7 +397,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"ABC Stations/Preview Content\"";
 				DEVELOPMENT_TEAM = QCHSD48ZLT;
 				ENABLE_PREVIEWS = YES;
@@ -394,7 +429,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"ABC Stations/Preview Content\"";
 				DEVELOPMENT_TEAM = QCHSD48ZLT;
 				ENABLE_PREVIEWS = YES;
@@ -539,7 +574,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = QCHSD48ZLT;
 				ENABLE_PREVIEWS = YES;
@@ -573,7 +608,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = QCHSD48ZLT;
 				ENABLE_PREVIEWS = YES;
@@ -634,6 +669,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		269FF1DF297356050087615B /* XCRemoteSwiftPackageReference "swiftui-navigation" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swiftui-navigation";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.5.0;
+			};
+		};
 		26CFB888296906920028EC29 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture";
@@ -648,6 +691,16 @@
 		26560A30296CD77400B7566F /* WatchDEBUG */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = WatchDEBUG;
+		};
+		269FF1E0297356050087615B /* SwiftUINavigation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 269FF1DF297356050087615B /* XCRemoteSwiftPackageReference "swiftui-navigation" */;
+			productName = SwiftUINavigation;
+		};
+		269FF1E2297356050087615B /* _SwiftUINavigationState */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 269FF1DF297356050087615B /* XCRemoteSwiftPackageReference "swiftui-navigation" */;
+			productName = _SwiftUINavigationState;
 		};
 		26CFB889296906920028EC29 /* ComposableArchitecture */ = {
 			isa = XCSwiftPackageProductDependency;

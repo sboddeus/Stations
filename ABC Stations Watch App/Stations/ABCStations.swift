@@ -7,6 +7,8 @@
 
 import Foundation
 
+let ABCStations = [news, tripleJ, classic, kids]
+
 let news = RadioStation(
     id: "ABC NEWS GLOBAL",
     title: "ABC News",

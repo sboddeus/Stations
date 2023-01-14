@@ -2,11 +2,13 @@
 import SwiftUI
 import ComposableArchitecture
 import AVFAudio
+import SwiftUINavigation
 
 struct Stations: ReducerProtocol {
     struct State: Equatable {
-        var stations = [news, tripleJ, classic, kids]
+        var stations = ABCStations
         var selectedStation: RadioStation?
+        var createStation: CreateStation.State?
     }
     
     enum Action: Equatable {
@@ -17,6 +19,10 @@ struct Stations: ReducerProtocol {
         
         // Internal actions
         case selected(RadioStation)
+        case showCreateStation(Bool)
+        
+        // Child Actions
+        case createStation(CreateStation.Action)
     }
     
     @Dependency(\.player) var player
@@ -24,6 +30,10 @@ struct Stations: ReducerProtocol {
     var body: some ReducerProtocol<State, Action> {
         Reduce { state, action in
             switch action {
+            case let .showCreateStation(show):
+                state.createStation = show ? .init() : nil
+                return .none
+                
             case let .selected(station):
                 return .concatenate(
                     .run { send in
@@ -41,9 +51,15 @@ struct Stations: ReducerProtocol {
                         }
                     }
                 )
+                
             case .delegate:
                 return .none
+                
+            case .createStation:
+                return .none
             }
+        }.ifLet(\.createStation, action: /Action.createStation) {
+            CreateStation()
         }
     }
 }
@@ -58,12 +74,35 @@ struct StationsView: View {
     }
     
     var body: some View {
-        List(viewStore.stations) { station in
-            Button {
-                viewStore.send(.selected(station))
-            } label: {
-                Text(station.title)
+        ScrollView {
+            VStack {
+                ForEach(viewStore.stations) { station in
+                    Button {
+                        viewStore.send(.selected(station))
+                    } label: {
+                        Text(station.title)
+                            .foregroundColor(viewStore.selectedStation == station ? .red : .white)
+                    }
+                }
+                Button {
+                    viewStore.send(.showCreateStation(true))
+                } label: {
+                    Text("Add")
+                }
             }
-        }
+        }.fullScreenCover(
+            unwrapping: viewStore.binding(
+                get: \.createStation,
+                send: { .showCreateStation($0 != nil) }
+            )) {
+                viewStore.send(.showCreateStation(false))
+            } content: { value in
+                let store = self.store.scope { _ in
+                    value.wrappedValue
+                } action: { action in
+                    Stations.Action.createStation(action)
+                }
+                CreateStationView(store: store)
+            }
     }
 }
