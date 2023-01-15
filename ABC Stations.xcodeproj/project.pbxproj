@@ -16,6 +16,7 @@
 		269FF1DE2973542F0087615B /* CreateStationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269FF1DD2973542F0087615B /* CreateStationView.swift */; };
 		269FF1E1297356050087615B /* SwiftUINavigation in Frameworks */ = {isa = PBXBuildFile; productRef = 269FF1E0297356050087615B /* SwiftUINavigation */; };
 		269FF1E3297356050087615B /* _SwiftUINavigationState in Frameworks */ = {isa = PBXBuildFile; productRef = 269FF1E2297356050087615B /* _SwiftUINavigationState */; };
+		269FF1E72974A7FC0087615B /* StationMaster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269FF1E62974A7FC0087615B /* StationMaster.swift */; };
 		26BA230929734E5F0033793F /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BA230529734E5F0033793F /* Helpers.swift */; };
 		26BA230A29734E5F0033793F /* Directory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BA230629734E5F0033793F /* Directory.swift */; };
 		26BA230B29734E5F0033793F /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BA230729734E5F0033793F /* File.swift */; };
@@ -67,6 +68,7 @@
 		26560A2F296CD72200B7566F /* WatchDEBUG */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = WatchDEBUG; path = ../WatchDEBUG; sourceTree = "<group>"; };
 		26560A32296CDFD500B7566F /* ABC-Stations-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "ABC-Stations-Info.plist"; sourceTree = SOURCE_ROOT; };
 		269FF1DD2973542F0087615B /* CreateStationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateStationView.swift; sourceTree = "<group>"; };
+		269FF1E62974A7FC0087615B /* StationMaster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationMaster.swift; sourceTree = "<group>"; };
 		26BA230529734E5F0033793F /* Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		26BA230629734E5F0033793F /* Directory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Directory.swift; sourceTree = "<group>"; };
 		26BA230729734E5F0033793F /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
@@ -135,6 +137,24 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		269FF1E42974A7C90087615B /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				269FF1E52974A7E10087615B /* Station Master */,
+				26CFB88F296906E30028EC29 /* Player */,
+				26BA230429734DD50033793F /* FileSystem */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		269FF1E52974A7E10087615B /* Station Master */ = {
+			isa = PBXGroup;
+			children = (
+				269FF1E62974A7FC0087615B /* StationMaster.swift */,
+			);
+			path = "Station Master";
+			sourceTree = "<group>";
+		};
 		26BA230429734DD50033793F /* FileSystem */ = {
 			isa = PBXGroup;
 			children = (
@@ -171,14 +191,13 @@
 			children = (
 				26CFB87A296906440028EC29 /* ABC_StationsApp.swift */,
 				26CFB8A129694AE30028EC29 /* ABC-Stations-Watch-App-Info.plist */,
+				269FF1E42974A7C90087615B /* Services */,
 				26CFB8A229694C320028EC29 /* Now Playing Controls */,
 				26CFB89E296944520028EC29 /* Dependencies */,
 				26CFB89B296940D60028EC29 /* Views */,
 				26CFB898296940690028EC29 /* Resources */,
 				26CFB89529693F930028EC29 /* Stations */,
-				26CFB88F296906E30028EC29 /* Player */,
 				26CFB892296906F80028EC29 /* Models */,
-				26BA230429734DD50033793F /* FileSystem */,
 			);
 			path = "ABC Stations Watch App";
 			sourceTree = "<group>";
@@ -363,6 +382,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				269FF1E72974A7FC0087615B /* StationMaster.swift in Sources */,
 				26CFB88E296906AA0028EC29 /* Player.swift in Sources */,
 				26BA230B29734E5F0033793F /* File.swift in Sources */,
 				26CFB8A429694C450028EC29 /* NowPlayingControls.swift in Sources */,
@@ -397,7 +417,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"ABC Stations/Preview Content\"";
 				DEVELOPMENT_TEAM = QCHSD48ZLT;
 				ENABLE_PREVIEWS = YES;
@@ -429,7 +449,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"ABC Stations/Preview Content\"";
 				DEVELOPMENT_TEAM = QCHSD48ZLT;
 				ENABLE_PREVIEWS = YES;
@@ -574,7 +594,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = QCHSD48ZLT;
 				ENABLE_PREVIEWS = YES;
@@ -608,7 +628,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = QCHSD48ZLT;
 				ENABLE_PREVIEWS = YES;

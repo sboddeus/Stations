@@ -11,7 +11,15 @@ struct CreateStation: ReducerProtocol {
     enum Action: Equatable {
         case setTitle(String)
         case setURL(String)
+        case addStation
+        
+        enum Delegate {
+            case stationAdded
+        }
+        case delegate(Delegate)
     }
+    
+    @Dependency(\.stationMaster) var stationMaster
     
     var body: some ReducerProtocol<State, Action> {
         Reduce { state, action in
@@ -22,6 +30,23 @@ struct CreateStation: ReducerProtocol {
                 
             case let .setURL(url):
                 state.url = url
+                return .none
+                
+            case .addStation:
+                return .task { [state] in
+                    await stationMaster.add(
+                        station: .init(
+                            id: state.title,
+                            title: state.title,
+                            description: "",
+                            url: URL(string: state.url)!
+                        )
+                    )
+                    
+                    return .delegate(.stationAdded)
+                }
+                
+            case .delegate:
                 return .none
             }
         }
@@ -45,6 +70,11 @@ struct CreateStationView: View {
             TextField("URL", text: viewStore.binding(get: \.url, send: CreateStation.Action.setURL))
                 .textInputAutocapitalization(.never)
                 .disableAutocorrection(true)
+            Button {
+                viewStore.send(.addStation)
+            } label: {
+                Text("Create")
+            }.disabled(viewStore.url.isEmpty || viewStore.title.isEmpty)
         }
     }
 }

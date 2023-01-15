@@ -20,12 +20,14 @@ struct Stations: ReducerProtocol {
         // Internal actions
         case selected(RadioStation)
         case showCreateStation(Bool)
-        
+        case onAppear
+        case loaded([RadioStation])
         // Child Actions
         case createStation(CreateStation.Action)
     }
     
     @Dependency(\.player) var player
+    @Dependency(\.stationMaster) var stationMaster
     
     var body: some ReducerProtocol<State, Action> {
         Reduce { state, action in
@@ -54,6 +56,20 @@ struct Stations: ReducerProtocol {
                 
             case .delegate:
                 return .none
+                
+            case .onAppear:
+                return .task {
+                    let stations = await stationMaster.getStations()
+                    return .loaded(stations)
+                }
+                
+            case let .loaded(stations):
+                state.stations = stations
+                return .none
+                
+            case .createStation(.delegate(.stationAdded)):
+                state.createStation = nil
+                return Effect(value: .onAppear)
                 
             case .createStation:
                 return .none
@@ -89,6 +105,9 @@ struct StationsView: View {
                 } label: {
                     Text("Add")
                 }
+            }
+            .onAppear {
+                viewStore.send(.onAppear)
             }
         }.fullScreenCover(
             unwrapping: viewStore.binding(

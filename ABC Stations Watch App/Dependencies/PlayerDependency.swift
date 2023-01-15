@@ -18,3 +18,14 @@ extension DependencyValues {
         static let liveValue: AVAudioPlayer = .shared!
     }
 }
+
+extension DependencyValues {
+    var stationMaster: StationMaster {
+        get { self[StationMasterKey.self] }
+        set { self[StationMasterKey.self] = newValue }
+    }
+
+    enum StationMasterKey: DependencyKey {
+        static let liveValue: StationMaster = .init()
+    }
+}

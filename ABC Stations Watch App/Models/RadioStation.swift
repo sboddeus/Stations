@@ -1,9 +1,3 @@
-//
-//  RadioStation.swift
-//  ABC Stations Watch App
-//
-//  Created by Sye Boddeus on 7/1/2023.
-//
 
 import Foundation
 
@@ -15,7 +9,7 @@ struct APITimeZone: Equatable {
     let offset: Double
 }
 
-struct RadioStation: Equatable, Identifiable {
+struct RadioStation: Equatable, Identifiable, Codable {
     let id: String
     let title: String
     let description: String
