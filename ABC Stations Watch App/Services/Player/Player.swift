@@ -369,7 +369,7 @@ final class AVAudioPlayer: NSObject {
     // Stops all media playback and removes all items from queue
     // should only call this if we enter an unknown state.
     // Most of the time a caller should call pause
-    private func stop() {
+    func stop() {
         playerMessags.send("Audio Player: Stop, hammer time")
 
         player.pause()
@@ -381,10 +381,6 @@ final class AVAudioPlayer: NSObject {
 
     private func allQueuedItems() -> [RadioStation] {
         player.items().dropFirst().compactMap(\.asset.playerItem) + itemQueue.queuedItems.compactMap(\.playerItem)
-    }
-
-    func clean() {
-        stop()
     }
 
     // MARK: - Deinit Cleanup

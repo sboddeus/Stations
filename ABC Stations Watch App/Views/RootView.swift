@@ -118,6 +118,7 @@ struct RootView: View {
                         }
                     }
                 }
+                .interactiveDismissDisabled()
         }
         .fullScreenCover(
             unwrapping: viewStore.binding(
@@ -134,6 +135,7 @@ struct RootView: View {
                         }
                     }
                 }
+                .interactiveDismissDisabled()
         }
         .fullScreenCover(
             unwrapping: viewStore.binding(

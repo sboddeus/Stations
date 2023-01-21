@@ -50,6 +50,7 @@ struct Stations: ReducerProtocol {
         Reduce { state, action in
             switch action {
             // NOTE: Do player binding at this level in the hopes of being more efficient
+            // then doing it at the row level
             case .playerBinding:
                 let stations = state.stations
                 struct PlayerBindingID {}
@@ -85,6 +86,12 @@ struct Stations: ReducerProtocol {
                 
             case let .station(id, action: .delegate(.delete)):
                 return .task {
+                    // Stop playing the station if it is playing
+                    if player.currentItem?.id == id {
+                        player.stop()
+                    }
+                    
+                    // Then remove it from station master
                     await stationMaster.remove(stationId: id)
                     
                     return .onAppear
@@ -138,6 +145,7 @@ struct Stations: ReducerProtocol {
                 return Effect(value: .onAppear)
             
             case .routeAction(.editStation(.delegate(.stationEdited))):
+                // TODO: If the station edited was the currently playing station then reload it.
                 state.route = nil
                 return Effect(value: .onAppear)
                 
@@ -186,6 +194,11 @@ struct StationsView: View {
             } label: {
                 HStack {
                     Spacer()
+                    Image(systemName: "plus")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 10, height: 10)
+                        .foregroundColor(.green)
                     Text("Add")
                         .foregroundColor(.green)
                     Spacer()
@@ -210,6 +223,7 @@ struct StationsView: View {
                 action: { Stations.Action.routeAction(.createStation($0)) }
             )
             CreateStationView(store: store)
+                .interactiveDismissDisabled()
         }
         .fullScreenCover(
             unwrapping: viewStore.binding(
@@ -223,6 +237,7 @@ struct StationsView: View {
                 action: { Stations.Action.routeAction(.editStation($0)) }
             )
             EditStationView(store: store)
+                .interactiveDismissDisabled()
         }
     }
 }

@@ -74,15 +74,36 @@ struct CreateStationView: View {
     var body: some View {
         ScrollView {
             VStack {
-                TextField("Name", text: viewStore.binding(get: \.title, send: CreateStation.Action.setTitle))
-                    .textInputAutocapitalization(.never)
-                    .disableAutocorrection(true)
-                TextField("URL", text: viewStore.binding(get: \.url, send: CreateStation.Action.setURL))
-                    .textInputAutocapitalization(.never)
-                    .disableAutocorrection(true)
-                TextField("Image URL", text: viewStore.binding(get: \.imageURL, send: CreateStation.Action.setImageURL))
-                    .textInputAutocapitalization(.never)
-                    .disableAutocorrection(true)
+                TextField(
+                    "Name",
+                    text: viewStore.binding(
+                        get: \.title,
+                        send: CreateStation.Action.setTitle
+                    )
+                )
+                .textInputAutocapitalization(.never)
+                .disableAutocorrection(true)
+                
+                TextField(
+                    "URL",
+                    text: viewStore.binding(
+                        get: \.url,
+                        send: CreateStation.Action.setURL
+                    )
+                )
+                .textInputAutocapitalization(.never)
+                .disableAutocorrection(true)
+                
+                TextField(
+                    "Image URL",
+                    text: viewStore.binding(
+                        get: \.imageURL,
+                        send: CreateStation.Action.setImageURL
+                    )
+                )
+                .textInputAutocapitalization(.never)
+                .disableAutocorrection(true)
+                
                 Button {
                     viewStore.send(.addStation)
                 } label: {
