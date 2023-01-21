@@ -7,6 +7,7 @@
 
 import Combine
 import MediaPlayer
+import SDWebImage
 
 final class NowPlayingControlsController {
     private var cancellable: AnyCancellable?
@@ -64,20 +65,20 @@ final class NowPlayingControlsController {
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
 
         // Set the image metadata
-//        if let currentURL = nowPlayingInfo[NowPlayingControlsController.imageURLIdKey] as? URL {
-//            if currentURL == playerItem.squareImageURL {
-//                return
-//            }
-//        }
-//        SDWebImageDownloader.shared.downloadImage(with: playerItem.squareImageURL.imageProxiedSmall) { [weak self] image, _, _, _ in
-//            guard let self = self else { return }
-//            if let image = image {
-//                self.nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
-//                // Set the metadata
-//                MPNowPlayingInfoCenter.default().nowPlayingInfo = self.nowPlayingInfo
-//            }
-//        }
-//        nowPlayingInfo[NowPlayingControlsController.imageURLIdKey] = playerItem.squareImageURL
+        if let currentURL = nowPlayingInfo[NowPlayingControlsController.imageURLIdKey] as? URL {
+            if currentURL == playerItem.imageURL {
+                return
+            }
+        }
+        SDWebImageDownloader.shared.downloadImage(with: playerItem.imageURL) { [weak self] image, _, _, _ in
+            guard let self = self else { return }
+            if let image = image {
+                self.nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
+                // Set the metadata
+                MPNowPlayingInfoCenter.default().nowPlayingInfo = self.nowPlayingInfo
+            }
+        }
+        nowPlayingInfo[NowPlayingControlsController.imageURLIdKey] = playerItem.imageURL
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
 
         // Modify remote controls for item kind

@@ -17,6 +17,20 @@ actor StationMaster {
         await save()
     }
     
+    func update(station: RadioStation, to newStation: RadioStation) async {
+        if stationCache == nil {
+            await _ = getStations()
+        }
+        
+        stationCache?.removeAll(where: { cached in
+            cached.id == station.id
+        })
+        
+        stationCache?.append(newStation)
+        
+        await save()
+    }
+    
     func getStations() async -> [RadioStation] {
         guard let stations = stationCache else {
             if let stations = await load(),

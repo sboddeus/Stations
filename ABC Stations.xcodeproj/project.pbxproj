@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2619BDB329793F6A00C36485 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 2619BDB229793F6A00C36485 /* SDWebImageSwiftUI */; };
+		2619BDB529794AE900C36485 /* EditStationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2619BDB429794AE900C36485 /* EditStationView.swift */; };
 		26560A1F296BCC8B00B7566F /* ABC_StationsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26560A1E296BCC8B00B7566F /* ABC_StationsApp.swift */; };
 		26560A21296BCC8B00B7566F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26560A20296BCC8B00B7566F /* ContentView.swift */; };
 		26560A23296BCC8C00B7566F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 26560A22296BCC8C00B7566F /* Assets.xcassets */; };
@@ -60,6 +62,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2619BDB429794AE900C36485 /* EditStationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditStationView.swift; sourceTree = "<group>"; };
 		26560A1C296BCC8B00B7566F /* ABC Stations.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ABC Stations.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		26560A1E296BCC8B00B7566F /* ABC_StationsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ABC_StationsApp.swift; sourceTree = "<group>"; };
 		26560A20296BCC8B00B7566F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -99,6 +102,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2619BDB329793F6A00C36485 /* SDWebImageSwiftUI in Frameworks */,
 				269FF1E1297356050087615B /* SwiftUINavigation in Frameworks */,
 				26CFB88A296906920028EC29 /* ComposableArchitecture in Frameworks */,
 				26CFB88C296906920028EC29 /* Dependencies in Frameworks */,
@@ -241,6 +245,7 @@
 				26CFB899296940D10028EC29 /* RootView.swift */,
 				26CFB89C296942720028EC29 /* StationsView.swift */,
 				269FF1DD2973542F0087615B /* CreateStationView.swift */,
+				2619BDB429794AE900C36485 /* EditStationView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -302,6 +307,7 @@
 				26560A30296CD77400B7566F /* WatchDEBUG */,
 				269FF1E0297356050087615B /* SwiftUINavigation */,
 				269FF1E2297356050087615B /* _SwiftUINavigationState */,
+				2619BDB229793F6A00C36485 /* SDWebImageSwiftUI */,
 			);
 			productName = "ABC Stations Watch App";
 			productReference = 26CFB877296906440028EC29 /* ABC Stations Watch App.app */;
@@ -337,6 +343,7 @@
 			packageReferences = (
 				26CFB888296906920028EC29 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
 				269FF1DF297356050087615B /* XCRemoteSwiftPackageReference "swiftui-navigation" */,
+				2619BDB129793F6A00C36485 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 			);
 			productRefGroup = 26CFB878296906440028EC29 /* Products */;
 			projectDirPath = "";
@@ -385,6 +392,7 @@
 				269FF1E72974A7FC0087615B /* StationMaster.swift in Sources */,
 				26CFB88E296906AA0028EC29 /* Player.swift in Sources */,
 				26BA230B29734E5F0033793F /* File.swift in Sources */,
+				2619BDB529794AE900C36485 /* EditStationView.swift in Sources */,
 				26CFB8A429694C450028EC29 /* NowPlayingControls.swift in Sources */,
 				26CFB894296907BE0028EC29 /* MediaMetaDataEnrichment.swift in Sources */,
 				26BA230929734E5F0033793F /* Helpers.swift in Sources */,
@@ -417,7 +425,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_ASSET_PATHS = "\"ABC Stations/Preview Content\"";
 				DEVELOPMENT_TEAM = QCHSD48ZLT;
 				ENABLE_PREVIEWS = YES;
@@ -449,7 +457,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_ASSET_PATHS = "\"ABC Stations/Preview Content\"";
 				DEVELOPMENT_TEAM = QCHSD48ZLT;
 				ENABLE_PREVIEWS = YES;
@@ -594,7 +602,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = QCHSD48ZLT;
 				ENABLE_PREVIEWS = YES;
@@ -628,7 +636,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = QCHSD48ZLT;
 				ENABLE_PREVIEWS = YES;
@@ -689,6 +697,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		2619BDB129793F6A00C36485 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
 		269FF1DF297356050087615B /* XCRemoteSwiftPackageReference "swiftui-navigation" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/pointfreeco/swiftui-navigation";
@@ -708,6 +724,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		2619BDB229793F6A00C36485 /* SDWebImageSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2619BDB129793F6A00C36485 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
+			productName = SDWebImageSwiftUI;
+		};
 		26560A30296CD77400B7566F /* WatchDEBUG */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = WatchDEBUG;

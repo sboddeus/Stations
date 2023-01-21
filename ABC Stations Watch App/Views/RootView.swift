@@ -57,16 +57,16 @@ struct RootView: View {
             )
         ) {
             DEBUG().tag(Root.State.Route.debug)
-            
+
             StationsView(
                 store: self.store.scope(
                     state: \.stations,
                     action: Root.Action.stations
                 )
             ).tag(Root.State.Route.stations)
-            
+
             NowPlayingView().tag(Root.State.Route.nowPlaying)
-            
+
         }.tabViewStyle(.page)
     }
 }

@@ -18,6 +18,7 @@ final class RadioMetadataEnricher: NSObject, AVPlayerItemMetadataOutputPushDeleg
             id: radio.id,
             title: radio.title,
             description: trackTitle ?? radio.description,
+            imageURL: radio.imageURL,
             url: radio.url
         )
     }

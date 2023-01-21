@@ -1,12 +1,19 @@
-
 import SwiftUI
 import ComposableArchitecture
 
-struct CreateStation: ReducerProtocol {
+struct EditStation: ReducerProtocol {
     struct State: Equatable {
+        let editedStation: RadioStation
         var title: String = ""
         var url: String = ""
         var imageURL: String = ""
+        
+        init(editedStation: RadioStation) {
+            self.editedStation = editedStation
+            self.title = editedStation.title
+            self.url = editedStation.url.absoluteString
+            self.imageURL = editedStation.imageURL?.absoluteString ?? ""
+        }
     }
     
     enum Action: Equatable {
@@ -16,7 +23,7 @@ struct CreateStation: ReducerProtocol {
         case addStation
         
         enum Delegate {
-            case stationAdded
+            case stationEdited
         }
         case delegate(Delegate)
     }
@@ -41,9 +48,10 @@ struct CreateStation: ReducerProtocol {
             case .addStation:
                 return .task { [state] in
                     
-                    await stationMaster.add(
-                        station: .init(
-                            id: state.title,
+                    await stationMaster.update(
+                        station: state.editedStation,
+                        to: .init(
+                            id: state.editedStation.id,
                             title: state.title,
                             description: "",
                             // TODO: These URLs have to be checked properly
@@ -52,7 +60,7 @@ struct CreateStation: ReducerProtocol {
                         )
                     )
                     
-                    return .delegate(.stationAdded)
+                    return .delegate(.stationEdited)
                 }
                 
             case .delegate:
@@ -62,11 +70,11 @@ struct CreateStation: ReducerProtocol {
     }
 }
 
-struct CreateStationView: View {
-    let store: StoreOf<CreateStation>
-    @ObservedObject var viewStore: ViewStoreOf<CreateStation>
+struct EditStationView: View {
+    let store: StoreOf<EditStation>
+    @ObservedObject var viewStore: ViewStoreOf<EditStation>
     
-    init(store: StoreOf<CreateStation>) {
+    init(store: StoreOf<EditStation>) {
         self.store = store
         viewStore = .init(store, observe: { $0 })
     }
@@ -74,19 +82,20 @@ struct CreateStationView: View {
     var body: some View {
         ScrollView {
             VStack {
-                TextField("Name", text: viewStore.binding(get: \.title, send: CreateStation.Action.setTitle))
+                TextField("Name", text: viewStore.binding(get: \.title, send: EditStation.Action.setTitle))
                     .textInputAutocapitalization(.never)
                     .disableAutocorrection(true)
-                TextField("URL", text: viewStore.binding(get: \.url, send: CreateStation.Action.setURL))
+                TextField("URL", text: viewStore.binding(get: \.url, send: EditStation.Action.setURL))
                     .textInputAutocapitalization(.never)
                     .disableAutocorrection(true)
-                TextField("Image URL", text: viewStore.binding(get: \.imageURL, send: CreateStation.Action.setImageURL))
+                TextField("Image URL", text: viewStore.binding(get: \.imageURL, send: EditStation.Action.setImageURL))
                     .textInputAutocapitalization(.never)
                     .disableAutocorrection(true)
+                    
                 Button {
                     viewStore.send(.addStation)
                 } label: {
-                    Text("Create")
+                    Text("Update")
                 }.disabled(viewStore.url.isEmpty || viewStore.title.isEmpty)
             }
         }
