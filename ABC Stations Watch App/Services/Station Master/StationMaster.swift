@@ -9,7 +9,7 @@ actor StationMaster {
     
     func add(station: RadioStation) async {
         if stationCache == nil {
-            await _ = getStations()
+            _ = await getStations()
         }
         
         stationCache?.append(station)
@@ -17,9 +17,18 @@ actor StationMaster {
         await save()
     }
     
+    func remove(stationId: String) async {
+        if stationCache == nil {
+            _ = await getStations()
+        }
+        stationCache?.removeAll(where: { $0.id == stationId })
+        
+        await save()
+    }
+    
     func update(station: RadioStation, to newStation: RadioStation) async {
         if stationCache == nil {
-            await _ = getStations()
+            _ = await getStations()
         }
         
         stationCache?.removeAll(where: { cached in

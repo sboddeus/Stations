@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		26149F7E297BA5C500D66622 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26149F7D297BA5C500D66622 /* MenuView.swift */; };
 		2619BDB329793F6A00C36485 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 2619BDB229793F6A00C36485 /* SDWebImageSwiftUI */; };
 		2619BDB529794AE900C36485 /* EditStationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2619BDB429794AE900C36485 /* EditStationView.swift */; };
 		26560A1F296BCC8B00B7566F /* ABC_StationsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26560A1E296BCC8B00B7566F /* ABC_StationsApp.swift */; };
@@ -62,6 +63,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		26149F7D297BA5C500D66622 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		2619BDB429794AE900C36485 /* EditStationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditStationView.swift; sourceTree = "<group>"; };
 		26560A1C296BCC8B00B7566F /* ABC Stations.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ABC Stations.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		26560A1E296BCC8B00B7566F /* ABC_StationsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ABC_StationsApp.swift; sourceTree = "<group>"; };
@@ -246,6 +248,7 @@
 				26CFB89C296942720028EC29 /* StationsView.swift */,
 				269FF1DD2973542F0087615B /* CreateStationView.swift */,
 				2619BDB429794AE900C36485 /* EditStationView.swift */,
+				26149F7D297BA5C500D66622 /* MenuView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -396,6 +399,7 @@
 				26CFB8A429694C450028EC29 /* NowPlayingControls.swift in Sources */,
 				26CFB894296907BE0028EC29 /* MediaMetaDataEnrichment.swift in Sources */,
 				26BA230929734E5F0033793F /* Helpers.swift in Sources */,
+				26149F7E297BA5C500D66622 /* MenuView.swift in Sources */,
 				269FF1DE2973542F0087615B /* CreateStationView.swift in Sources */,
 				26CFB89A296940D10028EC29 /* RootView.swift in Sources */,
 				26CFB89D296942720028EC29 /* StationsView.swift in Sources */,
@@ -425,7 +429,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_ASSET_PATHS = "\"ABC Stations/Preview Content\"";
 				DEVELOPMENT_TEAM = QCHSD48ZLT;
 				ENABLE_PREVIEWS = YES;
@@ -457,7 +461,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_ASSET_PATHS = "\"ABC Stations/Preview Content\"";
 				DEVELOPMENT_TEAM = QCHSD48ZLT;
 				ENABLE_PREVIEWS = YES;
@@ -602,7 +606,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = QCHSD48ZLT;
 				ENABLE_PREVIEWS = YES;
@@ -636,7 +640,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = QCHSD48ZLT;
 				ENABLE_PREVIEWS = YES;

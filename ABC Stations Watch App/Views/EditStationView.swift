@@ -96,6 +96,7 @@ struct EditStationView: View {
                     viewStore.send(.addStation)
                 } label: {
                     Text("Update")
+                        .foregroundColor(.indigo)
                 }.disabled(viewStore.url.isEmpty || viewStore.title.isEmpty)
             }
         }

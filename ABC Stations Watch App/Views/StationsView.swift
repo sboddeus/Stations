@@ -8,9 +8,22 @@ import SDWebImageSwiftUI
 struct Stations: ReducerProtocol {
     struct State: Equatable {
         var stations = ABCStations
-        var selectedStation: RadioStation?
-        var createStation: CreateStation.State?
-        var editStation: EditStation.State?
+        
+        struct ActiveStationState: Equatable {
+            let station: RadioStation
+            enum State: Equatable {
+                case idle
+                case playing
+            }
+            let state: State
+        }
+        var activeStation: ActiveStationState?
+        
+        enum Route: Equatable {
+            case createStation(CreateStation.State)
+            case editStation(EditStation.State)
+        }
+        var route: Route?
     }
     
     enum Action: Equatable {
@@ -21,14 +34,23 @@ struct Stations: ReducerProtocol {
         
         // Internal actions
         case selected(RadioStation)
-        case showCreateStation(Bool)
-        case showEditStation(RadioStation?)
+        case setRoute(State.Route?)
+        case showCreateStation
+        case showEditStation(RadioStation)
+        case delete(RadioStation)
         case onAppear
         case loaded([RadioStation])
+        case playerBinding
+        case setActiveStation(State.ActiveStationState?)
+        case pause
+        case play
         
         // Child Actions
-        case createStation(CreateStation.Action)
-        case editStation(EditStation.Action)
+        enum RouteAction: Equatable {
+            case createStation(CreateStation.Action)
+            case editStation(EditStation.Action)
+        }
+       case routeAction(RouteAction)
     }
     
     @Dependency(\.player) var player
@@ -37,20 +59,61 @@ struct Stations: ReducerProtocol {
     var body: some ReducerProtocol<State, Action> {
         Reduce { state, action in
             switch action {
-            case let .showCreateStation(show):
-                state.createStation = show ? .init() : nil
+            case .playerBinding:
+                struct PlayerBindingID {}
+                let currentStationState = state.activeStation
+                return .run { send in
+                    for await value in player.playingState.values {
+                        switch value {
+                        case let .loading(station), let .paused(station):
+                            let newState = State.ActiveStationState(
+                                station: station,
+                                state: .idle
+                            )
+                            if newState != currentStationState {
+                                await send.send(.setActiveStation(newState))
+                            }
+                        case let .playing(station, _, _ ,_):
+                            let newState = State.ActiveStationState(
+                                station: station,
+                                state: .playing
+                            )
+                            if newState != currentStationState {
+                                await send.send(.setActiveStation(newState))
+                            }
+                        default:
+                            await send.send(.setActiveStation(nil))
+                        }
+                    }
+                }.cancellable(id: PlayerBindingID.self)
+                
+            case .pause:
+                return .fireAndForget {
+                    player.pause()
+                }
+                
+            case .play:
+                return .fireAndForget {
+                    player.play()
+                }
+                
+            case let .setRoute(route):
+                state.route = route
+                return .none
+                
+            case let .setActiveStation(activeStationState):
+                state.activeStation = activeStationState
+                return .none
+                
+            case .showCreateStation:
+                state.route = .createStation(.init())
                 return .none
                 
             case let .showEditStation(station):
-                if let station {
-                    state.editStation = .init(editedStation: station)
-                } else {
-                    state.editStation = nil
-                }
+                state.route = .editStation(.init(editedStation: station))
                 return .none
                 
             case let .selected(station):
-                state.selectedStation = station
                 return .concatenate(
                     .run { send in
                         AVAudioSession.sharedInstance().activate { _, error in
@@ -68,6 +131,13 @@ struct Stations: ReducerProtocol {
                     }
                 )
                 
+            case let .delete(station):
+                return .task {
+                    await stationMaster.remove(stationId: station.id)
+                    
+                    return .onAppear
+                }
+                
             case .delegate:
                 return .none
                 
@@ -84,26 +154,25 @@ struct Stations: ReducerProtocol {
                 state.stations = stations
                 return .none
                 
-            case .createStation(.delegate(.stationAdded)):
-                state.createStation = nil
+            case .routeAction(.createStation(.delegate(.stationAdded))):
+                state.route = nil
                 return Effect(value: .onAppear)
             
-            case .editStation(.delegate(.stationEdited)):
-                state.editStation = nil
+            case .routeAction(.editStation(.delegate(.stationEdited))):
+                state.route = nil
                 return Effect(value: .onAppear)
                 
-            case .createStation:
-                return .none
-                
-            case .editStation:
+            case .routeAction:
                 return .none
             }
         }
-        .ifLet(\.createStation, action: /Action.createStation) {
-            CreateStation()
-        }
-        .ifLet(\.editStation, action: /Action.editStation) {
-            EditStation()
+        .ifLet(\.route, action: /Action.routeAction) {
+            Scope(state: /State.Route.createStation, action: /Action.RouteAction.createStation) {
+                CreateStation()
+            }
+            Scope(state: /State.Route.editStation, action: /Action.RouteAction.editStation) {
+                EditStation()
+            }
         }
     }
 }
@@ -118,6 +187,7 @@ struct StationsView: View {
     }
     
     @ViewBuilder
+    // TODO: This should become its own TCA component
     private func row(station: RadioStation) -> some View {
         Button {
             viewStore.send(.selected(station))
@@ -133,8 +203,27 @@ struct StationsView: View {
                 .frame(maxWidth: 30, maxHeight: 30)
                 .clipShape(RoundedRectangle(cornerRadius: 8))
                 Text(station.title)
-                    .foregroundColor(viewStore.selectedStation == station ? .red : .white)
+                    .foregroundColor(viewStore.activeStation?.station == station ? .red : .white)
                 Spacer()
+                if viewStore.activeStation?.station == station {
+                    if viewStore.activeStation?.state == .playing {
+                        Image(systemName: "pause.circle")
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(.red)
+                            .onTapGesture {
+                                viewStore.send(.pause)
+                            }
+                    } else {
+                        Image(systemName: "play.circle")
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(.red)
+                            .onTapGesture {
+                                viewStore.send(.play)
+                            }
+                    }
+                }
             }
         }
     }
@@ -150,48 +239,57 @@ struct StationsView: View {
                             Image(systemName: "pencil")
                         }
                         .tint(.indigo)
+                        
+                        Button(role: .destructive) {
+                            viewStore.send(.delete(station))
+                        } label: {
+                            Image(systemName: "trash")
+                        }
+                        .tint(.red)
                     }
             }
             Button {
-                viewStore.send(.showCreateStation(true))
+                viewStore.send(.showCreateStation)
             } label: {
                 HStack {
                     Spacer()
                     Text("Add")
+                        .foregroundColor(.green)
                     Spacer()
                 }
             }
+        }
+        .task {
+            await viewStore.send(.playerBinding).finish()
         }
         .onAppear {
             viewStore.send(.onAppear)
         }
         .fullScreenCover(
             unwrapping: viewStore.binding(
-                get: \.createStation,
-                send: { .showCreateStation($0 != nil) }
-            )) {
-                viewStore.send(.showCreateStation(false))
-            } content: { value in
-                let store = self.store.scope { _ in
-                    value.wrappedValue
-                } action: { action in
-                    Stations.Action.createStation(action)
-                }
-                CreateStationView(store: store)
-            }
+                get: \.route,
+                send: Stations.Action.setRoute
+            ),
+            case: /Stations.State.Route.createStation
+        ) { $value in
+            let store = store.scope(
+                state: { _ in $value.wrappedValue },
+                action: { Stations.Action.routeAction(.createStation($0)) }
+            )
+            CreateStationView(store: store)
+        }
         .fullScreenCover(
             unwrapping: viewStore.binding(
-                get: \.editStation,
-                send: { .showEditStation($0?.editedStation) }
-            )) {
-                viewStore.send(.showEditStation(nil))
-            } content: { value in
-                let store = self.store.scope { _ in
-                    value.wrappedValue
-                } action: { action in
-                    Stations.Action.editStation(action)
-                }
-                EditStationView(store: store)
-            }
+                get: \.route,
+                send: Stations.Action.setRoute
+            ),
+            case: /Stations.State.Route.editStation
+        ) { $value in
+            let store = store.scope(
+                state: { _ in $value.wrappedValue },
+                action: { Stations.Action.routeAction(.editStation($0)) }
+            )
+            EditStationView(store: store)
+        }
     }
 }

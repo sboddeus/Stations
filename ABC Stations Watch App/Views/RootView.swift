@@ -1,24 +1,31 @@
 
 import SwiftUI
 import ComposableArchitecture
+import SwiftUINavigation
 import AVFoundation
 import WatchKit
 import WatchDEBUG
 
 struct Root: ReducerProtocol {
     struct State: Equatable {
-        enum Route: Int, Equatable {
+        enum Route: Equatable {
             case debug
-            case stations
             case nowPlaying
+            case menu(Menu.State)
         }
-        var route: Route
+        var route: Route?
         var stations: Stations.State
     }
     
     enum Action: Equatable {
-        case setRoute(State.Route)
+        case setRoute(State.Route?)
         case stations(Stations.Action)
+        case showMenu
+        
+        enum RouteAction: Equatable {
+            case menu(Menu.Action)
+        }
+        case routeAction(RouteAction)
     }
         
     var body: some ReducerProtocol<State, Action> {
@@ -30,11 +37,29 @@ struct Root: ReducerProtocol {
             case let .setRoute(route):
                 state.route = route
                 return .none
+            
             case .stations(.delegate(.selected)):
                 state.route = .nowPlaying
                 return .none
+            
+            case .showMenu:
+                state.route = .menu(.init())
+                return .none
+                
+            case .routeAction(.menu(.delegate(.tappedDebugMenu))):
+                state.route = .debug
+                return .none
+                
+            case .routeAction(.menu(.delegate(.tappedNowPlaying))):
+                state.route = .nowPlaying
+                return .none
+                
             default:
                 return .none
+            }
+        }.ifLet(\.route, action: /Action.routeAction) {
+            Scope(state: /State.Route.menu, action: /Action.RouteAction.menu) {
+                Menu()
             }
         }
     }
@@ -50,24 +75,76 @@ struct RootView: View {
     }
     
     var body: some View {
-        TabView(
-            selection: viewStore.binding(
-                get: \.route,
-                send: Root.Action.setRoute
-            )
-        ) {
-            DEBUG().tag(Root.State.Route.debug)
-
+        ZStack(alignment: .bottomTrailing) {
             StationsView(
                 store: self.store.scope(
                     state: \.stations,
                     action: Root.Action.stations
                 )
-            ).tag(Root.State.Route.stations)
-
-            NowPlayingView().tag(Root.State.Route.nowPlaying)
-
-        }.tabViewStyle(.page)
+            )
+            
+            Button {
+                viewStore.send(.showMenu)
+            } label: {
+                Image(systemName: "ellipsis")
+                    .foregroundColor(.indigo)
+            }
+            .backgroundStyle(.indigo)
+            .frame(width: 30, height: 30)
+            .clipShape(Circle())
+        }
+        .fullScreenCover(
+            unwrapping: viewStore.binding(
+                get: \.route,
+                send: Root.Action.setRoute
+            ),
+            case: /Root.State.Route.menu
+        ) { $value in
+            let store = store.scope(
+                state: { _ in $value.wrappedValue },
+                action: { Root.Action.routeAction(.menu($0)) }
+            )
+            MenuView(store: store)
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button(action: { viewStore.send(.setRoute(nil)) }) {
+                           Text("Close")
+                        }
+                    }
+                }
+        }
+        .fullScreenCover(
+            unwrapping: viewStore.binding(
+                get: \.route,
+                send: Root.Action.setRoute
+            ),
+            case: /Root.State.Route.nowPlaying
+        ) { _ in
+            NowPlayingView()
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button(action: { viewStore.send(.setRoute(nil)) }) {
+                           Text("Close")
+                        }
+                    }
+                }
+        }
+        .fullScreenCover(
+            unwrapping: viewStore.binding(
+                get: \.route,
+                send: Root.Action.setRoute
+            ),
+            case: /Root.State.Route.debug
+        ) { _ in
+            DEBUG()
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button(action: { viewStore.send(.setRoute(nil)) }) {
+                           Text("Close")
+                        }
+                    }
+                }
+        }
     }
 }
 

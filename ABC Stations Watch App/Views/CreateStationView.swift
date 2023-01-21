@@ -87,6 +87,7 @@ struct CreateStationView: View {
                     viewStore.send(.addStation)
                 } label: {
                     Text("Create")
+                        .foregroundColor(.indigo)
                 }.disabled(viewStore.url.isEmpty || viewStore.title.isEmpty)
             }
         }
