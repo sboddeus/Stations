@@ -3,12 +3,12 @@ import ComposableArchitecture
 
 struct EditStation: ReducerProtocol {
     struct State: Equatable {
-        let editedStation: RadioStation
+        let editedStation: Station
         var title: String = ""
         var url: String = ""
         var imageURL: String = ""
         
-        init(editedStation: RadioStation) {
+        init(editedStation: Station) {
             self.editedStation = editedStation
             self.title = editedStation.title
             self.url = editedStation.url.absoluteString

@@ -9,7 +9,7 @@ import Foundation
 
 let ABCStations = [news, tripleJ, classic, kids, bbc]
 
-let news = RadioStation(
+let news = Station(
     id: "ABC NEWS GLOBAL",
     title: "ABC News",
     description: "ABC News Broadcast",
@@ -17,7 +17,7 @@ let news = RadioStation(
     url: URL(string: "https://mediaserviceslive.akamaized.net/hls/live/2038311/newsradio/masterhq.m3u8")!
 )
 
-let tripleJ = RadioStation(
+let tripleJ = Station(
     id: "ABC TRIPLE J",
     title: "Triple J",
     description: "ABC Youth Station",
@@ -25,7 +25,7 @@ let tripleJ = RadioStation(
     url: URL(string: "https://mediaserviceslive.akamaized.net/hls/live/2038308/triplejnsw/masterlq.m3u8")!
 )
 
-let classic = RadioStation(
+let classic = Station(
     id: "ABC CLASSIC",
     title: "ABC Classic",
     description: "Classical music broadcast",
@@ -33,7 +33,7 @@ let classic = RadioStation(
     url: URL(string: "https://mediaserviceslive.akamaized.net/hls/live/2038316/classicfmnsw/masterhq.m3u8")!
 )
 
-let kids = RadioStation(
+let kids = Station(
     id: "ABC KIDS",
     title: "ABC Kids",
     description: "Kids music broadcast",
@@ -41,7 +41,7 @@ let kids = RadioStation(
     url: URL(string: "https://mediaserviceslive.akamaized.net/hls/live/2038321/abcextra/masterhq.m3u8")!
 )
 
-let bbc = RadioStation(
+let bbc = Station(
     id: "BBC WORLDWIDE",
     title: "BBC Worldwide",
     description: "BCC Wordwide Service",

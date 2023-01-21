@@ -15,9 +15,9 @@ enum PlayingError: Error {
 enum PlayingState {
     case initial
     case stopped(PlayingError?)
-    case playing(RadioStation, duration: CMTime, current: CMTime, rate: Float)
-    case paused(RadioStation)
-    case loading(RadioStation) // loading or buffering
+    case playing(Station, duration: CMTime, current: CMTime, rate: Float)
+    case paused(Station)
+    case loading(Station) // loading or buffering
 }
 
 let playerMessags = CurrentValueSubject<String, Never>("Initial")
@@ -160,9 +160,9 @@ final class AVAudioPlayer: NSObject {
     // MARK: - Accessing Player State
 
     let playingState = CurrentValueSubject<PlayingState, Never>(.initial)
-    let queueState = CurrentValueSubject<[RadioStation], Never>([])
+    let queueState = CurrentValueSubject<[Station], Never>([])
 
-    var currentItem: RadioStation? {
+    var currentItem: Station? {
         if let item = player.currentItem?.asset.playerItem { return item }
         if let item = player.items().first?.asset.playerItem { return item }
         if let item = itemQueue.queuedItems.first?.playerItem { return item }
@@ -203,7 +203,7 @@ final class AVAudioPlayer: NSObject {
     /// Starts playing the item passed immediately
     /// - Parameter item: A PlayerItem describing the resource to be played. A nil value is continues playing
     /// the currently played item if it was paused.
-    func play(_ item: RadioStation? = nil) {
+    func play(_ item: Station? = nil) {
         playerMessags.send("Audio Player: Request to play item")
         // Check if there is a new item to play, or if we are just toggling
         guard let item = item else {
@@ -262,7 +262,7 @@ final class AVAudioPlayer: NSObject {
 
     // MARK: Public Queue Items
 
-    func addQueue(items: [RadioStation]) {
+    func addQueue(items: [Station]) {
         // Filter out premium content if we are not premium
         // let items = items.filter { !($0.item.isPrem && !userIsPremium) }
 
@@ -275,7 +275,7 @@ final class AVAudioPlayer: NSObject {
     }
 
     /// Remove specififed items from queue
-    func removeFromQueue(items: [RadioStation]?) {
+    func removeFromQueue(items: [Station]?) {
 
         guard let items = items else {
             stop()
@@ -379,7 +379,7 @@ final class AVAudioPlayer: NSObject {
         playingState.send(.stopped(nil))
     }
 
-    private func allQueuedItems() -> [RadioStation] {
+    private func allQueuedItems() -> [Station] {
         player.items().dropFirst().compactMap(\.asset.playerItem) + itemQueue.queuedItems.compactMap(\.playerItem)
     }
 
@@ -604,9 +604,9 @@ import ObjectiveC
 private var associatedObjectHandle: UInt8 = 0
 
 extension AVAsset {
-    var playerItem: RadioStation? {
+    var playerItem: Station? {
         get {
-            objc_getAssociatedObject(self, &associatedObjectHandle) as? RadioStation
+            objc_getAssociatedObject(self, &associatedObjectHandle) as? Station
         }
         set {
             objc_setAssociatedObject(self, &associatedObjectHandle, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
@@ -615,7 +615,7 @@ extension AVAsset {
 }
 
 extension AVURLAsset {
-    convenience init(playerItem: RadioStation) {
+    convenience init(playerItem: Station) {
         self.init(url: playerItem.url)
         self.playerItem = playerItem
     }

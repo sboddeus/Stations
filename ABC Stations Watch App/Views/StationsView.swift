@@ -22,7 +22,7 @@ struct Stations: ReducerProtocol {
     
     enum Action: Equatable {
         enum Delegate: Equatable {
-            case selected(RadioStation)
+            case selected(Station)
         }
         case delegate(Delegate)
 
@@ -30,7 +30,7 @@ struct Stations: ReducerProtocol {
         case setRoute(State.Route?)
         case showCreateStation
         case onAppear
-        case loaded([RadioStation])
+        case loaded([Station])
         case playerBinding
 
         // Child Actions

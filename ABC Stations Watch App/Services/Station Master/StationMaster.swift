@@ -3,11 +3,11 @@ import Foundation
 
 actor StationMaster {
     
-    private var stationCache: [RadioStation]? = nil
+    private var stationCache: [Station]? = nil
     private var filesystem: FileSystem = .default
     private var stationFile: File? = nil
     
-    func add(station: RadioStation) async {
+    func add(station: Station) async {
         if stationCache == nil {
             _ = await getStations()
         }
@@ -26,7 +26,7 @@ actor StationMaster {
         await save()
     }
     
-    func update(station: RadioStation, to newStation: RadioStation) async {
+    func update(station: Station, to newStation: Station) async {
         if stationCache == nil {
             _ = await getStations()
         }
@@ -40,7 +40,7 @@ actor StationMaster {
         await save()
     }
     
-    func getStations() async -> [RadioStation] {
+    func getStations() async -> [Station] {
         guard let stations = stationCache else {
             if let stations = await load(),
                 !stations.isEmpty {
@@ -56,12 +56,12 @@ actor StationMaster {
         return stations
     }
     
-    private func load() async -> [RadioStation]? {
+    private func load() async -> [Station]? {
         if stationFile == nil {
             let dir = filesystem.directory(inBase: .documents, path: URL(string: "/stations")!)
             stationFile = try! await dir.file(name: "stations")
         }
-        return try? await stationFile!.retrieve(as: [RadioStation].self)
+        return try? await stationFile!.retrieve(as: [Station].self)
     }
     
     private func save() async {

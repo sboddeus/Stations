@@ -13,8 +13,8 @@ final class RadioMetadataEnricher: NSObject, AVPlayerItemMetadataOutputPushDeleg
     // returns a new radio station with the information
     // enriched with the collected metadata from a
     // streaming object
-    func enrich(radio: RadioStation) -> RadioStation {
-        RadioStation(
+    func enrich(radio: Station) -> Station {
+        Station(
             id: radio.id,
             title: radio.title,
             description: trackTitle ?? radio.description,

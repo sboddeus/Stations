@@ -5,7 +5,7 @@ import SDWebImageSwiftUI
 
 struct StationRow: ReducerProtocol {
     struct State: Equatable, Identifiable {
-        let station: RadioStation
+        let station: Station
         
         enum ActiveState: Equatable {
             case idle
