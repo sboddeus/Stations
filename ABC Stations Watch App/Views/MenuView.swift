@@ -45,6 +45,22 @@ struct MenuView: View {
             } label: {
                 Text("Debug")
             }
+            
+            Text("Version: \(Bundle.main.combinedVersionString)")
         }
+    }
+}
+
+// MARK: Helpers
+
+extension Bundle {
+    var releaseVersionNumber: String {
+        return infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
+    }
+    var buildVersionNumber: String {
+        return infoDictionary?["CFBundleVersion"] as? String ?? ""
+    }
+    var combinedVersionString: String {
+        return "\(releaseVersionNumber) (\(buildVersionNumber))"
     }
 }

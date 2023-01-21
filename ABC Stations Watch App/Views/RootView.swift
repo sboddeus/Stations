@@ -76,12 +76,16 @@ struct RootView: View {
     
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
-            StationsView(
-                store: self.store.scope(
-                    state: \.stations,
-                    action: Root.Action.stations
+            NavigationStack {
+                StationsView(
+                    store: self.store.scope(
+                        state: \.stations,
+                        action: Root.Action.stations
+                    )
                 )
-            )
+                .navigationTitle("Stations")
+                .navigationBarTitleDisplayMode(.inline)
+            }
             
             Button {
                 viewStore.send(.showMenu)
@@ -92,6 +96,8 @@ struct RootView: View {
             .backgroundStyle(.indigo)
             .frame(width: 30, height: 30)
             .clipShape(Circle())
+            .padding(.trailing, 5)
+            .offset(y: 10)
         }
         .fullScreenCover(
             unwrapping: viewStore.binding(

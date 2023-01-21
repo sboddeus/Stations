@@ -10,6 +10,7 @@
 		26149F7E297BA5C500D66622 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26149F7D297BA5C500D66622 /* MenuView.swift */; };
 		2619BDB329793F6A00C36485 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 2619BDB229793F6A00C36485 /* SDWebImageSwiftUI */; };
 		2619BDB529794AE900C36485 /* EditStationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2619BDB429794AE900C36485 /* EditStationView.swift */; };
+		265295B3297BEEF8008232A6 /* StationRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 265295B2297BEEF8008232A6 /* StationRowView.swift */; };
 		26560A1F296BCC8B00B7566F /* ABC_StationsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26560A1E296BCC8B00B7566F /* ABC_StationsApp.swift */; };
 		26560A21296BCC8B00B7566F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26560A20296BCC8B00B7566F /* ContentView.swift */; };
 		26560A23296BCC8C00B7566F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 26560A22296BCC8C00B7566F /* Assets.xcassets */; };
@@ -65,6 +66,7 @@
 /* Begin PBXFileReference section */
 		26149F7D297BA5C500D66622 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		2619BDB429794AE900C36485 /* EditStationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditStationView.swift; sourceTree = "<group>"; };
+		265295B2297BEEF8008232A6 /* StationRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationRowView.swift; sourceTree = "<group>"; };
 		26560A1C296BCC8B00B7566F /* ABC Stations.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ABC Stations.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		26560A1E296BCC8B00B7566F /* ABC_StationsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ABC_StationsApp.swift; sourceTree = "<group>"; };
 		26560A20296BCC8B00B7566F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -249,6 +251,7 @@
 				269FF1DD2973542F0087615B /* CreateStationView.swift */,
 				2619BDB429794AE900C36485 /* EditStationView.swift */,
 				26149F7D297BA5C500D66622 /* MenuView.swift */,
+				265295B2297BEEF8008232A6 /* StationRowView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -400,6 +403,7 @@
 				26CFB894296907BE0028EC29 /* MediaMetaDataEnrichment.swift in Sources */,
 				26BA230929734E5F0033793F /* Helpers.swift in Sources */,
 				26149F7E297BA5C500D66622 /* MenuView.swift in Sources */,
+				265295B3297BEEF8008232A6 /* StationRowView.swift in Sources */,
 				269FF1DE2973542F0087615B /* CreateStationView.swift in Sources */,
 				26CFB89A296940D10028EC29 /* RootView.swift in Sources */,
 				26CFB89D296942720028EC29 /* StationsView.swift in Sources */,
