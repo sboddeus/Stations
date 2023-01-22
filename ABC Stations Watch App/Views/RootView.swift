@@ -14,13 +14,17 @@ struct Root: ReducerProtocol {
             case menu(Menu.State)
         }
         var route: Route?
-        var stations: Stations.State
+        
+        var stations: Stations.State?
+        var hasAppearedOnce: Bool = false
     }
     
     enum Action: Equatable {
         case setRoute(State.Route?)
         case stations(Stations.Action)
         case showMenu
+        case onAppear
+        case setStationsState(Stations.State)
         
         enum RouteAction: Equatable {
             case menu(Menu.Action)
@@ -28,12 +32,26 @@ struct Root: ReducerProtocol {
         case routeAction(RouteAction)
     }
         
+    @Dependency(\.stationMaster) var stationMaster
+    
     var body: some ReducerProtocol<State, Action> {
-        Scope(state: \.stations, action: /Action.stations) {
-            Stations()
-        }
         Reduce { state, action in
             switch action {
+            case .onAppear:
+                guard !state.hasAppearedOnce else {
+                    return .none
+                }
+                state.hasAppearedOnce = true
+                return .task {
+                    await stationMaster.constructInitialSystemIfNeeded()
+                    let rootDir = await stationMaster.rootDirectory
+                    return .setStationsState(Stations.State(rootDirectory: rootDir))
+                }
+                
+            case let .setStationsState(stations):
+                state.stations = stations
+                return .none
+                
             case let .setRoute(route):
                 state.route = route
                 return .none
@@ -57,10 +75,14 @@ struct Root: ReducerProtocol {
             default:
                 return .none
             }
-        }.ifLet(\.route, action: /Action.routeAction) {
+        }
+        .ifLet(\.route, action: /Action.routeAction) {
             Scope(state: /State.Route.menu, action: /Action.RouteAction.menu) {
                 Menu()
             }
+        }
+        .ifLet(\.stations, action: /Action.stations) {
+            Stations()
         }
     }
 }
@@ -77,12 +99,16 @@ struct RootView: View {
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
             NavigationStack {
-                StationsView(
-                    store: self.store.scope(
+                IfLetStore(
+                    self.store.scope(
                         state: \.stations,
                         action: Root.Action.stations
                     )
-                )
+                ) { store in
+                    StationsView(store: store)
+                } else: {
+                    ProgressView()
+                }
                 .navigationTitle("Stations")
                 .navigationBarTitleDisplayMode(.inline)
             }

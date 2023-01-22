@@ -7,15 +7,20 @@ import SDWebImageSwiftUI
 
 struct Stations: ReducerProtocol {
     struct State: Equatable {
-        var stations: IdentifiedArrayOf<StationRow.State> = .init(
-            uniqueElements: ABCStations.map {
-                StationRow.State(station: $0, activeState: .unselected)
-            }
-        )
+        var rootDirectory: Directory
         
-        enum Route: Equatable {
+        init(rootDirectory: Directory) {
+            self.rootDirectory = rootDirectory
+        }
+        
+        var isLoading = true
+        var stations: IdentifiedArrayOf<StationRow.State> = []
+        var directories: IdentifiedArrayOf<DirectoryRow.State> = []
+        
+        indirect enum Route: Equatable {
             case createStation(CreateStation.State)
             case editStation(EditStation.State)
+            case subDirectory(Stations.State)
         }
         var route: Route?
     }
@@ -59,9 +64,9 @@ struct Stations: ReducerProtocol {
                         try Task.checkCancellation()
                         switch value {
                         case let .loading(station), let .paused(station):
-                            await send.send(.station(id: station.id, action: .setActiveState(.idle)))
+                            await send.send(.station(id: station.id.uuidString, action: .setActiveState(.idle)))
                         case let .playing(station, _, _ ,_):
-                            await send.send(.station(id: station.id, action: .setActiveState(.isPlaying)))
+                            await send.send(.station(id: station.id.uuidString, action: .setActiveState(.isPlaying)))
                         default:
                             for station in stations {
                                 await send.send(.station(id: station.id, action: .setActiveState(.unselected)))
@@ -87,7 +92,7 @@ struct Stations: ReducerProtocol {
             case let .station(id, action: .delegate(.delete)):
                 return .task {
                     // Stop playing the station if it is playing
-                    if player.currentItem?.id == id {
+                    if player.currentItem?.id.uuidString == id {
                         player.stop()
                     }
                     
@@ -239,5 +244,13 @@ struct StationsView: View {
             EditStationView(store: store)
                 .interactiveDismissDisabled()
         }
+    }
+}
+
+// MARK: - Helper
+
+extension Directory: Equatable {
+    public static func == (lhs: Directory, rhs: Directory) -> Bool {
+        lhs.path == rhs.path
     }
 }

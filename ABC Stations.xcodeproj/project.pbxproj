@@ -11,6 +11,7 @@
 		2619BDB329793F6A00C36485 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 2619BDB229793F6A00C36485 /* SDWebImageSwiftUI */; };
 		2619BDB529794AE900C36485 /* EditStationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2619BDB429794AE900C36485 /* EditStationView.swift */; };
 		265295B3297BEEF8008232A6 /* StationRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 265295B2297BEEF8008232A6 /* StationRowView.swift */; };
+		265295B5297D316C008232A6 /* DirectoryRowVIew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 265295B4297D316C008232A6 /* DirectoryRowVIew.swift */; };
 		26560A1F296BCC8B00B7566F /* ABC_StationsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26560A1E296BCC8B00B7566F /* ABC_StationsApp.swift */; };
 		26560A21296BCC8B00B7566F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26560A20296BCC8B00B7566F /* ContentView.swift */; };
 		26560A23296BCC8C00B7566F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 26560A22296BCC8C00B7566F /* Assets.xcassets */; };
@@ -67,6 +68,7 @@
 		26149F7D297BA5C500D66622 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		2619BDB429794AE900C36485 /* EditStationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditStationView.swift; sourceTree = "<group>"; };
 		265295B2297BEEF8008232A6 /* StationRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationRowView.swift; sourceTree = "<group>"; };
+		265295B4297D316C008232A6 /* DirectoryRowVIew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectoryRowVIew.swift; sourceTree = "<group>"; };
 		26560A1C296BCC8B00B7566F /* ABC Stations.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ABC Stations.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		26560A1E296BCC8B00B7566F /* ABC_StationsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ABC_StationsApp.swift; sourceTree = "<group>"; };
 		26560A20296BCC8B00B7566F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -252,6 +254,7 @@
 				2619BDB429794AE900C36485 /* EditStationView.swift */,
 				26149F7D297BA5C500D66622 /* MenuView.swift */,
 				265295B2297BEEF8008232A6 /* StationRowView.swift */,
+				265295B4297D316C008232A6 /* DirectoryRowVIew.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -395,6 +398,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				265295B5297D316C008232A6 /* DirectoryRowVIew.swift in Sources */,
 				269FF1E72974A7FC0087615B /* StationMaster.swift in Sources */,
 				26CFB88E296906AA0028EC29 /* Player.swift in Sources */,
 				26BA230B29734E5F0033793F /* File.swift in Sources */,

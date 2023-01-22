@@ -3,76 +3,70 @@ import Foundation
 
 actor StationMaster {
     
-    private var stationCache: [Station]? = nil
     private var filesystem: FileSystem = .default
-    private var stationFile: File? = nil
+    private var defaults: UserDefaults = .standard
+    private var rootPath = URL(string: "/stations")!
     
-    func add(station: Station) async {
-        if stationCache == nil {
-            _ = await getStations()
-        }
-        
-        stationCache?.append(station)
-        
-        await save()
+    var rootDirectory: Directory {
+        filesystem.directory(
+            inBase: .documents,
+            path: rootPath
+        )
     }
     
-    func remove(stationId: String) async {
-        if stationCache == nil {
-            _ = await getStations()
+    func constructInitialSystemIfNeeded() async {
+        let initialConstructionKey = "fs.version.0";
+        guard !defaults.bool(forKey: initialConstructionKey) else {
+            // Our work is done
+            return
         }
-        stationCache?.removeAll(where: { $0.id == stationId })
         
-        await save()
+        // Version 0 of the initial folders
+        let dir = rootDirectory
+        try? await dir.remove()
+        
+        // Australian
+        let aus = await dir.directory(path: URL(string: "Australia")!)
+        let abc = await aus.directory(path: URL(string: "ABC")!)
+        try? await abc.file(name: tripleJ.id.uuidString).save(tripleJ)
+        try? await abc.file(name: news.id.uuidString).save(news)
+        try? await abc.file(name: classic.id.uuidString).save(classic)
+        try? await abc.file(name: kids.id.uuidString).save(kids)
+        
+        // UK
+        let uk = await dir.directory(path: URL(string: "UK")!)
+        let bbc = await uk.directory(path: URL(string: "BBC")!)
+        try? await bbc.file(name: bbcWorldwide.id.uuidString).save(bbcWorldwide)
+        
+        // Finally, update user defaults
+        defaults.set(true, forKey: initialConstructionKey)
     }
-    
-    func update(station: Station, to newStation: Station) async {
-        if stationCache == nil {
-            _ = await getStations()
+}
+
+extension Directory {
+    func getAllStations() async -> [Station] {
+        guard let files = try? await retrieveAllFiles() else {
+            return []
         }
         
-        stationCache?.removeAll(where: { cached in
-            cached.id == station.id
-        })
+        let nilStations = await files.asyncMap {
+            try? await $0.retrieve(as: Station.self)
+        }
         
-        stationCache?.append(newStation)
-        
-        await save()
+        return nilStations.compactMap { $0 }
     }
-    
-    func getStations() async -> [Station] {
-        guard let stations = stationCache else {
-            if let stations = await load(),
-                !stations.isEmpty {
-                stationCache = stations
-                return stations
-            } else {
-                stationCache = ABCStations
-                await save()
-                return ABCStations
-            }
+}
+
+extension Sequence {
+    func asyncMap<T>(
+        _ transform: (Element) async throws -> T
+    ) async rethrows -> [T] {
+        var values = [T]()
+
+        for element in self {
+            try await values.append(transform(element))
         }
-        
-        return stations
-    }
-    
-    private func load() async -> [Station]? {
-        if stationFile == nil {
-            let dir = filesystem.directory(inBase: .documents, path: URL(string: "/stations")!)
-            stationFile = try! await dir.file(name: "stations")
-        }
-        return try? await stationFile!.retrieve(as: [Station].self)
-    }
-    
-    private func save() async {
-        if let stationCache {
-            
-            if stationFile == nil {
-                let dir = filesystem.directory(inBase: .documents, path: URL(string: "/stations")!)
-                stationFile = try! await dir.file(name: "stations")
-            }
-            
-            try? await stationFile!.save(stationCache)
-        }
+
+        return values
     }
 }

@@ -15,7 +15,7 @@ struct StationRow: ReducerProtocol {
         var activeState: ActiveState
         
         var id: String {
-            station.id
+            station.id.uuidString
         }
     }
     

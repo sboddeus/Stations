@@ -29,7 +29,15 @@ public actor Directory {
     }
 
     let baseDirectory: BaseDirectory
+    
+    nonisolated
     let path: URL
+    
+    nonisolated
+    var name: String {
+        path.lastPathComponent
+    }
+    
     let fileSystem: FileSystem
     
     init(baseDirectory: BaseDirectory, path: URL, fileSystem: FileSystem) {
