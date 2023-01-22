@@ -23,6 +23,7 @@ struct Stations: ReducerProtocol {
             case createDirectory(CreateDirectory.State)
             case editDirectory(EditDirectory.State)
             case subDirectory(Stations.State)
+            case editMenu(EditMenu.State)
         }
         var route: Route?
     }
@@ -35,8 +36,7 @@ struct Stations: ReducerProtocol {
 
         // Internal actions
         case setRoute(State.Route?)
-        case showCreateStation
-        case showCreateDirectory
+        case showEditOptions
         case onAppear
         case loadedStations([Station])
         case loadedSubDirectories([Directory])
@@ -48,6 +48,7 @@ struct Stations: ReducerProtocol {
             case subDirectory(Stations.Action)
             case editDirectory(EditDirectory.Action)
             case createDirectory(CreateDirectory.Action)
+            case editMenu(EditMenu.Action)
         }
         case routeAction(RouteAction)
         
@@ -62,24 +63,12 @@ struct Stations: ReducerProtocol {
         Reduce { state, action in
             switch action {
                 
+            case .showEditOptions:
+                state.route = .editMenu(.init())
+                return .none
+                
             case let .setRoute(route):
                 state.route = route
-                return .none
-                
-            case .showCreateStation:
-                state.route = .createStation(
-                    .init(
-                        containingDirectory: state.rootDirectory
-                    )
-                )
-                return .none
-                
-            case .showCreateDirectory:
-                state.route = .createDirectory(
-                    .init(
-                        containingDirectory: state.rootDirectory
-                    )
-                )
                 return .none
                 
             case let .station(id, action: .delegate(.edit)):
@@ -157,6 +146,22 @@ struct Stations: ReducerProtocol {
                     uniqueElements: directories.map {
                         .init(directory: $0)
                     }
+                )
+                return .none
+        
+            case .routeAction(.editMenu(.delegate(.addFolder))):
+                state.route = .createDirectory(
+                    .init(
+                        containingDirectory: state.rootDirectory
+                    )
+                )
+                return .none
+                
+            case .routeAction(.editMenu(.delegate(.addStation))):
+                state.route = .createStation(
+                    .init(
+                        containingDirectory: state.rootDirectory
+                    )
                 )
                 return .none
                 
@@ -240,6 +245,11 @@ struct Stations: ReducerProtocol {
             Stations()
         }
     }
+    private var editMenu: some ReducerProtocol<Stations.State.Route, Stations.Action.RouteAction> {
+        Scope(state: /State.Route.editMenu, action: /Action.RouteAction.editMenu) {
+            EditMenu()
+        }
+    }
     
     var body: some ReducerProtocol<State, Action> {
         core
@@ -269,61 +279,37 @@ struct StationsView: View {
     }
     
     var body: some View {
-        ScrollView {
-            VStack {
-                ForEachStore(
-                    store.scope(
-                        state: \.stations,
-                        action: Stations.Action.station(id:action:))
-                ) { store in
-                    StationRowView(store: store)
-                }
-                
-                ForEachStore(
-                    store.scope(
-                        state: \.directories,
-                        action: Stations.Action.directory(id:action:)
-                    )
-                ) { store in
-                    DirectoryRowView(store: store)
-                }
-                HStack {
-                    Button {
-                        viewStore.send(.showCreateStation)
-                    } label: {
-                        HStack {
-                            Spacer()
-                            Image(systemName: "plus")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 10, height: 10)
-                                .foregroundColor(.green)
-                            Image(systemName: "radio.fill")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 20, height: 20)
-                                .foregroundColor(.green)
-                            Spacer()
-                        }
-                    }
-                    
-                    Button {
-                        viewStore.send(.showCreateDirectory)
-                    } label: {
-                        HStack {
-                            Spacer()
-                            Image(systemName: "plus")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 10, height: 10)
-                                .foregroundColor(.green)
-                            Image(systemName: "folder.fill")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 20, height: 20)
-                                .foregroundColor(.green)
-                            Spacer()
-                        }
+        List {
+            ForEachStore(
+                store.scope(
+                    state: \.stations,
+                    action: Stations.Action.station(id:action:))
+            ) { store in
+                StationRowView(store: store)
+            }
+            
+            ForEachStore(
+                store.scope(
+                    state: \.directories,
+                    action: Stations.Action.directory(id:action:)
+                )
+            ) { store in
+                DirectoryRowView(store: store)
+            }
+            Section {
+                Button {
+                    viewStore.send(.showEditOptions)
+                } label: {
+                    HStack {
+                        Spacer()
+                        Image(systemName: "plus")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 10, height: 10)
+                            .foregroundColor(.green)
+                        Text("Add")
+                            .foregroundColor(.green)
+                        Spacer()
                     }
                 }
             }
@@ -347,6 +333,19 @@ struct StationsView: View {
                 StationsView(store: store)
             }
         )
+        .fullScreenCover(
+            unwrapping: viewStore.binding(
+                get: \.route,
+                send: Stations.Action.setRoute
+            ),
+            case: /Stations.State.Route.editMenu
+        ) { $value in
+            let store = store.scope(
+                state: { _ in $value.wrappedValue },
+                action: { Stations.Action.routeAction(.editMenu($0)) }
+            )
+            EditMenuView(store: store)
+        }
         .fullScreenCover(
             unwrapping: viewStore.binding(
                 get: \.route,
