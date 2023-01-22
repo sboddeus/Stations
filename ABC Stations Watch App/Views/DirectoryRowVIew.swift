@@ -15,6 +15,8 @@ struct DirectoryRow: ReducerProtocol {
     enum Action: Equatable {
         enum Delegate: Equatable {
             case selected
+            case edit
+            case delete
         }
         case delegate(Delegate)
     }
@@ -40,6 +42,21 @@ struct DirectoryRowView: View {
             viewStore.send(.delegate(.selected))
         } label: {
             Text(viewStore.directory.name)
+        }
+        .swipeActions(edge: .trailing) {
+            Button {
+                viewStore.send(.delegate(.edit))
+            } label: {
+                Image(systemName: "pencil")
+            }
+            .tint(.indigo)
+
+            Button(role: .destructive) {
+                viewStore.send(.delegate(.delete))
+            } label: {
+                Image(systemName: "trash")
+            }
+            .tint(.red)
         }
     }
 }

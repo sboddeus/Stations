@@ -17,9 +17,11 @@ struct ABC_Stations_Watch_AppApp: App {
     
     var body: some Scene {
         WindowGroup {
-            RootView(store: .init(
-                initialState: .init(route: nil, stations: .init()),
-                reducer: Root())
+            RootView(
+                store: .init(
+                    initialState: .init(),
+                    reducer: Root()
+                )
             )
         }
     }

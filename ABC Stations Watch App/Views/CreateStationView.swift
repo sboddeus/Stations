@@ -4,6 +4,7 @@ import ComposableArchitecture
 
 struct CreateStation: ReducerProtocol {
     struct State: Equatable {
+        let containingDirectory: Directory
         var title: String = ""
         var url: String = ""
         var imageURL: String = ""
@@ -20,9 +21,7 @@ struct CreateStation: ReducerProtocol {
         }
         case delegate(Delegate)
     }
-    
-    @Dependency(\.stationMaster) var stationMaster
-    
+        
     var body: some ReducerProtocol<State, Action> {
         Reduce { state, action in
             switch action {
@@ -41,16 +40,19 @@ struct CreateStation: ReducerProtocol {
             case .addStation:
                 return .task { [state] in
                     
-                    await stationMaster.add(
-                        station: .init(
-                            id: state.title,
-                            title: state.title,
-                            description: "",
-                            // TODO: These URLs have to be checked properly
-                            imageURL: URL(string: state.imageURL),
-                            url: URL(string: state.url)!
-                        )
+                    let station = Station(
+                       id: UUID(),
+                       title: state.title,
+                       description: "",
+                       // TODO: These URLs have to be checked properly
+                       imageURL: URL(string: state.imageURL),
+                       url: URL(string: state.url)!
                     )
+                   
+                    let file = try await state.containingDirectory.file(
+                        name: station.id.uuidString
+                    )
+                    try await file.save(station)
                     
                     return .delegate(.stationAdded)
                 }

@@ -109,8 +109,6 @@ struct RootView: View {
                 } else: {
                     ProgressView()
                 }
-                .navigationTitle("Stations")
-                .navigationBarTitleDisplayMode(.inline)
             }
             
             Button {
@@ -124,6 +122,9 @@ struct RootView: View {
             .clipShape(Circle())
             .padding(.trailing, 5)
             .offset(y: 10)
+        }
+        .onAppear {
+            viewStore.send(.onAppear)
         }
         .fullScreenCover(
             unwrapping: viewStore.binding(

@@ -4,12 +4,17 @@ import ComposableArchitecture
 struct EditStation: ReducerProtocol {
     struct State: Equatable {
         let editedStation: Station
+        let containingDirectory: Directory
         var title: String = ""
         var url: String = ""
         var imageURL: String = ""
         
-        init(editedStation: Station) {
+        init(
+            editedStation: Station,
+            containingDirectory: Directory
+        ) {
             self.editedStation = editedStation
+            self.containingDirectory = containingDirectory
             self.title = editedStation.title
             self.url = editedStation.url.absoluteString
             self.imageURL = editedStation.imageURL?.absoluteString ?? ""
@@ -27,9 +32,7 @@ struct EditStation: ReducerProtocol {
         }
         case delegate(Delegate)
     }
-    
-    @Dependency(\.stationMaster) var stationMaster
-    
+        
     var body: some ReducerProtocol<State, Action> {
         Reduce { state, action in
             switch action {
@@ -48,17 +51,19 @@ struct EditStation: ReducerProtocol {
             case .addStation:
                 return .task { [state] in
                     
-                    await stationMaster.update(
-                        station: state.editedStation,
-                        to: .init(
-                            id: state.editedStation.id,
-                            title: state.title,
-                            description: "",
-                            // TODO: These URLs have to be checked properly
-                            imageURL: URL(string: state.imageURL),
-                            url: URL(string: state.url)!
-                        )
+                    let station = Station(
+                        id: state.editedStation.id,
+                        title: state.title,
+                        description: "",
+                        // TODO: These URLs have to be checked properly
+                        imageURL: URL(string: state.imageURL),
+                        url: URL(string: state.url)!
                     )
+                    
+                    let file = try await state.containingDirectory.file(
+                        name: station.id.uuidString
+                    )
+                    try await file.save(station)
                     
                     return .delegate(.stationEdited)
                 }

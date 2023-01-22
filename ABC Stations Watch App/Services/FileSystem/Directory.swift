@@ -86,12 +86,23 @@ public extension Directory {
     
     // In the future this should invalidate files
     /// Remove the Directory from the underlying OS File System
-    func remove() async throws  {
+    func remove() async throws {
         try await fileSystem.remove(self)
+    }
+    
+    /// Rename the current directory to the given name
+    func rename(to: String) async throws -> Directory {
+        try await fileSystem.rename(directory: self, to: to)
     }
     
     /// Returns a bool indicating if the Directory exists in the underlying OS File System.
     func exists() async -> Bool {
         await fileSystem.exists(self)
+    }
+}
+
+extension Directory: Equatable {
+    public static func == (lhs: Directory, rhs: Directory) -> Bool {
+        lhs.path == rhs.path
     }
 }
