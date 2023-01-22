@@ -15,7 +15,7 @@ struct EditDirectory: ReducerProtocol {
     
     enum Action: Equatable {
         case setTitle(String)
-        case addDirectory
+        case editDirectory
         
         enum Delegate: Equatable {
             case directoryEdited(Directory)
@@ -30,7 +30,7 @@ struct EditDirectory: ReducerProtocol {
                 state.title = title
                 return .none
                 
-            case .addDirectory:
+            case .editDirectory:
                 return .task { [state] in
                     let dir = try await state.editedDirectory
                         .rename(
@@ -69,7 +69,7 @@ struct EditDirectoryView: View {
                 .disableAutocorrection(true)
                 
                 Button {
-                    viewStore.send(.addDirectory)
+                    viewStore.send(.editDirectory)
                 } label: {
                     Text("Update")
                         .foregroundColor(.indigo)

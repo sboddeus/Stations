@@ -207,10 +207,11 @@ extension FileSystem {
     
     /// Renames a given directory to the given name
     nonisolated func rename(directory: Directory, to: String) async throws -> Directory {
-        let original = directory.path
-        let new = directory.path
+        let original = try await directory.url(fileManager: fileManager)
+        let new = original
             .deletingLastPathComponent()
             .appending(path: to)
+        
         try fileManager.moveItem(at: original, to: new)
         
         return Directory(

@@ -20,6 +20,17 @@ enum PlayingState {
     case loading(Station) // loading or buffering
 }
 
+extension PlayingState {
+    var stationId: UUID? {
+        switch self {
+        case  let .playing(station, _, _, _), let .paused(station), let .loading(station):
+            return station.id
+        case .initial, .stopped:
+            return nil
+        }
+    }
+}
+
 let playerMessags = CurrentValueSubject<String, Never>("Initial")
 
 /*

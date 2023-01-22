@@ -47,10 +47,3 @@ let bbcWorldwide = Station(
     imageURL: URL(string: "https://brandslogos.com/wp-content/uploads/images/large/bbc-logo-1.png")!,
     url: URL(string: "https://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/nonuk/sbr_low/ak/bbc_world_service.m3u8")!
 )
-
-// Initial groups
-//let ABC = Group(id: UUID(), name: "ABC", children: [.station(news), .station(tripleJ), .station(classic), .station(kids)])
-//let BBC = Group(id: UUID(), name: "BBC", children: [.station(bbc)])
-//let Australia = Group(id: UUID(), name: "Australia", children: [.group(ABC)])
-//let UK = Group(id: UUID(), name: "UK", children: [.group(BBC)])
-//let root = Group(id: UUID(), name: "root", children: [.group(UK), .group(Australia)])

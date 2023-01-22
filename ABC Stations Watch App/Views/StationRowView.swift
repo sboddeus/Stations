@@ -30,6 +30,8 @@ struct StationRow: ReducerProtocol {
         case play
         case pause
         
+        case playerBinding
+        
         case setActiveState(State.ActiveState)
     }
     
@@ -51,6 +53,29 @@ struct StationRow: ReducerProtocol {
                 }
             case .delegate:
                 return .none
+                
+            case .playerBinding:
+                let stationId = state.station.id
+                struct PlayerBindingID {}
+                return .run { send in
+                    for await value in player.playingState.values {
+                        try Task.checkCancellation()
+                        
+                        guard value.stationId == stationId else {
+                            await send.send(.setActiveState(.unselected))
+                            continue
+                        }
+                        
+                        switch value {
+                        case .loading, .paused:
+                            await send.send(.setActiveState(.idle))
+                        case .playing:
+                            await send.send(.setActiveState(.isPlaying))
+                        case .initial, .stopped:
+                            await send.send(.setActiveState(.unselected))
+                        }
+                    }
+                }.cancellable(id: PlayerBindingID.self)
             }
         }
     }
@@ -104,6 +129,9 @@ struct StationRowView: View {
                     }
                 }
             }
+        }
+        .task {
+            await viewStore.send(.playerBinding).finish()
         }
         .swipeActions(edge: .trailing) {
             Button {

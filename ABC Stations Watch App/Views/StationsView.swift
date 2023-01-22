@@ -40,7 +40,6 @@ struct Stations: ReducerProtocol {
         case onAppear
         case loadedStations([Station])
         case loadedSubDirectories([Directory])
-        case playerBinding
 
         // Child Actions
         indirect enum RouteAction: Equatable {
@@ -59,29 +58,9 @@ struct Stations: ReducerProtocol {
     @Dependency(\.player) var player
     @Dependency(\.stationMaster) var stationMaster
     
-    var core: some ReducerProtocol<State, Action> {
+    private var core: some ReducerProtocol<State, Action> {
         Reduce { state, action in
             switch action {
-            // NOTE: Do player binding at this level in the hopes of being more efficient
-            // then doing it at the row level
-            case .playerBinding:
-                let stations = state.stations
-                struct PlayerBindingID {}
-                return .run { send in
-                    for await value in player.playingState.values {
-                        try Task.checkCancellation()
-                        switch value {
-                        case let .loading(station), let .paused(station):
-                            await send.send(.station(id: station.id.uuidString, action: .setActiveState(.idle)))
-                        case let .playing(station, _, _ ,_):
-                            await send.send(.station(id: station.id.uuidString, action: .setActiveState(.isPlaying)))
-                        default:
-                            for station in stations {
-                                await send.send(.station(id: station.id, action: .setActiveState(.unselected)))
-                            }
-                        }
-                    }
-                }.cancellable(id: PlayerBindingID.self, cancelInFlight: true)
                 
             case let .setRoute(route):
                 state.route = route
@@ -153,6 +132,7 @@ struct Stations: ReducerProtocol {
                 return .none
                 
             case .onAppear:
+                struct OnAppearID {}
                 return .run { [directory = state.rootDirectory] send in
                     let stations = await directory.getAllStations()
                     
@@ -161,7 +141,7 @@ struct Stations: ReducerProtocol {
                     let directories = (try? await directory.retrieveAllSubDirectories()) ?? []
                     
                     await send(.loadedSubDirectories(directories))
-                }
+                }.cancellable(id: OnAppearID.self, cancelInFlight: true)
                 
             case let .loadedStations(stations):
                 state.stations = .init(
@@ -189,8 +169,7 @@ struct Stations: ReducerProtocol {
                 state.route = nil
                 return Effect(value: .onAppear)
                 
-            case let .routeAction(.editDirectory(.delegate(.directoryEdited(dir)))):
-                state.rootDirectory = dir
+            case .routeAction(.editDirectory(.delegate(.directoryEdited))):
                 state.route = nil
                 return Effect(value: .onAppear)
 
@@ -198,6 +177,10 @@ struct Stations: ReducerProtocol {
                 state.route = nil
                 return Effect(value: .onAppear)
 
+            case let .routeAction(.subDirectory(.delegate(.selected(station)))):
+                // Propogate selected station
+                return Effect(value: .delegate(.selected(station)))
+                
             case .routeAction:
                 return .none
                 
@@ -232,6 +215,32 @@ struct Stations: ReducerProtocol {
         }
     }
     
+    private var createStation: some ReducerProtocol<Stations.State.Route, Stations.Action.RouteAction> {
+        Scope(state: /State.Route.createStation, action: /Action.RouteAction.createStation) {
+            CreateStation()
+        }
+    }
+    private var editStation: some ReducerProtocol<Stations.State.Route, Stations.Action.RouteAction> {
+        Scope(state: /State.Route.editStation, action: /Action.RouteAction.editStation) {
+            EditStation()
+        }
+    }
+    private var createDirectory: some ReducerProtocol<Stations.State.Route, Stations.Action.RouteAction> {
+        Scope(state: /State.Route.createDirectory, action: /Action.RouteAction.createDirectory) {
+            CreateDirectory()
+        }
+    }
+    private var editDirectory: some ReducerProtocol<Stations.State.Route, Stations.Action.RouteAction> {
+        Scope(state: /State.Route.editDirectory, action: /Action.RouteAction.editDirectory) {
+            EditDirectory()
+        }
+    }
+    private var subDirectory: some ReducerProtocol<Stations.State.Route, Stations.Action.RouteAction> {
+        Scope(state: /State.Route.subDirectory, action: /Action.RouteAction.subDirectory) {
+            Stations()
+        }
+    }
+    
     var body: some ReducerProtocol<State, Action> {
         core
         .forEach(\.stations, action: /Action.station) {
@@ -241,21 +250,11 @@ struct Stations: ReducerProtocol {
             DirectoryRow()
         }
         .ifLet(\.route, action: /Action.routeAction) {
-            Scope(state: /State.Route.createStation, action: /Action.RouteAction.createStation) {
-                CreateStation()
-            }
-            Scope(state: /State.Route.editStation, action: /Action.RouteAction.editStation) {
-                EditStation()
-            }
-            Scope(state: /State.Route.createDirectory, action: /Action.RouteAction.createDirectory) {
-                CreateDirectory()
-            }
-            Scope(state: /State.Route.editDirectory, action: /Action.RouteAction.editDirectory) {
-                EditDirectory()
-            }
-            Scope(state: /State.Route.subDirectory, action: /Action.RouteAction.subDirectory) {
-                Stations()
-            }
+            createStation
+            editStation
+            createDirectory
+            editDirectory
+            subDirectory
         }
     }
 }
@@ -270,67 +269,67 @@ struct StationsView: View {
     }
     
     var body: some View {
-        List {
-            ForEachStore(
-                store.scope(
-                    state: \.stations,
-                    action: Stations.Action.station(id:action:))
-            ) { store in
-                StationRowView(store: store)
-            }
-            
-            ForEachStore(
-                store.scope(
-                    state: \.directories,
-                    action: Stations.Action.directory(id:action:)
-                )
-            ) { store in
-                DirectoryRowView(store: store)
-            }
-            
-            Button {
-                viewStore.send(.showCreateStation)
-            } label: {
-                HStack {
-                    Spacer()
-                    Image(systemName: "plus")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 10, height: 10)
-                        .foregroundColor(.green)
-                    Image(systemName: "radio.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 20, height: 20)
-                        .foregroundColor(.green)
-                    Spacer()
+        ScrollView {
+            VStack {
+                ForEachStore(
+                    store.scope(
+                        state: \.stations,
+                        action: Stations.Action.station(id:action:))
+                ) { store in
+                    StationRowView(store: store)
                 }
-            }
-            
-            Button {
-                viewStore.send(.showCreateDirectory)
-            } label: {
+                
+                ForEachStore(
+                    store.scope(
+                        state: \.directories,
+                        action: Stations.Action.directory(id:action:)
+                    )
+                ) { store in
+                    DirectoryRowView(store: store)
+                }
                 HStack {
-                    Spacer()
-                    Image(systemName: "plus")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 10, height: 10)
-                        .foregroundColor(.green)
-                    Image(systemName: "folder.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 20, height: 20)
-                        .foregroundColor(.green)
-                    Spacer()
+                    Button {
+                        viewStore.send(.showCreateStation)
+                    } label: {
+                        HStack {
+                            Spacer()
+                            Image(systemName: "plus")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 10, height: 10)
+                                .foregroundColor(.green)
+                            Image(systemName: "radio.fill")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 20, height: 20)
+                                .foregroundColor(.green)
+                            Spacer()
+                        }
+                    }
+                    
+                    Button {
+                        viewStore.send(.showCreateDirectory)
+                    } label: {
+                        HStack {
+                            Spacer()
+                            Image(systemName: "plus")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 10, height: 10)
+                                .foregroundColor(.green)
+                            Image(systemName: "folder.fill")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 20, height: 20)
+                                .foregroundColor(.green)
+                            Spacer()
+                        }
+                    }
                 }
             }
         }
         .navigationTitle(viewStore.state.rootDirectory.name)
         .navigationBarTitleDisplayMode(.inline)
-        .task {
-            await viewStore.send(.playerBinding).finish()
-        }
         .onAppear {
             viewStore.send(.onAppear)
         }

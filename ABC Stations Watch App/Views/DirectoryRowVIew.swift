@@ -41,7 +41,10 @@ struct DirectoryRowView: View {
         Button {
             viewStore.send(.delegate(.selected))
         } label: {
-            Text(viewStore.directory.name)
+            HStack {
+                Text(viewStore.directory.name)
+                Spacer()
+            }
         }
         .swipeActions(edge: .trailing) {
             Button {
