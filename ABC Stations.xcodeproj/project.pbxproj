@@ -19,6 +19,7 @@
 		26560A26296BCC8C00B7566F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 26560A25296BCC8C00B7566F /* Preview Assets.xcassets */; };
 		26560A2B296BCCB900B7566F /* ABC Stations Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 26CFB877296906440028EC29 /* ABC Stations Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		26560A31296CD77400B7566F /* WatchDEBUG in Frameworks */ = {isa = PBXBuildFile; productRef = 26560A30296CD77400B7566F /* WatchDEBUG */; };
+		266E07D4297E9A3900E5225B /* RecentlyPlayedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 266E07D3297E9A3900E5225B /* RecentlyPlayedView.swift */; };
 		266F8D77297D49E6006606BF /* EditDirectoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 266F8D76297D49E6006606BF /* EditDirectoryView.swift */; };
 		266F8D79297D49F2006606BF /* CreateDirectoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 266F8D78297D49F2006606BF /* CreateDirectoryView.swift */; };
 		269FF1DE2973542F0087615B /* CreateStationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269FF1DD2973542F0087615B /* CreateStationView.swift */; };
@@ -28,7 +29,6 @@
 		26B8E80D297E80FF00547AD4 /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = 26B8E80C297E80FF00547AD4 /* Collections */; };
 		26B8E80F297E80FF00547AD4 /* DequeModule in Frameworks */ = {isa = PBXBuildFile; productRef = 26B8E80E297E80FF00547AD4 /* DequeModule */; };
 		26B8E811297E80FF00547AD4 /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 26B8E810297E80FF00547AD4 /* OrderedCollections */; };
-		26B8E814297E859700547AD4 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B8E813297E859700547AD4 /* HomeView.swift */; };
 		26B8E817297E861800547AD4 /* NowPlayingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B8E816297E861800547AD4 /* NowPlayingView.swift */; };
 		26BA230929734E5F0033793F /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BA230529734E5F0033793F /* Helpers.swift */; };
 		26BA230A29734E5F0033793F /* Directory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BA230629734E5F0033793F /* Directory.swift */; };
@@ -42,7 +42,7 @@
 		26CFB891296906F20028EC29 /* Station.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26CFB890296906F20028EC29 /* Station.swift */; };
 		26CFB894296907BE0028EC29 /* MediaMetaDataEnrichment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26CFB893296907BE0028EC29 /* MediaMetaDataEnrichment.swift */; };
 		26CFB89729693FAB0028EC29 /* ABCStations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26CFB89629693FAB0028EC29 /* ABCStations.swift */; };
-		26CFB89A296940D10028EC29 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26CFB899296940D10028EC29 /* RootView.swift */; };
+		26CFB89A296940D10028EC29 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26CFB899296940D10028EC29 /* HomeView.swift */; };
 		26CFB89D296942720028EC29 /* StationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26CFB89C296942720028EC29 /* StationsView.swift */; };
 		26CFB8A0296944680028EC29 /* PlayerDependency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26CFB89F296944680028EC29 /* PlayerDependency.swift */; };
 		26CFB8A429694C450028EC29 /* NowPlayingControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26CFB8A329694C450028EC29 /* NowPlayingControls.swift */; };
@@ -85,11 +85,11 @@
 		26560A25296BCC8C00B7566F /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		26560A2F296CD72200B7566F /* WatchDEBUG */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = WatchDEBUG; path = ../WatchDEBUG; sourceTree = "<group>"; };
 		26560A32296CDFD500B7566F /* ABC-Stations-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "ABC-Stations-Info.plist"; sourceTree = SOURCE_ROOT; };
+		266E07D3297E9A3900E5225B /* RecentlyPlayedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentlyPlayedView.swift; sourceTree = "<group>"; };
 		266F8D76297D49E6006606BF /* EditDirectoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditDirectoryView.swift; sourceTree = "<group>"; };
 		266F8D78297D49F2006606BF /* CreateDirectoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateDirectoryView.swift; sourceTree = "<group>"; };
 		269FF1DD2973542F0087615B /* CreateStationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateStationView.swift; sourceTree = "<group>"; };
 		269FF1E62974A7FC0087615B /* StationMaster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationMaster.swift; sourceTree = "<group>"; };
-		26B8E813297E859700547AD4 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		26B8E816297E861800547AD4 /* NowPlayingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingView.swift; sourceTree = "<group>"; };
 		26BA230529734E5F0033793F /* Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		26BA230629734E5F0033793F /* Directory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Directory.swift; sourceTree = "<group>"; };
@@ -102,7 +102,7 @@
 		26CFB890296906F20028EC29 /* Station.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Station.swift; sourceTree = "<group>"; };
 		26CFB893296907BE0028EC29 /* MediaMetaDataEnrichment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaMetaDataEnrichment.swift; sourceTree = "<group>"; };
 		26CFB89629693FAB0028EC29 /* ABCStations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ABCStations.swift; sourceTree = "<group>"; };
-		26CFB899296940D10028EC29 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		26CFB899296940D10028EC29 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		26CFB89C296942720028EC29 /* StationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationsView.swift; sourceTree = "<group>"; };
 		26CFB89F296944680028EC29 /* PlayerDependency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerDependency.swift; sourceTree = "<group>"; };
 		26CFB8A129694AE30028EC29 /* ABC-Stations-Watch-App-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "ABC-Stations-Watch-App-Info.plist"; sourceTree = SOURCE_ROOT; };
@@ -199,8 +199,10 @@
 		26B8E815297E859C00547AD4 /* Home */ = {
 			isa = PBXGroup;
 			children = (
-				26B8E813297E859700547AD4 /* HomeView.swift */,
+				26149F7D297BA5C500D66622 /* MenuView.swift */,
+				26CFB899296940D10028EC29 /* HomeView.swift */,
 				26B8E816297E861800547AD4 /* NowPlayingView.swift */,
+				266E07D3297E9A3900E5225B /* RecentlyPlayedView.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -290,8 +292,6 @@
 			children = (
 				26B8E815297E859C00547AD4 /* Home */,
 				26B8E812297E855B00547AD4 /* Station */,
-				26CFB899296940D10028EC29 /* RootView.swift */,
-				26149F7D297BA5C500D66622 /* MenuView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -442,6 +442,7 @@
 				265295B5297D316C008232A6 /* DirectoryRowVIew.swift in Sources */,
 				269FF1E72974A7FC0087615B /* StationMaster.swift in Sources */,
 				26CFB88E296906AA0028EC29 /* Player.swift in Sources */,
+				266E07D4297E9A3900E5225B /* RecentlyPlayedView.swift in Sources */,
 				26BA230B29734E5F0033793F /* File.swift in Sources */,
 				2619BDB529794AE900C36485 /* EditStationView.swift in Sources */,
 				265295B7297DF818008232A6 /* EditFolderMenuView.swift in Sources */,
@@ -451,7 +452,7 @@
 				26149F7E297BA5C500D66622 /* MenuView.swift in Sources */,
 				265295B3297BEEF8008232A6 /* StationRowView.swift in Sources */,
 				269FF1DE2973542F0087615B /* CreateStationView.swift in Sources */,
-				26CFB89A296940D10028EC29 /* RootView.swift in Sources */,
+				26CFB89A296940D10028EC29 /* HomeView.swift in Sources */,
 				266F8D77297D49E6006606BF /* EditDirectoryView.swift in Sources */,
 				26CFB89D296942720028EC29 /* StationsView.swift in Sources */,
 				26CFB89729693FAB0028EC29 /* ABCStations.swift in Sources */,
@@ -461,7 +462,6 @@
 				26BA230A29734E5F0033793F /* Directory.swift in Sources */,
 				26CFB891296906F20028EC29 /* Station.swift in Sources */,
 				26CFB87B296906440028EC29 /* ABC_StationsApp.swift in Sources */,
-				26B8E814297E859700547AD4 /* HomeView.swift in Sources */,
 				26BA230C29734E5F0033793F /* FileSystem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

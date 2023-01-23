@@ -22,10 +22,10 @@ struct ABC_Stations_Watch_AppApp: App {
     
     var body: some Scene {
         WindowGroup {
-            RootView(
+            HomeView(
                 store: .init(
                     initialState: .init(),
-                    reducer: Root()
+                    reducer: Home()
                 )
             )
         }

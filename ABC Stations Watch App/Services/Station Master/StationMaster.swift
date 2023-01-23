@@ -38,10 +38,10 @@ actor StationMaster {
         bindTask?.cancel()
         bindTask = Task {
             var recents: Deque<Station>  = (try? await recentsFile.retrieve(as: Deque<Station>.self)) ?? []
-            
             for await value in player.playingState.values {
                 switch value {
                 case let .loading(station):
+                    recents.removeAll { $0.id == station.id }
                     recents.insert(station, at: 0)
                     if recents.count > 3 {
                         _ = recents.popLast()
