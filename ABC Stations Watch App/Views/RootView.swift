@@ -10,24 +10,24 @@ struct Root: ReducerProtocol {
     struct State: Equatable {
         enum Route: Equatable {
             case debug
-            case nowPlaying
             case menu(Menu.State)
+            case stations(Stations.State)
         }
         var route: Route?
         
-        var stations: Stations.State?
-        var hasAppearedOnce: Bool = false
+        var nowPlaying = NowPlaying.State()
     }
     
     enum Action: Equatable {
         case setRoute(State.Route?)
-        case stations(Stations.Action)
+        case nowPlaying(NowPlaying.Action)
         case showMenu
-        case onAppear
-        case setStationsState(Stations.State)
+        case showHome
+        case showStations
         
         enum RouteAction: Equatable {
             case menu(Menu.Action)
+            case stations(Stations.Action)
         }
         case routeAction(RouteAction)
     }
@@ -35,29 +35,20 @@ struct Root: ReducerProtocol {
     @Dependency(\.stationMaster) var stationMaster
     
     var body: some ReducerProtocol<State, Action> {
+        Scope(state: \.nowPlaying, action: /Action.nowPlaying) {
+            NowPlaying()
+        }
         Reduce { state, action in
             switch action {
-            case .onAppear:
-                guard !state.hasAppearedOnce else {
-                    return .none
-                }
-                state.hasAppearedOnce = true
+            case .showStations:
                 return .task {
                     await stationMaster.constructInitialSystemIfNeeded()
                     let rootDir = await stationMaster.rootDirectory
-                    return .setStationsState(Stations.State(rootDirectory: rootDir))
+                    return .setRoute(.stations(Stations.State(rootDirectory: rootDir)))
                 }
-                
-            case let .setStationsState(stations):
-                state.stations = stations
-                return .none
                 
             case let .setRoute(route):
                 state.route = route
-                return .none
-            
-            case .stations(.delegate(.selected)):
-                state.route = .nowPlaying
                 return .none
             
             case .showMenu:
@@ -67,9 +58,8 @@ struct Root: ReducerProtocol {
             case .routeAction(.menu(.delegate(.tappedDebugMenu))):
                 state.route = .debug
                 return .none
-                
-            case .routeAction(.menu(.delegate(.tappedNowPlaying))):
-                state.route = .nowPlaying
+            case .showHome:
+                state.route = nil
                 return .none
                 
             default:
@@ -80,9 +70,9 @@ struct Root: ReducerProtocol {
             Scope(state: /State.Route.menu, action: /Action.RouteAction.menu) {
                 Menu()
             }
-        }
-        .ifLet(\.stations, action: /Action.stations) {
-            Stations()
+            Scope(state: /State.Route.stations, action: /Action.RouteAction.stations) {
+                Stations()
+            }
         }
     }
 }
@@ -99,32 +89,49 @@ struct RootView: View {
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
             NavigationStack {
-                IfLetStore(
-                    self.store.scope(
-                        state: \.stations,
-                        action: Root.Action.stations
-                    )
-                ) { store in
-                    StationsView(store: store)
-                } else: {
-                    ProgressView()
+                ScrollView {
+                    VStack {
+                        NowPlayingView(
+                            store: store.scope(
+                                state: \.nowPlaying,
+                                action: { Root.Action.nowPlaying($0) }
+                            )
+                        )
+                    }
+                    Button {
+                        viewStore.send(.showStations)
+                    } label: {
+                        Text("Stations")
+                    }
                 }
+                .navigationDestination(
+                    unwrapping: viewStore.binding(
+                        get: \.route,
+                        send: Root.Action.setRoute
+                    ),
+                    case: /Root.State.Route.stations,
+                    destination: { $value in
+                        let store = store.scope(
+                            state: { _ in $value.wrappedValue },
+                            action: { Root.Action.routeAction(.stations($0)) }
+                        )
+                        StationsView(store: store)
+                    }
+                )
             }
-            
-            Button {
-                viewStore.send(.showMenu)
-            } label: {
-                Image(systemName: "ellipsis")
-                    .foregroundColor(.indigo)
+            if viewStore.route != nil {
+                Button {
+                    viewStore.send(.showHome)
+                } label: {
+                    Image(systemName: "house")
+                        .foregroundColor(.indigo)
+                }
+                .backgroundStyle(.indigo)
+                .frame(width: 30, height: 30)
+                .clipShape(Circle())
+                .padding(.trailing, 5)
+                .offset(y: 10)
             }
-            .backgroundStyle(.indigo)
-            .frame(width: 30, height: 30)
-            .clipShape(Circle())
-            .padding(.trailing, 5)
-            .offset(y: 10)
-        }
-        .onAppear {
-            viewStore.send(.onAppear)
         }
         .fullScreenCover(
             unwrapping: viewStore.binding(
@@ -138,23 +145,6 @@ struct RootView: View {
                 action: { Root.Action.routeAction(.menu($0)) }
             )
             MenuView(store: store)
-                .toolbar {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button(action: { viewStore.send(.setRoute(nil)) }) {
-                           Text("Close")
-                        }
-                    }
-                }
-                .interactiveDismissDisabled()
-        }
-        .fullScreenCover(
-            unwrapping: viewStore.binding(
-                get: \.route,
-                send: Root.Action.setRoute
-            ),
-            case: /Root.State.Route.nowPlaying
-        ) { _ in
-            NowPlayingView()
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
                         Button(action: { viewStore.send(.setRoute(nil)) }) {

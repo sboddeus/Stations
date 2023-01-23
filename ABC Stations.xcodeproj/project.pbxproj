@@ -25,6 +25,11 @@
 		269FF1E1297356050087615B /* SwiftUINavigation in Frameworks */ = {isa = PBXBuildFile; productRef = 269FF1E0297356050087615B /* SwiftUINavigation */; };
 		269FF1E3297356050087615B /* _SwiftUINavigationState in Frameworks */ = {isa = PBXBuildFile; productRef = 269FF1E2297356050087615B /* _SwiftUINavigationState */; };
 		269FF1E72974A7FC0087615B /* StationMaster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269FF1E62974A7FC0087615B /* StationMaster.swift */; };
+		26B8E80D297E80FF00547AD4 /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = 26B8E80C297E80FF00547AD4 /* Collections */; };
+		26B8E80F297E80FF00547AD4 /* DequeModule in Frameworks */ = {isa = PBXBuildFile; productRef = 26B8E80E297E80FF00547AD4 /* DequeModule */; };
+		26B8E811297E80FF00547AD4 /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 26B8E810297E80FF00547AD4 /* OrderedCollections */; };
+		26B8E814297E859700547AD4 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B8E813297E859700547AD4 /* HomeView.swift */; };
+		26B8E817297E861800547AD4 /* NowPlayingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B8E816297E861800547AD4 /* NowPlayingView.swift */; };
 		26BA230929734E5F0033793F /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BA230529734E5F0033793F /* Helpers.swift */; };
 		26BA230A29734E5F0033793F /* Directory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BA230629734E5F0033793F /* Directory.swift */; };
 		26BA230B29734E5F0033793F /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BA230729734E5F0033793F /* File.swift */; };
@@ -84,6 +89,8 @@
 		266F8D78297D49F2006606BF /* CreateDirectoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateDirectoryView.swift; sourceTree = "<group>"; };
 		269FF1DD2973542F0087615B /* CreateStationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateStationView.swift; sourceTree = "<group>"; };
 		269FF1E62974A7FC0087615B /* StationMaster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationMaster.swift; sourceTree = "<group>"; };
+		26B8E813297E859700547AD4 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		26B8E816297E861800547AD4 /* NowPlayingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingView.swift; sourceTree = "<group>"; };
 		26BA230529734E5F0033793F /* Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		26BA230629734E5F0033793F /* Directory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Directory.swift; sourceTree = "<group>"; };
 		26BA230729734E5F0033793F /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
@@ -114,10 +121,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				26B8E80D297E80FF00547AD4 /* Collections in Frameworks */,
 				2619BDB329793F6A00C36485 /* SDWebImageSwiftUI in Frameworks */,
 				269FF1E1297356050087615B /* SwiftUINavigation in Frameworks */,
 				26CFB88A296906920028EC29 /* ComposableArchitecture in Frameworks */,
 				26CFB88C296906920028EC29 /* Dependencies in Frameworks */,
+				26B8E811297E80FF00547AD4 /* OrderedCollections in Frameworks */,
+				26B8E80F297E80FF00547AD4 /* DequeModule in Frameworks */,
 				269FF1E3297356050087615B /* _SwiftUINavigationState in Frameworks */,
 				26560A31296CD77400B7566F /* WatchDEBUG in Frameworks */,
 			);
@@ -169,6 +179,30 @@
 				269FF1E62974A7FC0087615B /* StationMaster.swift */,
 			);
 			path = "Station Master";
+			sourceTree = "<group>";
+		};
+		26B8E812297E855B00547AD4 /* Station */ = {
+			isa = PBXGroup;
+			children = (
+				26CFB89C296942720028EC29 /* StationsView.swift */,
+				269FF1DD2973542F0087615B /* CreateStationView.swift */,
+				2619BDB429794AE900C36485 /* EditStationView.swift */,
+				265295B2297BEEF8008232A6 /* StationRowView.swift */,
+				265295B4297D316C008232A6 /* DirectoryRowVIew.swift */,
+				266F8D76297D49E6006606BF /* EditDirectoryView.swift */,
+				266F8D78297D49F2006606BF /* CreateDirectoryView.swift */,
+				265295B6297DF818008232A6 /* EditFolderMenuView.swift */,
+			);
+			path = Station;
+			sourceTree = "<group>";
+		};
+		26B8E815297E859C00547AD4 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				26B8E813297E859700547AD4 /* HomeView.swift */,
+				26B8E816297E861800547AD4 /* NowPlayingView.swift */,
+			);
+			path = Home;
 			sourceTree = "<group>";
 		};
 		26BA230429734DD50033793F /* FileSystem */ = {
@@ -254,16 +288,10 @@
 		26CFB89B296940D60028EC29 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				26B8E815297E859C00547AD4 /* Home */,
+				26B8E812297E855B00547AD4 /* Station */,
 				26CFB899296940D10028EC29 /* RootView.swift */,
-				26CFB89C296942720028EC29 /* StationsView.swift */,
-				269FF1DD2973542F0087615B /* CreateStationView.swift */,
-				2619BDB429794AE900C36485 /* EditStationView.swift */,
 				26149F7D297BA5C500D66622 /* MenuView.swift */,
-				265295B2297BEEF8008232A6 /* StationRowView.swift */,
-				265295B4297D316C008232A6 /* DirectoryRowVIew.swift */,
-				266F8D76297D49E6006606BF /* EditDirectoryView.swift */,
-				266F8D78297D49F2006606BF /* CreateDirectoryView.swift */,
-				265295B6297DF818008232A6 /* EditFolderMenuView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -326,6 +354,9 @@
 				269FF1E0297356050087615B /* SwiftUINavigation */,
 				269FF1E2297356050087615B /* _SwiftUINavigationState */,
 				2619BDB229793F6A00C36485 /* SDWebImageSwiftUI */,
+				26B8E80C297E80FF00547AD4 /* Collections */,
+				26B8E80E297E80FF00547AD4 /* DequeModule */,
+				26B8E810297E80FF00547AD4 /* OrderedCollections */,
 			);
 			productName = "ABC Stations Watch App";
 			productReference = 26CFB877296906440028EC29 /* ABC Stations Watch App.app */;
@@ -362,6 +393,7 @@
 				26CFB888296906920028EC29 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
 				269FF1DF297356050087615B /* XCRemoteSwiftPackageReference "swiftui-navigation" */,
 				2619BDB129793F6A00C36485 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
+				26B8E80B297E80FF00547AD4 /* XCRemoteSwiftPackageReference "swift-collections" */,
 			);
 			productRefGroup = 26CFB878296906440028EC29 /* Products */;
 			projectDirPath = "";
@@ -425,9 +457,11 @@
 				26CFB89729693FAB0028EC29 /* ABCStations.swift in Sources */,
 				26CFB8A0296944680028EC29 /* PlayerDependency.swift in Sources */,
 				266F8D79297D49F2006606BF /* CreateDirectoryView.swift in Sources */,
+				26B8E817297E861800547AD4 /* NowPlayingView.swift in Sources */,
 				26BA230A29734E5F0033793F /* Directory.swift in Sources */,
 				26CFB891296906F20028EC29 /* Station.swift in Sources */,
 				26CFB87B296906440028EC29 /* ABC_StationsApp.swift in Sources */,
+				26B8E814297E859700547AD4 /* HomeView.swift in Sources */,
 				26BA230C29734E5F0033793F /* FileSystem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -739,6 +773,14 @@
 				minimumVersion = 0.5.0;
 			};
 		};
+		26B8E80B297E80FF00547AD4 /* XCRemoteSwiftPackageReference "swift-collections" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-collections.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		26CFB888296906920028EC29 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture";
@@ -768,6 +810,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 269FF1DF297356050087615B /* XCRemoteSwiftPackageReference "swiftui-navigation" */;
 			productName = _SwiftUINavigationState;
+		};
+		26B8E80C297E80FF00547AD4 /* Collections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 26B8E80B297E80FF00547AD4 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = Collections;
+		};
+		26B8E80E297E80FF00547AD4 /* DequeModule */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 26B8E80B297E80FF00547AD4 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = DequeModule;
+		};
+		26B8E810297E80FF00547AD4 /* OrderedCollections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 26B8E80B297E80FF00547AD4 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = OrderedCollections;
 		};
 		26CFB889296906920028EC29 /* ComposableArchitecture */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -1,5 +1,6 @@
 
 import Foundation
+import Collections
 
 actor StationMaster {
     
@@ -12,6 +13,45 @@ actor StationMaster {
             inBase: .documents,
             path: rootPath
         )
+    }
+    
+    private lazy var recentsFile: File = {
+        let dir = Directory(
+            baseDirectory: .documents,
+            path: URL(string: "/recents")!,
+            fileSystem: filesystem
+        )
+        return File(
+            directory: dir,
+            name: "recents",
+            fileSystem: filesystem
+        )
+    }()
+    
+    func recents() async -> [Station] {
+        let recents = (try? await recentsFile.retrieve(as: Deque<Station>.self)) ?? []
+        return Array(recents)
+    }
+    
+    private var bindTask: Task<(), Never>?
+    func bind(to player: AVAudioPlayer) {
+        bindTask?.cancel()
+        bindTask = Task {
+            var recents: Deque<Station>  = (try? await recentsFile.retrieve(as: Deque<Station>.self)) ?? []
+            
+            for await value in player.playingState.values {
+                switch value {
+                case let .loading(station):
+                    recents.insert(station, at: 0)
+                    if recents.count > 3 {
+                        _ = recents.popLast()
+                    }
+                    try? await recentsFile.save(recents)
+                default:
+                    break
+                }
+            }
+        }
     }
     
     func constructInitialSystemIfNeeded() async {
@@ -40,6 +80,10 @@ actor StationMaster {
         
         // Finally, update user defaults
         defaults.set(true, forKey: initialConstructionKey)
+    }
+    
+    deinit {
+        bindTask?.cancel()
     }
 }
 

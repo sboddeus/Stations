@@ -10,7 +10,6 @@ struct Menu: ReducerProtocol {
     
     enum Action: Equatable {
         enum Delegate: Equatable {
-            case tappedNowPlaying
             case tappedDebugMenu
         }
         case delegate(Delegate)
@@ -34,12 +33,6 @@ struct MenuView: View {
     
     var body: some View {
         List {
-            Button {
-                viewStore.send(.delegate(.tappedNowPlaying))
-            } label: {
-                Text("Now Playing")
-            }
-            
             Button {
                 viewStore.send(.delegate(.tappedDebugMenu))
             } label: {
