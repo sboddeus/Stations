@@ -44,7 +44,7 @@ let tikTokTrending = Station(
     id: UUID(),
     title: "TikTok",
     description: "TikTok Trending",
-    imageURL: nil,
+    imageURL: URL(string: "https://www.edigitalagency.com.au/wp-content/uploads/TikTok-icon-glyph.png")!,
     url: URL(string: "https://ais-arn.streamguys1.com/au_032/playlist.m3u8")!
 )
 

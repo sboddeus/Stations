@@ -5,7 +5,7 @@ import AVFAudio
 import SwiftUINavigation
 import SDWebImageSwiftUI
 
-struct Stations: ReducerProtocol {
+struct Stream: ReducerProtocol {
     struct State: Equatable {
         var rootDirectory: Directory
         
@@ -14,7 +14,7 @@ struct Stations: ReducerProtocol {
         }
         
         var isLoading = true
-        var stations: IdentifiedArrayOf<StationRow.State> = []
+        var stations: IdentifiedArrayOf<StreamRow.State> = []
         var directories: IdentifiedArrayOf<DirectoryRow.State> = []
         
         indirect enum Route: Equatable {
@@ -22,7 +22,7 @@ struct Stations: ReducerProtocol {
             case editStation(EditStation.State)
             case createDirectory(CreateDirectory.State)
             case editDirectory(EditDirectory.State)
-            case subDirectory(Stations.State)
+            case subDirectory(Stream.State)
             case editMenu(EditMenu.State)
         }
         var route: Route?
@@ -45,19 +45,18 @@ struct Stations: ReducerProtocol {
         indirect enum RouteAction: Equatable {
             case createStation(CreateStation.Action)
             case editStation(EditStation.Action)
-            case subDirectory(Stations.Action)
+            case subDirectory(Stream.Action)
             case editDirectory(EditDirectory.Action)
             case createDirectory(CreateDirectory.Action)
             case editMenu(EditMenu.Action)
         }
         case routeAction(RouteAction)
         
-        case station(id: StationRow.State.ID, action: StationRow.Action)
+        case station(id: StreamRow.State.ID, action: StreamRow.Action)
         case directory(id: DirectoryRow.State.ID, action: DirectoryRow.Action)
     }
     
     @Dependency(\.player) var player
-    @Dependency(\.stationMaster) var stationMaster
     
     private var core: some ReducerProtocol<State, Action> {
         Reduce { state, action in
@@ -218,32 +217,32 @@ struct Stations: ReducerProtocol {
         }
     }
     
-    private var createStation: some ReducerProtocol<Stations.State.Route, Stations.Action.RouteAction> {
+    private var createStation: some ReducerProtocol<Stream.State.Route, Stream.Action.RouteAction> {
         Scope(state: /State.Route.createStation, action: /Action.RouteAction.createStation) {
             CreateStation()
         }
     }
-    private var editStation: some ReducerProtocol<Stations.State.Route, Stations.Action.RouteAction> {
+    private var editStation: some ReducerProtocol<Stream.State.Route, Stream.Action.RouteAction> {
         Scope(state: /State.Route.editStation, action: /Action.RouteAction.editStation) {
             EditStation()
         }
     }
-    private var createDirectory: some ReducerProtocol<Stations.State.Route, Stations.Action.RouteAction> {
+    private var createDirectory: some ReducerProtocol<Stream.State.Route, Stream.Action.RouteAction> {
         Scope(state: /State.Route.createDirectory, action: /Action.RouteAction.createDirectory) {
             CreateDirectory()
         }
     }
-    private var editDirectory: some ReducerProtocol<Stations.State.Route, Stations.Action.RouteAction> {
+    private var editDirectory: some ReducerProtocol<Stream.State.Route, Stream.Action.RouteAction> {
         Scope(state: /State.Route.editDirectory, action: /Action.RouteAction.editDirectory) {
             EditDirectory()
         }
     }
-    private var subDirectory: some ReducerProtocol<Stations.State.Route, Stations.Action.RouteAction> {
+    private var subDirectory: some ReducerProtocol<Stream.State.Route, Stream.Action.RouteAction> {
         Scope(state: /State.Route.subDirectory, action: /Action.RouteAction.subDirectory) {
-            Stations()
+            Stream()
         }
     }
-    private var editMenu: some ReducerProtocol<Stations.State.Route, Stations.Action.RouteAction> {
+    private var editMenu: some ReducerProtocol<Stream.State.Route, Stream.Action.RouteAction> {
         Scope(state: /State.Route.editMenu, action: /Action.RouteAction.editMenu) {
             EditMenu()
         }
@@ -252,7 +251,7 @@ struct Stations: ReducerProtocol {
     var body: some ReducerProtocol<State, Action> {
         core
         .forEach(\.stations, action: /Action.station) {
-            StationRow()
+            StreamRow()
         }
         .forEach(\.directories, action: /Action.directory) {
             DirectoryRow()
@@ -267,11 +266,11 @@ struct Stations: ReducerProtocol {
     }
 }
 
-struct StationsView: View {
-    let store: StoreOf<Stations>
-    @ObservedObject var viewStore: ViewStoreOf<Stations>
+struct SteamsView: View {
+    let store: StoreOf<Stream>
+    @ObservedObject var viewStore: ViewStoreOf<Stream>
     
-    init(store: StoreOf<Stations>) {
+    init(store: StoreOf<Stream>) {
         self.store = store
         viewStore = .init(store, observe: { $0 })
     }
@@ -281,15 +280,15 @@ struct StationsView: View {
             ForEachStore(
                 store.scope(
                     state: \.stations,
-                    action: Stations.Action.station(id:action:))
+                    action: Stream.Action.station(id:action:))
             ) { store in
-                StationRowView(store: store)
+                StreamRowView(store: store)
             }
             
             ForEachStore(
                 store.scope(
                     state: \.directories,
-                    action: Stations.Action.directory(id:action:)
+                    action: Stream.Action.directory(id:action:)
                 )
             ) { store in
                 DirectoryRowView(store: store)
@@ -320,40 +319,40 @@ struct StationsView: View {
         .navigationDestination(
             unwrapping: viewStore.binding(
                 get: \.route,
-                send: Stations.Action.setRoute
+                send: Stream.Action.setRoute
             ),
-            case: /Stations.State.Route.subDirectory,
+            case: /Stream.State.Route.subDirectory,
             destination: { $value in
                 let store = store.scope(
                     state: { _ in $value.wrappedValue },
-                    action: { Stations.Action.routeAction(.subDirectory($0)) }
+                    action: { Stream.Action.routeAction(.subDirectory($0)) }
                 )
-                StationsView(store: store)
+                SteamsView(store: store)
             }
         )
         .fullScreenCover(
             unwrapping: viewStore.binding(
                 get: \.route,
-                send: Stations.Action.setRoute
+                send: Stream.Action.setRoute
             ),
-            case: /Stations.State.Route.editMenu
+            case: /Stream.State.Route.editMenu
         ) { $value in
             let store = store.scope(
                 state: { _ in $value.wrappedValue },
-                action: { Stations.Action.routeAction(.editMenu($0)) }
+                action: { Stream.Action.routeAction(.editMenu($0)) }
             )
             EditMenuView(store: store)
         }
         .fullScreenCover(
             unwrapping: viewStore.binding(
                 get: \.route,
-                send: Stations.Action.setRoute
+                send: Stream.Action.setRoute
             ),
-            case: /Stations.State.Route.createStation
+            case: /Stream.State.Route.createStation
         ) { $value in
             let store = store.scope(
                 state: { _ in $value.wrappedValue },
-                action: { Stations.Action.routeAction(.createStation($0)) }
+                action: { Stream.Action.routeAction(.createStation($0)) }
             )
             CreateStationView(store: store)
                 .interactiveDismissDisabled()
@@ -361,13 +360,13 @@ struct StationsView: View {
         .fullScreenCover(
             unwrapping: viewStore.binding(
                 get: \.route,
-                send: Stations.Action.setRoute
+                send: Stream.Action.setRoute
             ),
-            case: /Stations.State.Route.editStation
+            case: /Stream.State.Route.editStation
         ) { $value in
             let store = store.scope(
                 state: { _ in $value.wrappedValue },
-                action: { Stations.Action.routeAction(.editStation($0)) }
+                action: { Stream.Action.routeAction(.editStation($0)) }
             )
             EditStationView(store: store)
                 .interactiveDismissDisabled()
@@ -375,13 +374,13 @@ struct StationsView: View {
         .fullScreenCover(
             unwrapping: viewStore.binding(
                 get: \.route,
-                send: Stations.Action.setRoute
+                send: Stream.Action.setRoute
             ),
-            case: /Stations.State.Route.editDirectory
+            case: /Stream.State.Route.editDirectory
         ) { $value in
             let store = store.scope(
                 state: { _ in $value.wrappedValue },
-                action: { Stations.Action.routeAction(.editDirectory($0)) }
+                action: { Stream.Action.routeAction(.editDirectory($0)) }
             )
             EditDirectoryView(store: store)
                 .interactiveDismissDisabled()
@@ -389,13 +388,13 @@ struct StationsView: View {
         .fullScreenCover(
             unwrapping: viewStore.binding(
                 get: \.route,
-                send: Stations.Action.setRoute
+                send: Stream.Action.setRoute
             ),
-            case: /Stations.State.Route.createDirectory
+            case: /Stream.State.Route.createDirectory
         ) { $value in
             let store = store.scope(
                 state: { _ in $value.wrappedValue },
-                action: { Stations.Action.routeAction(.createDirectory($0)) }
+                action: { Stream.Action.routeAction(.createDirectory($0)) }
             )
             CreateDirectoryView(store: store)
                 .interactiveDismissDisabled()

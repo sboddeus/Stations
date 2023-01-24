@@ -3,7 +3,7 @@ import SwiftUI
 import ComposableArchitecture
 import SDWebImageSwiftUI
 
-struct StationRow: ReducerProtocol {
+struct StreamRow: ReducerProtocol {
     struct State: Equatable, Identifiable {
         let station: Station
         
@@ -81,11 +81,11 @@ struct StationRow: ReducerProtocol {
     }
 }
 
-struct StationRowView: View {
-    let store: StoreOf<StationRow>
-    @ObservedObject var viewStore: ViewStoreOf<StationRow>
+struct StreamRowView: View {
+    let store: StoreOf<StreamRow>
+    @ObservedObject var viewStore: ViewStoreOf<StreamRow>
     
-    init(store: StoreOf<StationRow>) {
+    init(store: StoreOf<StreamRow>) {
         self.store = store
         viewStore = .init(store, observe: { $0 })
     }

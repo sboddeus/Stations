@@ -27,7 +27,7 @@ struct NowPlaying: ReducerProtocol {
     }
     
     @Dependency(\.player) var player
-    @Dependency(\.stationMaster) var stationMaster
+    @Dependency(\.streamMaster) var stationMaster
     
     var body: some ReducerProtocol<State, Action> {
         Reduce { state, action in
@@ -138,7 +138,7 @@ struct NowPlayingView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 8))
                 .padding()
                 .brightness(-0.8)
-                .blur(radius: 3)
+                .blur(radius: 1)
             }
             VStack(alignment: .leading) {
                 Text(viewStore.title)
@@ -150,7 +150,7 @@ struct NowPlayingView: View {
                     .foregroundColor(.secondary)
                     .minimumScaleFactor(0.7)
                 if viewStore.playButton != .hidden {
-                    VStack {
+                    VStack(spacing: 10) {
                         Button {
                             viewStore.send(.togglePlay)
                         } label: {

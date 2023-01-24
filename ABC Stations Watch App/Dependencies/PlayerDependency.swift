@@ -20,12 +20,12 @@ extension DependencyValues {
 }
 
 extension DependencyValues {
-    var stationMaster: StationMaster {
+    var streamMaster: StreamMaster {
         get { self[StationMasterKey.self] }
         set { self[StationMasterKey.self] = newValue }
     }
 
     enum StationMasterKey: DependencyKey {
-        static let liveValue: StationMaster = .init()
+        static let liveValue: StreamMaster = .init()
     }
 }

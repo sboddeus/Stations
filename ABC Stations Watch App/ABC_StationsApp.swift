@@ -12,7 +12,7 @@ import ComposableArchitecture
 struct ABC_Stations_Watch_AppApp: App {
     let nowPlaying = NowPlayingControlsController()
     
-    @Dependency(\.stationMaster) var stationMaster
+    @Dependency(\.streamMaster) var stationMaster
     
     init() {
         nowPlaying.bind(toPlayer: .shared!)

@@ -11,7 +11,7 @@ struct Home: ReducerProtocol {
         enum Route: Equatable {
             case debug
             case menu(Menu.State)
-            case stations(Stations.State)
+            case stations(Stream.State)
         }
         var route: Route?
         
@@ -29,12 +29,12 @@ struct Home: ReducerProtocol {
         
         enum RouteAction: Equatable {
             case menu(Menu.Action)
-            case stations(Stations.Action)
+            case stations(Stream.Action)
         }
         case routeAction(RouteAction)
     }
         
-    @Dependency(\.stationMaster) var stationMaster
+    @Dependency(\.streamMaster) var stationMaster
     
     var body: some ReducerProtocol<State, Action> {
         Scope(state: \.nowPlaying, action: /Action.nowPlaying) {
@@ -49,7 +49,7 @@ struct Home: ReducerProtocol {
                 return .task {
                     await stationMaster.constructInitialSystemIfNeeded()
                     let rootDir = await stationMaster.rootDirectory
-                    return .setRoute(.stations(Stations.State(rootDirectory: rootDir)))
+                    return .setRoute(.stations(Stream.State(rootDirectory: rootDir)))
                 }
                 
             case let .setRoute(route):
@@ -77,7 +77,7 @@ struct Home: ReducerProtocol {
                 Menu()
             }
             Scope(state: /State.Route.stations, action: /Action.RouteAction.stations) {
-                Stations()
+                Stream()
             }
         }
     }
@@ -98,7 +98,9 @@ struct HomeView: View {
                 ScrollView {
                     VStack(spacing: 20) {
                         VStack(alignment: .leading, spacing: 10) {
-                            Text("Now Playing").font(.title3).foregroundColor(.secondary)
+                            Text("Now Playing")
+                                .font(.title3)
+                                .foregroundColor(LeincastColors.brand.color)
                             Divider()
                             NowPlayingView(
                                 store: store.scope(
@@ -109,17 +111,21 @@ struct HomeView: View {
                         }
                         
                         VStack(alignment: .leading, spacing: 10) {
-                            Text("Stations folder").font(.title3).foregroundColor(.secondary)
+                            Text("Streams")
+                                .font(.title3)
+                                .foregroundColor(LeincastColors.brand.color)
                             Divider()
                             Button {
                                 viewStore.send(.showStations)
                             } label: {
-                                Text("Stations")
+                                Text("Your Streams")
                             }
                         }
                         
                         VStack(alignment: .leading, spacing: 10) {
-                            Text("Recently Played").font(.title3).foregroundColor(.secondary)
+                            Text("Recently Played")
+                                .font(.title3)
+                                .foregroundColor(LeincastColors.brand.color)
                             Divider()
                             RecentlyPlayedView(
                                 store: store.scope(
@@ -129,7 +135,9 @@ struct HomeView: View {
                             )
                         }
                         VStack(alignment: .leading, spacing: 10) {
-                            Text("Help and Settings").font(.title3).foregroundColor(.secondary)
+                            Text("Help and Settings")
+                                .font(.title3)
+                                .foregroundColor(LeincastColors.brand.color)
                             Divider()
                             Button {
                                 viewStore.send(.showMenu)
@@ -150,7 +158,7 @@ struct HomeView: View {
                             state: { _ in $value.wrappedValue },
                             action: { Home.Action.routeAction(.stations($0)) }
                         )
-                        StationsView(store: store)
+                        SteamsView(store: store)
                     }
                 )
             }
@@ -160,7 +168,7 @@ struct HomeView: View {
                     viewStore.send(.showHome)
                 } label: {
                     Image(systemName: "house")
-                        .foregroundColor(.indigo)
+                        .foregroundColor(LeincastColors.brand.color)
                 }
                 .backgroundStyle(.indigo)
                 .frame(width: 30, height: 30)

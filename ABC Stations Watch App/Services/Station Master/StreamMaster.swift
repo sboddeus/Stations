@@ -4,11 +4,11 @@ import Collections
 import AsyncAlgorithms
 import AVFAudio
 
-actor StationMaster {
+actor StreamMaster {
     
     private var filesystem: FileSystem = .default
     private var defaults: UserDefaults = .standard
-    private var rootPath = URL(string: "/stations")!
+    private var rootPath = URL(string: "/Streams")!
     private var volumeObserver: NSKeyValueObservation?
     
     nonisolated
@@ -88,6 +88,7 @@ actor StationMaster {
         
         let commercial = await aus.directory(path: URL(string: "Commercial")!)
         try? await commercial.file(name: tikTokTrending.id.uuidString).save(tikTokTrending)
+        try? await commercial.file(name: hitFM.id.uuidString).save(hitFM)
         
         // UK
         let uk = await dir.directory(path: URL(string: "UK")!)

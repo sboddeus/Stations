@@ -5,16 +5,16 @@ import AVFAudio
 
 struct RecentlyPlayed: ReducerProtocol {
     struct State: Equatable {
-        var stations: IdentifiedArrayOf<StationRow.State> = []
+        var stations: IdentifiedArrayOf<StreamRow.State> = []
     }
     
     enum Action: Equatable {
         case onAppear
         case update([Station])
-        case station(id: StationRow.State.ID, action: StationRow.Action)
+        case station(id: StreamRow.State.ID, action: StreamRow.Action)
     }
     
-    @Dependency(\.stationMaster) var stationMaster
+    @Dependency(\.streamMaster) var stationMaster
     @Dependency(\.player) var player
     
     var body: some ReducerProtocol<State, Action> {
@@ -28,7 +28,7 @@ struct RecentlyPlayed: ReducerProtocol {
             case let .update(stations):
                 state.stations = IdentifiedArray(
                     uniqueElements: stations.map {
-                        StationRow.State(station: $0, activeState: .unselected)
+                        StreamRow.State(station: $0, activeState: .unselected)
                     }
                 )
                 return .none
@@ -54,7 +54,7 @@ struct RecentlyPlayed: ReducerProtocol {
             }
         }
         .forEach(\.stations, action: /Action.station) {
-            StationRow()
+            StreamRow()
         }
     }
 }
@@ -78,7 +78,7 @@ struct RecentlyPlayedView: View {
                     state: \.stations,
                     action: RecentlyPlayed.Action.station(id:action:))
             ) { store in
-                StationRowView(store: store)
+                StreamRowView(store: store)
             }
         }
         .onAppear {
