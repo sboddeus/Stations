@@ -97,22 +97,20 @@ struct Stations: ReducerProtocol {
                 
             case let .station(id, action: .delegate(.selected)):
                 if let station = state.stations[id: id]?.station {
-                    return .concatenate(
-                        .run { send in
-                            AVAudioSession.sharedInstance().activate { _, error in
-                                guard error == nil else {
-                                    // TODO: Deal with error
-                                    assertionFailure("Couldn't activate session")
-                                    return
-                                }
-                                
-                                Task {
-                                    player.play(station)
-                                    await send(.delegate(.selected(station)))
-                                }
+                    return .run { send in
+                        AVAudioSession.sharedInstance().activate { _, error in
+                            guard error == nil else {
+                                // TODO: Deal with error
+                                assertionFailure("Couldn't activate session")
+                                return
+                            }
+                            
+                            Task {
+                                player.play(station)
+                                await send(.delegate(.selected(station)))
                             }
                         }
-                    )
+                    }
                 } else {
                     return .none
                 }

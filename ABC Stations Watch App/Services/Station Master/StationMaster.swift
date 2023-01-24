@@ -1,12 +1,20 @@
 
 import Foundation
 import Collections
+import AsyncAlgorithms
+import AVFAudio
 
 actor StationMaster {
     
     private var filesystem: FileSystem = .default
     private var defaults: UserDefaults = .standard
     private var rootPath = URL(string: "/stations")!
+    private var volumeObserver: NSKeyValueObservation?
+    
+    nonisolated
+    var volume: Double {
+        Double(AVAudioSession.sharedInstance().outputVolume)
+    }
     
     var rootDirectory: Directory {
         filesystem.directory(
@@ -46,6 +54,7 @@ actor StationMaster {
                     if recents.count > 3 {
                         _ = recents.popLast()
                     }
+                    
                     try? await recentsFile.save(recents)
                 default:
                     break
@@ -83,6 +92,7 @@ actor StationMaster {
     }
     
     deinit {
+        volumeObserver?.invalidate()
         bindTask?.cancel()
     }
 }

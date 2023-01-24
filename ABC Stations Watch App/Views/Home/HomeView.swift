@@ -96,30 +96,48 @@ struct HomeView: View {
         ZStack(alignment: .bottomTrailing) {
             NavigationStack {
                 ScrollView {
-                    VStack {
-                        NowPlayingView(
-                            store: store.scope(
-                                state: \.nowPlaying,
-                                action: { Home.Action.nowPlaying($0) }
+                    VStack(spacing: 20) {
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text("Now Playing").font(.title3).foregroundColor(.secondary)
+                            Divider()
+                            NowPlayingView(
+                                store: store.scope(
+                                    state: \.nowPlaying,
+                                    action: { Home.Action.nowPlaying($0) }
+                                )
                             )
-                        )
+                        }
+                        
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text("Stations folder").font(.title3).foregroundColor(.secondary)
+                            Divider()
+                            Button {
+                                viewStore.send(.showStations)
+                            } label: {
+                                Text("Stations")
+                            }
+                        }
+                        
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text("Recently Played").font(.title3).foregroundColor(.secondary)
+                            Divider()
+                            RecentlyPlayedView(
+                                store: store.scope(
+                                    state: \.recentlyPlayed,
+                                    action: { Home.Action.recentlyPlayed($0) }
+                                )
+                            )
+                        }
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text("Help and Settings").font(.title3).foregroundColor(.secondary)
+                            Divider()
+                            Button {
+                                viewStore.send(.showMenu)
+                            } label: {
+                                Text("Settings")
+                            }
+                        }
                     }
-                    Button {
-                        viewStore.send(.showStations)
-                    } label: {
-                        Text("Stations")
-                    }
-                    Button {
-                        viewStore.send(.showMenu)
-                    } label: {
-                        Text("Options")
-                    }
-                    RecentlyPlayedView(
-                        store: store.scope(
-                            state: \.recentlyPlayed,
-                            action: { Home.Action.recentlyPlayed($0) }
-                        )
-                    )
                 }
                 .navigationDestination(
                     unwrapping: viewStore.binding(

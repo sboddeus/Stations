@@ -1,6 +1,7 @@
 
 import SwiftUI
 import ComposableArchitecture
+import AVFAudio
 
 struct RecentlyPlayed: ReducerProtocol {
     struct State: Equatable {
@@ -34,7 +35,16 @@ struct RecentlyPlayed: ReducerProtocol {
             case let .station(id, .delegate(.selected)):
                 if let station = state.stations[id: id] {
                     return .fireAndForget {
-                        player.play(station.station)
+                        AVAudioSession.sharedInstance().activate { _, error in
+                            guard error == nil else {
+                                // TODO: Deal with error
+                                assertionFailure("Couldn't activate session")
+                                return
+                            }
+                            
+                            player.play(station.station)
+                        }
+                        
                     }
                 }
                 return .none
@@ -60,6 +70,9 @@ struct RecentlyPlayedView: View {
     
     var body: some View {
         VStack {
+            if viewStore.stations.isEmpty {
+                Text("No streams played yet").font(.body)
+            }
             ForEachStore(
                 store.scope(
                     state: \.stations,
