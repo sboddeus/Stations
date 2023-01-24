@@ -28,7 +28,12 @@ struct CreateDirectory: ReducerProtocol {
                 return .task { [state] in
                     try await state.containingDirectory
                         .directory(
-                            path: URL(string: state.title)!
+                            // TODO: URL validation here
+                            path: URL(string:
+                                        state.title.trimmingCharacters(
+                                            in: .whitespacesAndNewlines
+                                        )
+                                     )!
                         )
                         .create()
                     

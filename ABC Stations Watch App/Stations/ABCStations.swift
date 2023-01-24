@@ -24,6 +24,30 @@ let tripleJ = Station(
     url: URL(string: "https://mediaserviceslive.akamaized.net/hls/live/2038308/triplejnsw/masterlq.m3u8")!
 )
 
+let SBS = Station(
+    id: UUID(),
+    title: "SBS",
+    description: "SBS Broadcast",
+    imageURL: URL(string: "https://www.code4fun.com.au/wp-content/uploads/2014/09/SBS-logo.png")!,
+    url: URL(string: "https://sbs-hls.streamguys1.com/hls/sbs1/playlist.m3u8")!
+)
+
+let hitFM = Station(
+    id: UUID(),
+    title: "HitFM",
+    description: "HitFM",
+    imageURL: nil,
+    url: URL(string: "https://sbs-hls.streamguys1.com/hls/sbs1/playlist.m3u8")!
+)
+
+let tikTokTrending = Station(
+    id: UUID(),
+    title: "TikTok",
+    description: "TikTok Trending",
+    imageURL: nil,
+    url: URL(string: "https://ais-arn.streamguys1.com/au_032/playlist.m3u8")!
+)
+
 let classic = Station(
     id: UUID(),
     title: "ABC Classic",
@@ -46,4 +70,12 @@ let bbcWorldwide = Station(
     description: "BCC Wordwide Service",
     imageURL: URL(string: "https://brandslogos.com/wp-content/uploads/images/large/bbc-logo-1.png")!,
     url: URL(string: "https://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/nonuk/sbr_low/ak/bbc_world_service.m3u8")!
+)
+
+let bin = Station(
+    id: UUID(),
+    title: "BIN",
+    description: "Black information network",
+    imageURL: nil,
+    url: URL(string: "https://stream.revma.ihrhls.com/zc6066/hls.m3u8")!
 )

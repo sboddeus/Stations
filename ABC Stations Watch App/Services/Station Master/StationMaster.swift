@@ -76,16 +76,27 @@ actor StationMaster {
         
         // Australian
         let aus = await dir.directory(path: URL(string: "Australia")!)
+        
         let abc = await aus.directory(path: URL(string: "ABC")!)
         try? await abc.file(name: tripleJ.id.uuidString).save(tripleJ)
         try? await abc.file(name: news.id.uuidString).save(news)
         try? await abc.file(name: classic.id.uuidString).save(classic)
         try? await abc.file(name: kids.id.uuidString).save(kids)
         
+        let sbs = await aus.directory(path: URL(string: "SBS")!)
+        try? await sbs.file(name: SBS.id.uuidString).save(SBS)
+        
+        let commercial = await aus.directory(path: URL(string: "Commercial")!)
+        try? await commercial.file(name: tikTokTrending.id.uuidString).save(tikTokTrending)
+        
         // UK
         let uk = await dir.directory(path: URL(string: "UK")!)
         let bbc = await uk.directory(path: URL(string: "BBC")!)
         try? await bbc.file(name: bbcWorldwide.id.uuidString).save(bbcWorldwide)
+        
+        // US
+        let us = await dir.directory(path: URL(string: "US")!)
+        try? await us.file(name: bin.id.uuidString).save(bin)
         
         // Finally, update user defaults
         defaults.set(true, forKey: initialConstructionKey)

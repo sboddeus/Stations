@@ -121,11 +121,11 @@ struct Stations: ReducerProtocol {
             case .onAppear:
                 struct OnAppearID {}
                 return .run { [directory = state.rootDirectory] send in
-                    let stations = await directory.getAllStations()
+                    let stations = await directory.getAllStations().sorted(by: { $0.title < $1.title })
                     
                     await send(.loadedStations(stations))
                     
-                    let directories = (try? await directory.retrieveAllSubDirectories()) ?? []
+                    let directories = (try? await directory.retrieveAllSubDirectories().sorted(by: { $0.name < $1.name })) ?? []
                     
                     await send(.loadedSubDirectories(directories))
                 }.cancellable(id: OnAppearID.self, cancelInFlight: true)
