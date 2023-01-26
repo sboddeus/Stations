@@ -16,10 +16,13 @@ struct NowPlaying: ReducerProtocol {
         var status: Status = .initial
         var isVolumeFocused: Bool = false
         var volume: Double = 0
+        
+        var context: PresentationContext = .embedded
     }
     
     enum Action: Equatable {
-        case onAppear
+        case setPresentationContext(PresentationContext)
+        case playBinding
         case update(State.Status)
         case togglePlay
         case toggleVolumeControl
@@ -32,7 +35,11 @@ struct NowPlaying: ReducerProtocol {
     var body: some ReducerProtocol<State, Action> {
         Reduce { state, action in
             switch action {
-            case .onAppear:
+            case let .setPresentationContext(context):
+                state.context = context
+                return .none
+                
+            case .playBinding:
                 return .run { send in
                         for await value in player.playingState.values {
                             switch value {
@@ -111,13 +118,16 @@ struct NowPlayingView: View {
                 imageURL = station.imageURL
             }
             
-            isVolumeFocused = state.isVolumeFocused
+            // Volume is focused if isVolumeFocused or if the presentatio context is full screen
+            isVolumeFocused = state.isVolumeFocused || state.context == .fullScreen
             volume = state.volume
         }
     }
     
     let store: StoreOf<NowPlaying>
     @ObservedObject var viewStore: ViewStore<ViewState, NowPlaying.Action>
+    
+    @Environment(\.presentationContext) var presentationContext
     
     init(store: StoreOf<NowPlaying>) {
         self.store = store
@@ -202,8 +212,11 @@ struct NowPlayingView: View {
                 }
             }
         }
+        .onAppear {
+            viewStore.send(.setPresentationContext(presentationContext))
+        }
         .task {
-            await viewStore.send(.onAppear).finish()
+            await viewStore.send(.playBinding).finish()
         }
         .background {
             if viewStore.isVolumeFocused {

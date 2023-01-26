@@ -30,6 +30,8 @@
 		269FF1E1297356050087615B /* SwiftUINavigation in Frameworks */ = {isa = PBXBuildFile; productRef = 269FF1E0297356050087615B /* SwiftUINavigation */; };
 		269FF1E3297356050087615B /* _SwiftUINavigationState in Frameworks */ = {isa = PBXBuildFile; productRef = 269FF1E2297356050087615B /* _SwiftUINavigationState */; };
 		269FF1E72974A7FC0087615B /* StreamMaster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269FF1E62974A7FC0087615B /* StreamMaster.swift */; };
+		26AC14ED298327DE00AE4C0D /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26AC14EC298327DE00AE4C0D /* HelpView.swift */; };
+		26AC14EF2983339700AE4C0D /* Environments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26AC14EE2983339700AE4C0D /* Environments.swift */; };
 		26B8E80D297E80FF00547AD4 /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = 26B8E80C297E80FF00547AD4 /* Collections */; };
 		26B8E80F297E80FF00547AD4 /* DequeModule in Frameworks */ = {isa = PBXBuildFile; productRef = 26B8E80E297E80FF00547AD4 /* DequeModule */; };
 		26B8E811297E80FF00547AD4 /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 26B8E810297E80FF00547AD4 /* OrderedCollections */; };
@@ -97,6 +99,8 @@
 		266F8D78297D49F2006606BF /* CreateDirectoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateDirectoryView.swift; sourceTree = "<group>"; };
 		269FF1DD2973542F0087615B /* CreateStationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateStationView.swift; sourceTree = "<group>"; };
 		269FF1E62974A7FC0087615B /* StreamMaster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamMaster.swift; sourceTree = "<group>"; };
+		26AC14EC298327DE00AE4C0D /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
+		26AC14EE2983339700AE4C0D /* Environments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Environments.swift; sourceTree = "<group>"; };
 		26B8E816297E861800547AD4 /* NowPlayingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingView.swift; sourceTree = "<group>"; };
 		26BA230529734E5F0033793F /* Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		26BA230629734E5F0033793F /* Directory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Directory.swift; sourceTree = "<group>"; };
@@ -156,6 +160,7 @@
 			isa = PBXGroup;
 			children = (
 				263FCE6C297F3CE600AA29B9 /* VolumeControl.swift */,
+				26AC14EE2983339700AE4C0D /* Environments.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -203,6 +208,14 @@
 				269FF1E62974A7FC0087615B /* StreamMaster.swift */,
 			);
 			path = "Station Master";
+			sourceTree = "<group>";
+		};
+		26AC14EB298327C700AE4C0D /* Help */ = {
+			isa = PBXGroup;
+			children = (
+				26AC14EC298327DE00AE4C0D /* HelpView.swift */,
+			);
+			path = Help;
 			sourceTree = "<group>";
 		};
 		26B8E812297E855B00547AD4 /* Station */ = {
@@ -317,6 +330,7 @@
 		26CFB89B296940D60028EC29 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				26AC14EB298327C700AE4C0D /* Help */,
 				26B8E815297E859C00547AD4 /* Home */,
 				26B8E812297E855B00547AD4 /* Station */,
 			);
@@ -474,6 +488,7 @@
 				26CFB88E296906AA0028EC29 /* Player.swift in Sources */,
 				266E07D4297E9A3900E5225B /* RecentlyPlayedView.swift in Sources */,
 				26BA230B29734E5F0033793F /* File.swift in Sources */,
+				26AC14EF2983339700AE4C0D /* Environments.swift in Sources */,
 				2619BDB529794AE900C36485 /* EditStationView.swift in Sources */,
 				265295B7297DF818008232A6 /* EditFolderMenuView.swift in Sources */,
 				26CFB8A429694C450028EC29 /* NowPlayingControls.swift in Sources */,
@@ -491,6 +506,7 @@
 				263FCE6D297F3CE600AA29B9 /* VolumeControl.swift in Sources */,
 				266F8D79297D49F2006606BF /* CreateDirectoryView.swift in Sources */,
 				26B8E817297E861800547AD4 /* NowPlayingView.swift in Sources */,
+				26AC14ED298327DE00AE4C0D /* HelpView.swift in Sources */,
 				26BA230A29734E5F0033793F /* Directory.swift in Sources */,
 				26CFB891296906F20028EC29 /* Station.swift in Sources */,
 				26CFB87B296906440028EC29 /* ABC_StationsApp.swift in Sources */,

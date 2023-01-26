@@ -2,22 +2,27 @@
 import Foundation
 import SwiftUI
 import ComposableArchitecture
+import WatchDEBUG
 
 struct Menu: ReducerProtocol {
     struct State: Equatable {
-        
+        enum Route: Equatable {
+            case debug
+        }
+        var route: Route?
     }
     
     enum Action: Equatable {
-        enum Delegate: Equatable {
-            case tappedDebugMenu
-        }
-        case delegate(Delegate)
+        case setRoute(State.Route?)
     }
     
     var body: some ReducerProtocol<State, Action> {
         Reduce { state, action in
-            return .none
+            switch action {
+            case let .setRoute(route):
+                state.route = route
+                return .none
+            }
         }
     }
 }
@@ -32,15 +37,25 @@ struct MenuView: View {
     }
     
     var body: some View {
-        List {
-            Button {
-                viewStore.send(.delegate(.tappedDebugMenu))
-            } label: {
-                Text("Debug")
+        ScrollView {
+            VStack(alignment: .leading, spacing: 10) {
+                Button {
+                    viewStore.send(.setRoute(.debug))
+                } label: {
+                    Text("Debug")
+                }
+                
+                Text("Version: \(Bundle.main.combinedVersionString)")
             }
-            
-            Text("Version: \(Bundle.main.combinedVersionString)")
-        }
+        }.navigationDestination(
+            isPresented: viewStore.binding(
+                get: { state in
+                    state.route == .debug
+                }, send: { value in
+                    .setRoute(value ? .debug : nil)
+                }), destination: {
+                    DEBUG()
+                })
     }
 }
 

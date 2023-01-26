@@ -9,27 +9,37 @@ import WatchDEBUG
 struct Home: ReducerProtocol {
     struct State: Equatable {
         enum Route: Equatable {
-            case debug
             case menu(Menu.State)
             case stations(Stream.State)
+            case help(Help.State)
         }
         var route: Route?
         
         var nowPlaying = NowPlaying.State()
         var recentlyPlayed = RecentlyPlayed.State()
+        
+        var showFullScreenNowPlaying = false
     }
     
     enum Action: Equatable {
-        case setRoute(State.Route?)
+        // Child actions
         case nowPlaying(NowPlaying.Action)
         case recentlyPlayed(RecentlyPlayed.Action)
+        
+        // Internal
         case showMenu
         case showHome
+        case showNowPlaying(Bool)
+        case showHelp
         case showStations
         
+        case setRoute(State.Route?)
+        
+        // Routed actions
         enum RouteAction: Equatable {
             case menu(Menu.Action)
             case stations(Stream.Action)
+            case help(Help.Action)
         }
         case routeAction(RouteAction)
     }
@@ -60,12 +70,16 @@ struct Home: ReducerProtocol {
                 state.route = .menu(.init())
                 return .none
                 
-            case .routeAction(.menu(.delegate(.tappedDebugMenu))):
-                state.route = .debug
-                return .none
-                
             case .showHome:
                 state.route = nil
+                return .none
+                
+            case .showHelp:
+                state.route = .help(.init())
+                return .none
+                
+            case let .showNowPlaying(show):
+                state.showFullScreenNowPlaying = show
                 return .none
                 
             default:
@@ -78,6 +92,9 @@ struct Home: ReducerProtocol {
             }
             Scope(state: /State.Route.stations, action: /Action.RouteAction.stations) {
                 Stream()
+            }
+            Scope(state: /State.Route.help, action: /Action.RouteAction.help) {
+                Help()
             }
         }
     }
@@ -107,7 +124,7 @@ struct HomeView: View {
                                     state: \.nowPlaying,
                                     action: { Home.Action.nowPlaying($0) }
                                 )
-                            )
+                            ).environment(\.presentationContext, .embedded)
                         }
                         
                         VStack(alignment: .leading, spacing: 10) {
@@ -144,6 +161,11 @@ struct HomeView: View {
                             } label: {
                                 Text("Settings")
                             }
+                            Button {
+                                viewStore.send(.showHelp)
+                            } label: {
+                                Text("Help")
+                            }
                         }
                     }
                 }
@@ -161,13 +183,39 @@ struct HomeView: View {
                         SteamsView(store: store)
                     }
                 )
+                .navigationDestination(
+                    unwrapping: viewStore.binding(
+                        get: \.route,
+                        send: Home.Action.setRoute
+                    ),
+                    case: /Home.State.Route.menu
+                ) { $value in
+                    let store = store.scope(
+                        state: { _ in $value.wrappedValue },
+                        action: { Home.Action.routeAction(.menu($0)) }
+                    )
+                    MenuView(store: store)
+                }
+                .navigationDestination(
+                    unwrapping: viewStore.binding(
+                        get: \.route,
+                        send: Home.Action.setRoute
+                    ),
+                    case: /Home.State.Route.help
+                ) { $value in
+                    let store = store.scope(
+                        state: { _ in $value.wrappedValue },
+                        action: { Home.Action.routeAction(.help($0)) }
+                    )
+                    HelpView(store: store)
+                }
             }
             switch viewStore.route {
-            case .stations:
+            case .stations, .help:
                 Button {
-                    viewStore.send(.showHome)
+                    viewStore.send(.showNowPlaying(true))
                 } label: {
-                    Image(systemName: "house")
+                    Image(systemName: "waveform.path")
                         .foregroundColor(LeincastColors.brand.color)
                 }
                 .backgroundStyle(.indigo)
@@ -179,42 +227,25 @@ struct HomeView: View {
                 EmptyView()
             }
         }
-        .fullScreenCover(
-            unwrapping: viewStore.binding(
-                get: \.route,
-                send: Home.Action.setRoute
-            ),
-            case: /Home.State.Route.menu
-        ) { $value in
-            let store = store.scope(
-                state: { _ in $value.wrappedValue },
-                action: { Home.Action.routeAction(.menu($0)) }
-            )
-            MenuView(store: store)
-                .toolbar {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button(action: { viewStore.send(.setRoute(nil)) }) {
-                           Text("Close")
-                        }
+        .fullScreenCover(isPresented: viewStore.binding(
+            get: \.showFullScreenNowPlaying,
+            send: Home.Action.showNowPlaying
+        )) {
+            VStack(alignment: .leading) {
+                NowPlayingView(
+                    store: store.scope(
+                        state: \.nowPlaying,
+                        action: { Home.Action.nowPlaying($0) }
+                    )
+                )
+                .environment(\.presentationContext, .fullScreen)
+            }.toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(action: { viewStore.send(.showNowPlaying(false)) }) {
+                       Text("Close")
                     }
                 }
-                .interactiveDismissDisabled()
-        }
-        .fullScreenCover(
-            unwrapping: viewStore.binding(
-                get: \.route,
-                send: Home.Action.setRoute
-            ),
-            case: /Home.State.Route.debug
-        ) { _ in
-            DEBUG()
-                .toolbar {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button(action: { viewStore.send(.setRoute(nil)) }) {
-                           Text("Close")
-                        }
-                    }
-                }
+            }
         }
     }
 }
