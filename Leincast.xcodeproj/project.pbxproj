@@ -1,0 +1,802 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2632CB9829847AFD0041BB2D /* Leincast Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 2632CB9729847AFD0041BB2D /* Leincast Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		2632CB9D29847AFD0041BB2D /* LeincastApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2632CB9C29847AFD0041BB2D /* LeincastApp.swift */; };
+		2632CBA129847AFD0041BB2D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2632CBA029847AFD0041BB2D /* Assets.xcassets */; };
+		2632CBB129847C9C0041BB2D /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 2632CBB029847C9C0041BB2D /* ComposableArchitecture */; };
+		2632CBB429847CB70041BB2D /* SwiftUINavigation in Frameworks */ = {isa = PBXBuildFile; productRef = 2632CBB329847CB70041BB2D /* SwiftUINavigation */; };
+		2632CBB729847CDD0041BB2D /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 2632CBB629847CDD0041BB2D /* SDWebImageSwiftUI */; };
+		2632CBBA29847CFA0041BB2D /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = 2632CBB929847CFA0041BB2D /* Collections */; };
+		2632CBBC29847CFA0041BB2D /* DequeModule in Frameworks */ = {isa = PBXBuildFile; productRef = 2632CBBB29847CFA0041BB2D /* DequeModule */; };
+		2632CBBE29847CFA0041BB2D /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 2632CBBD29847CFA0041BB2D /* OrderedCollections */; };
+		2632CBC129847D1B0041BB2D /* AsyncAlgorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 2632CBC029847D1B0041BB2D /* AsyncAlgorithms */; };
+		2632CBC329847D380041BB2D /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2632CBC229847D380041BB2D /* Colors.xcassets */; };
+		2632CBD629847EB80041BB2D /* DEBUG.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2632CBD529847EB80041BB2D /* DEBUG.swift */; };
+		2632CC162984805A0041BB2D /* LeinColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2632CBED2984805A0041BB2D /* LeinColors.swift */; };
+		2632CC172984805A0041BB2D /* Stream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2632CBEF2984805A0041BB2D /* Stream.swift */; };
+		2632CC182984805A0041BB2D /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2632CBF22984805A0041BB2D /* HomeView.swift */; };
+		2632CC192984805A0041BB2D /* RecentlyPlayedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2632CBF32984805A0041BB2D /* RecentlyPlayedView.swift */; };
+		2632CC1A2984805A0041BB2D /* NowPlayingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2632CBF42984805A0041BB2D /* NowPlayingView.swift */; };
+		2632CC1B2984805A0041BB2D /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2632CBF52984805A0041BB2D /* MenuView.swift */; };
+		2632CC1C2984805A0041BB2D /* StreamsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2632CBF72984805A0041BB2D /* StreamsView.swift */; };
+		2632CC1D2984805A0041BB2D /* DirectoryRowVIew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2632CBF92984805A0041BB2D /* DirectoryRowVIew.swift */; };
+		2632CC1E2984805A0041BB2D /* StreamRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2632CBFA2984805A0041BB2D /* StreamRowView.swift */; };
+		2632CC1F2984805A0041BB2D /* EditMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2632CBFB2984805A0041BB2D /* EditMenuView.swift */; };
+		2632CC202984805A0041BB2D /* EditStreamView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2632CBFD2984805A0041BB2D /* EditStreamView.swift */; };
+		2632CC212984805A0041BB2D /* EditDirectoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2632CBFE2984805A0041BB2D /* EditDirectoryView.swift */; };
+		2632CC222984805A0041BB2D /* CreateStreamView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2632CBFF2984805A0041BB2D /* CreateStreamView.swift */; };
+		2632CC232984805A0041BB2D /* CreateDirectoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2632CC002984805A0041BB2D /* CreateDirectoryView.swift */; };
+		2632CC242984805A0041BB2D /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2632CC022984805A0041BB2D /* HelpView.swift */; };
+		2632CC252984805A0041BB2D /* Environments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2632CC042984805A0041BB2D /* Environments.swift */; };
+		2632CC262984805A0041BB2D /* VolumeControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2632CC052984805A0041BB2D /* VolumeControl.swift */; };
+		2632CC272984805A0041BB2D /* NowPlayingControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2632CC072984805A0041BB2D /* NowPlayingControls.swift */; };
+		2632CC282984805A0041BB2D /* PlayerDependency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2632CC092984805A0041BB2D /* PlayerDependency.swift */; };
+		2632CC292984805A0041BB2D /* Directory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2632CC0C2984805A0041BB2D /* Directory.swift */; };
+		2632CC2A2984805A0041BB2D /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2632CC0D2984805A0041BB2D /* Helpers.swift */; };
+		2632CC2B2984805A0041BB2D /* FileSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2632CC0E2984805A0041BB2D /* FileSystem.swift */; };
+		2632CC2C2984805A0041BB2D /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2632CC0F2984805A0041BB2D /* File.swift */; };
+		2632CC2D2984805A0041BB2D /* ABCStreams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2632CC112984805A0041BB2D /* ABCStreams.swift */; };
+		2632CC2E2984805A0041BB2D /* StreamMaster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2632CC122984805A0041BB2D /* StreamMaster.swift */; };
+		2632CC2F2984805A0041BB2D /* MediaMetaDataEnrichment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2632CC142984805A0041BB2D /* MediaMetaDataEnrichment.swift */; };
+		2632CC302984805A0041BB2D /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2632CC152984805A0041BB2D /* Player.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		2632CB9929847AFD0041BB2D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2632CB8B29847AFC0041BB2D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2632CB9629847AFD0041BB2D;
+			remoteInfo = "Leincast Watch App";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		2632CBAA29847AFD0041BB2D /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				2632CB9829847AFD0041BB2D /* Leincast Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		2632CB9129847AFD0041BB2D /* Leincast.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Leincast.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2632CB9729847AFD0041BB2D /* Leincast Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Leincast Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2632CB9C29847AFD0041BB2D /* LeincastApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeincastApp.swift; sourceTree = "<group>"; };
+		2632CBA029847AFD0041BB2D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2632CBC229847D380041BB2D /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
+		2632CBD529847EB80041BB2D /* DEBUG.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DEBUG.swift; sourceTree = "<group>"; };
+		2632CBED2984805A0041BB2D /* LeinColors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeinColors.swift; sourceTree = "<group>"; };
+		2632CBEF2984805A0041BB2D /* Stream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stream.swift; sourceTree = "<group>"; };
+		2632CBF22984805A0041BB2D /* HomeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		2632CBF32984805A0041BB2D /* RecentlyPlayedView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecentlyPlayedView.swift; sourceTree = "<group>"; };
+		2632CBF42984805A0041BB2D /* NowPlayingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NowPlayingView.swift; sourceTree = "<group>"; };
+		2632CBF52984805A0041BB2D /* MenuView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
+		2632CBF72984805A0041BB2D /* StreamsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamsView.swift; sourceTree = "<group>"; };
+		2632CBF92984805A0041BB2D /* DirectoryRowVIew.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DirectoryRowVIew.swift; sourceTree = "<group>"; };
+		2632CBFA2984805A0041BB2D /* StreamRowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamRowView.swift; sourceTree = "<group>"; };
+		2632CBFB2984805A0041BB2D /* EditMenuView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditMenuView.swift; sourceTree = "<group>"; };
+		2632CBFD2984805A0041BB2D /* EditStreamView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditStreamView.swift; sourceTree = "<group>"; };
+		2632CBFE2984805A0041BB2D /* EditDirectoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditDirectoryView.swift; sourceTree = "<group>"; };
+		2632CBFF2984805A0041BB2D /* CreateStreamView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateStreamView.swift; sourceTree = "<group>"; };
+		2632CC002984805A0041BB2D /* CreateDirectoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateDirectoryView.swift; sourceTree = "<group>"; };
+		2632CC022984805A0041BB2D /* HelpView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
+		2632CC042984805A0041BB2D /* Environments.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Environments.swift; sourceTree = "<group>"; };
+		2632CC052984805A0041BB2D /* VolumeControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VolumeControl.swift; sourceTree = "<group>"; };
+		2632CC072984805A0041BB2D /* NowPlayingControls.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NowPlayingControls.swift; sourceTree = "<group>"; };
+		2632CC092984805A0041BB2D /* PlayerDependency.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerDependency.swift; sourceTree = "<group>"; };
+		2632CC0C2984805A0041BB2D /* Directory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Directory.swift; sourceTree = "<group>"; };
+		2632CC0D2984805A0041BB2D /* Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
+		2632CC0E2984805A0041BB2D /* FileSystem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSystem.swift; sourceTree = "<group>"; };
+		2632CC0F2984805A0041BB2D /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
+		2632CC112984805A0041BB2D /* ABCStreams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ABCStreams.swift; sourceTree = "<group>"; };
+		2632CC122984805A0041BB2D /* StreamMaster.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamMaster.swift; sourceTree = "<group>"; };
+		2632CC142984805A0041BB2D /* MediaMetaDataEnrichment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaMetaDataEnrichment.swift; sourceTree = "<group>"; };
+		2632CC152984805A0041BB2D /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
+		2632CC31298480BB0041BB2D /* Leincast-Watch-App-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Leincast-Watch-App-Info.plist"; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2632CB9429847AFD0041BB2D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2632CBB729847CDD0041BB2D /* SDWebImageSwiftUI in Frameworks */,
+				2632CBB429847CB70041BB2D /* SwiftUINavigation in Frameworks */,
+				2632CBBE29847CFA0041BB2D /* OrderedCollections in Frameworks */,
+				2632CBBC29847CFA0041BB2D /* DequeModule in Frameworks */,
+				2632CBBA29847CFA0041BB2D /* Collections in Frameworks */,
+				2632CBB129847C9C0041BB2D /* ComposableArchitecture in Frameworks */,
+				2632CBC129847D1B0041BB2D /* AsyncAlgorithms in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2632CB8A29847AFC0041BB2D = {
+			isa = PBXGroup;
+			children = (
+				2632CB9B29847AFD0041BB2D /* Leincast Watch App */,
+				2632CB9229847AFD0041BB2D /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		2632CB9229847AFD0041BB2D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2632CB9129847AFD0041BB2D /* Leincast.app */,
+				2632CB9729847AFD0041BB2D /* Leincast Watch App.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2632CB9B29847AFD0041BB2D /* Leincast Watch App */ = {
+			isa = PBXGroup;
+			children = (
+				2632CC31298480BB0041BB2D /* Leincast-Watch-App-Info.plist */,
+				2632CB9C29847AFD0041BB2D /* LeincastApp.swift */,
+				2632CC082984805A0041BB2D /* Dependencies */,
+				2632CBEC2984805A0041BB2D /* Design */,
+				2632CC032984805A0041BB2D /* Extensions */,
+				2632CBEE2984805A0041BB2D /* Models */,
+				2632CC062984805A0041BB2D /* Now Playing Controls */,
+				2632CC0A2984805A0041BB2D /* Services */,
+				2632CBF02984805A0041BB2D /* Views */,
+				2632CBD429847E8D0041BB2D /* DEBUG */,
+				2632CBAE29847C1F0041BB2D /* Resources */,
+			);
+			path = "Leincast Watch App";
+			sourceTree = "<group>";
+		};
+		2632CBAE29847C1F0041BB2D /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				2632CBC229847D380041BB2D /* Colors.xcassets */,
+				2632CBA029847AFD0041BB2D /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		2632CBD429847E8D0041BB2D /* DEBUG */ = {
+			isa = PBXGroup;
+			children = (
+				2632CBD529847EB80041BB2D /* DEBUG.swift */,
+			);
+			path = DEBUG;
+			sourceTree = "<group>";
+		};
+		2632CBEC2984805A0041BB2D /* Design */ = {
+			isa = PBXGroup;
+			children = (
+				2632CBED2984805A0041BB2D /* LeinColors.swift */,
+			);
+			path = Design;
+			sourceTree = "<group>";
+		};
+		2632CBEE2984805A0041BB2D /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				2632CBEF2984805A0041BB2D /* Stream.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		2632CBF02984805A0041BB2D /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				2632CBF12984805A0041BB2D /* Home */,
+				2632CBF62984805A0041BB2D /* Station */,
+				2632CC012984805A0041BB2D /* Help */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		2632CBF12984805A0041BB2D /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				2632CBF22984805A0041BB2D /* HomeView.swift */,
+				2632CBF32984805A0041BB2D /* RecentlyPlayedView.swift */,
+				2632CBF42984805A0041BB2D /* NowPlayingView.swift */,
+				2632CBF52984805A0041BB2D /* MenuView.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		2632CBF62984805A0041BB2D /* Station */ = {
+			isa = PBXGroup;
+			children = (
+				2632CBF72984805A0041BB2D /* StreamsView.swift */,
+				2632CBF82984805A0041BB2D /* Rows */,
+				2632CBFB2984805A0041BB2D /* EditMenuView.swift */,
+				2632CBFC2984805A0041BB2D /* CreateEdit */,
+			);
+			path = Station;
+			sourceTree = "<group>";
+		};
+		2632CBF82984805A0041BB2D /* Rows */ = {
+			isa = PBXGroup;
+			children = (
+				2632CBF92984805A0041BB2D /* DirectoryRowVIew.swift */,
+				2632CBFA2984805A0041BB2D /* StreamRowView.swift */,
+			);
+			path = Rows;
+			sourceTree = "<group>";
+		};
+		2632CBFC2984805A0041BB2D /* CreateEdit */ = {
+			isa = PBXGroup;
+			children = (
+				2632CBFD2984805A0041BB2D /* EditStreamView.swift */,
+				2632CBFE2984805A0041BB2D /* EditDirectoryView.swift */,
+				2632CBFF2984805A0041BB2D /* CreateStreamView.swift */,
+				2632CC002984805A0041BB2D /* CreateDirectoryView.swift */,
+			);
+			path = CreateEdit;
+			sourceTree = "<group>";
+		};
+		2632CC012984805A0041BB2D /* Help */ = {
+			isa = PBXGroup;
+			children = (
+				2632CC022984805A0041BB2D /* HelpView.swift */,
+			);
+			path = Help;
+			sourceTree = "<group>";
+		};
+		2632CC032984805A0041BB2D /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				2632CC042984805A0041BB2D /* Environments.swift */,
+				2632CC052984805A0041BB2D /* VolumeControl.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		2632CC062984805A0041BB2D /* Now Playing Controls */ = {
+			isa = PBXGroup;
+			children = (
+				2632CC072984805A0041BB2D /* NowPlayingControls.swift */,
+			);
+			path = "Now Playing Controls";
+			sourceTree = "<group>";
+		};
+		2632CC082984805A0041BB2D /* Dependencies */ = {
+			isa = PBXGroup;
+			children = (
+				2632CC092984805A0041BB2D /* PlayerDependency.swift */,
+			);
+			path = Dependencies;
+			sourceTree = "<group>";
+		};
+		2632CC0A2984805A0041BB2D /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				2632CC0B2984805A0041BB2D /* FileSystem */,
+				2632CC102984805A0041BB2D /* Stream Master */,
+				2632CC132984805A0041BB2D /* Player */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		2632CC0B2984805A0041BB2D /* FileSystem */ = {
+			isa = PBXGroup;
+			children = (
+				2632CC0C2984805A0041BB2D /* Directory.swift */,
+				2632CC0D2984805A0041BB2D /* Helpers.swift */,
+				2632CC0E2984805A0041BB2D /* FileSystem.swift */,
+				2632CC0F2984805A0041BB2D /* File.swift */,
+			);
+			path = FileSystem;
+			sourceTree = "<group>";
+		};
+		2632CC102984805A0041BB2D /* Stream Master */ = {
+			isa = PBXGroup;
+			children = (
+				2632CC112984805A0041BB2D /* ABCStreams.swift */,
+				2632CC122984805A0041BB2D /* StreamMaster.swift */,
+			);
+			path = "Stream Master";
+			sourceTree = "<group>";
+		};
+		2632CC132984805A0041BB2D /* Player */ = {
+			isa = PBXGroup;
+			children = (
+				2632CC142984805A0041BB2D /* MediaMetaDataEnrichment.swift */,
+				2632CC152984805A0041BB2D /* Player.swift */,
+			);
+			path = Player;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2632CB9029847AFD0041BB2D /* Leincast */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2632CBAB29847AFD0041BB2D /* Build configuration list for PBXNativeTarget "Leincast" */;
+			buildPhases = (
+				2632CB8F29847AFD0041BB2D /* Resources */,
+				2632CBAA29847AFD0041BB2D /* Embed Watch Content */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2632CB9A29847AFD0041BB2D /* PBXTargetDependency */,
+			);
+			name = Leincast;
+			productName = Leincast;
+			productReference = 2632CB9129847AFD0041BB2D /* Leincast.app */;
+			productType = "com.apple.product-type.application.watchapp2-container";
+		};
+		2632CB9629847AFD0041BB2D /* Leincast Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2632CBA729847AFD0041BB2D /* Build configuration list for PBXNativeTarget "Leincast Watch App" */;
+			buildPhases = (
+				2632CB9329847AFD0041BB2D /* Sources */,
+				2632CB9429847AFD0041BB2D /* Frameworks */,
+				2632CB9529847AFD0041BB2D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Leincast Watch App";
+			packageProductDependencies = (
+				2632CBB029847C9C0041BB2D /* ComposableArchitecture */,
+				2632CBB329847CB70041BB2D /* SwiftUINavigation */,
+				2632CBB629847CDD0041BB2D /* SDWebImageSwiftUI */,
+				2632CBB929847CFA0041BB2D /* Collections */,
+				2632CBBB29847CFA0041BB2D /* DequeModule */,
+				2632CBBD29847CFA0041BB2D /* OrderedCollections */,
+				2632CBC029847D1B0041BB2D /* AsyncAlgorithms */,
+			);
+			productName = "Leincast Watch App";
+			productReference = 2632CB9729847AFD0041BB2D /* Leincast Watch App.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2632CB8B29847AFC0041BB2D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1420;
+				LastUpgradeCheck = 1420;
+				TargetAttributes = {
+					2632CB9029847AFD0041BB2D = {
+						CreatedOnToolsVersion = 14.2;
+					};
+					2632CB9629847AFD0041BB2D = {
+						CreatedOnToolsVersion = 14.2;
+					};
+				};
+			};
+			buildConfigurationList = 2632CB8E29847AFC0041BB2D /* Build configuration list for PBXProject "Leincast" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 2632CB8A29847AFC0041BB2D;
+			packageReferences = (
+				2632CBAF29847C9C0041BB2D /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
+				2632CBB229847CB70041BB2D /* XCRemoteSwiftPackageReference "swiftui-navigation" */,
+				2632CBB529847CDD0041BB2D /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
+				2632CBB829847CFA0041BB2D /* XCRemoteSwiftPackageReference "swift-collections" */,
+				2632CBBF29847D1B0041BB2D /* XCRemoteSwiftPackageReference "swift-async-algorithms" */,
+			);
+			productRefGroup = 2632CB9229847AFD0041BB2D /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2632CB9029847AFD0041BB2D /* Leincast */,
+				2632CB9629847AFD0041BB2D /* Leincast Watch App */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2632CB8F29847AFD0041BB2D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2632CB9529847AFD0041BB2D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2632CBC329847D380041BB2D /* Colors.xcassets in Resources */,
+				2632CBA129847AFD0041BB2D /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2632CB9329847AFD0041BB2D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2632CC2C2984805A0041BB2D /* File.swift in Sources */,
+				2632CB9D29847AFD0041BB2D /* LeincastApp.swift in Sources */,
+				2632CC1B2984805A0041BB2D /* MenuView.swift in Sources */,
+				2632CC212984805A0041BB2D /* EditDirectoryView.swift in Sources */,
+				2632CC262984805A0041BB2D /* VolumeControl.swift in Sources */,
+				2632CC2E2984805A0041BB2D /* StreamMaster.swift in Sources */,
+				2632CC2A2984805A0041BB2D /* Helpers.swift in Sources */,
+				2632CC282984805A0041BB2D /* PlayerDependency.swift in Sources */,
+				2632CBD629847EB80041BB2D /* DEBUG.swift in Sources */,
+				2632CC1E2984805A0041BB2D /* StreamRowView.swift in Sources */,
+				2632CC222984805A0041BB2D /* CreateStreamView.swift in Sources */,
+				2632CC302984805A0041BB2D /* Player.swift in Sources */,
+				2632CC272984805A0041BB2D /* NowPlayingControls.swift in Sources */,
+				2632CC242984805A0041BB2D /* HelpView.swift in Sources */,
+				2632CC1D2984805A0041BB2D /* DirectoryRowVIew.swift in Sources */,
+				2632CC162984805A0041BB2D /* LeinColors.swift in Sources */,
+				2632CC2D2984805A0041BB2D /* ABCStreams.swift in Sources */,
+				2632CC232984805A0041BB2D /* CreateDirectoryView.swift in Sources */,
+				2632CC192984805A0041BB2D /* RecentlyPlayedView.swift in Sources */,
+				2632CC2F2984805A0041BB2D /* MediaMetaDataEnrichment.swift in Sources */,
+				2632CC182984805A0041BB2D /* HomeView.swift in Sources */,
+				2632CC2B2984805A0041BB2D /* FileSystem.swift in Sources */,
+				2632CC202984805A0041BB2D /* EditStreamView.swift in Sources */,
+				2632CC1A2984805A0041BB2D /* NowPlayingView.swift in Sources */,
+				2632CC1C2984805A0041BB2D /* StreamsView.swift in Sources */,
+				2632CC252984805A0041BB2D /* Environments.swift in Sources */,
+				2632CC292984805A0041BB2D /* Directory.swift in Sources */,
+				2632CC172984805A0041BB2D /* Stream.swift in Sources */,
+				2632CC1F2984805A0041BB2D /* EditMenuView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		2632CB9A29847AFD0041BB2D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2632CB9629847AFD0041BB2D /* Leincast Watch App */;
+			targetProxy = 2632CB9929847AFD0041BB2D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		2632CBA529847AFD0041BB2D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				WATCHOS_DEPLOYMENT_TARGET = 9.1;
+			};
+			name = Debug;
+		};
+		2632CBA629847AFD0041BB2D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				WATCHOS_DEPLOYMENT_TARGET = 9.1;
+			};
+			name = Release;
+		};
+		2632CBA829847AFD0041BB2D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = QCHSD48ZLT;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Leincast-Watch-App-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Leincast;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKWatchOnly = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = au.com.syeboddeus.leincast.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 9.1;
+			};
+			name = Debug;
+		};
+		2632CBA929847AFD0041BB2D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = QCHSD48ZLT;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Leincast-Watch-App-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Leincast;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKWatchOnly = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = au.com.syeboddeus.leincast.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 9.1;
+			};
+			name = Release;
+		};
+		2632CBAC29847AFD0041BB2D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = QCHSD48ZLT;
+				INFOPLIST_KEY_CFBundleDisplayName = Leincast;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = au.com.syeboddeus.leincast;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		2632CBAD29847AFD0041BB2D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = QCHSD48ZLT;
+				INFOPLIST_KEY_CFBundleDisplayName = Leincast;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = au.com.syeboddeus.leincast;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2632CB8E29847AFC0041BB2D /* Build configuration list for PBXProject "Leincast" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2632CBA529847AFD0041BB2D /* Debug */,
+				2632CBA629847AFD0041BB2D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2632CBA729847AFD0041BB2D /* Build configuration list for PBXNativeTarget "Leincast Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2632CBA829847AFD0041BB2D /* Debug */,
+				2632CBA929847AFD0041BB2D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2632CBAB29847AFD0041BB2D /* Build configuration list for PBXNativeTarget "Leincast" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2632CBAC29847AFD0041BB2D /* Debug */,
+				2632CBAD29847AFD0041BB2D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2632CBAF29847C9C0041BB2D /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.49.2;
+			};
+		};
+		2632CBB229847CB70041BB2D /* XCRemoteSwiftPackageReference "swiftui-navigation" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swiftui-navigation";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.6.0;
+			};
+		};
+		2632CBB529847CDD0041BB2D /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+		2632CBB829847CFA0041BB2D /* XCRemoteSwiftPackageReference "swift-collections" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-collections.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+		2632CBBF29847D1B0041BB2D /* XCRemoteSwiftPackageReference "swift-async-algorithms" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-async-algorithms.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.0.4;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2632CBB029847C9C0041BB2D /* ComposableArchitecture */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2632CBAF29847C9C0041BB2D /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
+			productName = ComposableArchitecture;
+		};
+		2632CBB329847CB70041BB2D /* SwiftUINavigation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2632CBB229847CB70041BB2D /* XCRemoteSwiftPackageReference "swiftui-navigation" */;
+			productName = SwiftUINavigation;
+		};
+		2632CBB629847CDD0041BB2D /* SDWebImageSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2632CBB529847CDD0041BB2D /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
+			productName = SDWebImageSwiftUI;
+		};
+		2632CBB929847CFA0041BB2D /* Collections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2632CBB829847CFA0041BB2D /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = Collections;
+		};
+		2632CBBB29847CFA0041BB2D /* DequeModule */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2632CBB829847CFA0041BB2D /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = DequeModule;
+		};
+		2632CBBD29847CFA0041BB2D /* OrderedCollections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2632CBB829847CFA0041BB2D /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = OrderedCollections;
+		};
+		2632CBC029847D1B0041BB2D /* AsyncAlgorithms */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2632CBBF29847D1B0041BB2D /* XCRemoteSwiftPackageReference "swift-async-algorithms" */;
+			productName = AsyncAlgorithms;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 2632CB8B29847AFC0041BB2D /* Project object */;
+}
