@@ -187,15 +187,17 @@ struct HomeView: View {
                                 .font(.title3)
                                 .foregroundColor(LeincastColors.brand.color)
                             Divider()
-                            Button {
-                                viewStore.send(.showMenu)
-                            } label: {
-                                Text("Settings")
-                            }
-                            Button {
-                                viewStore.send(.showHelp)
-                            } label: {
-                                Text("Help")
+                            VStack(spacing: 5) {
+                                Button {
+                                    viewStore.send(.showMenu)
+                                } label: {
+                                    Text("Settings")
+                                }
+                                Button {
+                                    viewStore.send(.showHelp)
+                                } label: {
+                                    Text("Help")
+                                }
                             }
                         }
                     }
