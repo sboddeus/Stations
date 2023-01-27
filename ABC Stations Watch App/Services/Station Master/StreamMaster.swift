@@ -86,8 +86,8 @@ actor StreamMaster {
         let sbs = await aus.directory(path: URL(string: "SBS")!)
         try? await sbs.file(name: SBS.id.uuidString).save(SBS)
         
-        let commercial = await aus.directory(path: URL(string: "Commercial")!)
-        try? await commercial.file(name: tikTokTrending.id.uuidString).save(tikTokTrending)
+//        let commercial = await aus.directory(path: URL(string: "Commercial")!)
+//        try? await commercial.file(name: tikTokTrending.id.uuidString).save(tikTokTrending)
         
         // UK
         let uk = await dir.directory(path: URL(string: "UK")!)
@@ -95,8 +95,8 @@ actor StreamMaster {
         try? await bbc.file(name: bbcWorldwide.id.uuidString).save(bbcWorldwide)
         
         // US
-        let us = await dir.directory(path: URL(string: "US")!)
-        try? await us.file(name: bin.id.uuidString).save(bin)
+//        let us = await dir.directory(path: URL(string: "US")!)
+//        try? await us.file(name: bin.id.uuidString).save(bin)
         
         // Finally, update user defaults
         defaults.set(true, forKey: initialConstructionKey)

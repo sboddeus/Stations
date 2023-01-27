@@ -18,8 +18,8 @@ struct Streams: ReducerProtocol {
         var directories: IdentifiedArrayOf<DirectoryRow.State> = []
         
         indirect enum Route: Equatable {
-            case createStation(CreateStation.State)
-            case editStation(EditStation.State)
+            case createStation(CreateStream.State)
+            case editStation(EditStream.State)
             case createDirectory(CreateDirectory.State)
             case editDirectory(EditDirectory.State)
             case subDirectory(Streams.State)
@@ -43,8 +43,8 @@ struct Streams: ReducerProtocol {
 
         // Child Actions
         indirect enum RouteAction: Equatable {
-            case createStation(CreateStation.Action)
-            case editStation(EditStation.Action)
+            case createStation(CreateStream.Action)
+            case editStation(EditStream.Action)
             case subDirectory(Streams.Action)
             case editDirectory(EditDirectory.Action)
             case createDirectory(CreateDirectory.Action)
@@ -219,12 +219,12 @@ struct Streams: ReducerProtocol {
     
     private var createStation: some ReducerProtocol<Streams.State.Route, Streams.Action.RouteAction> {
         Scope(state: /State.Route.createStation, action: /Action.RouteAction.createStation) {
-            CreateStation()
+            CreateStream()
         }
     }
     private var editStation: some ReducerProtocol<Streams.State.Route, Streams.Action.RouteAction> {
         Scope(state: /State.Route.editStation, action: /Action.RouteAction.editStation) {
-            EditStation()
+            EditStream()
         }
     }
     private var createDirectory: some ReducerProtocol<Streams.State.Route, Streams.Action.RouteAction> {
@@ -266,7 +266,7 @@ struct Streams: ReducerProtocol {
     }
 }
 
-struct SteamsView: View {
+struct StreamsView: View {
     let store: StoreOf<Streams>
     @ObservedObject var viewStore: ViewStoreOf<Streams>
     
@@ -327,7 +327,7 @@ struct SteamsView: View {
                     state: { _ in $value.wrappedValue },
                     action: { Streams.Action.routeAction(.subDirectory($0)) }
                 )
-                SteamsView(store: store)
+                StreamsView(store: store)
             }
         )
         .fullScreenCover(
@@ -354,7 +354,7 @@ struct SteamsView: View {
                 state: { _ in $value.wrappedValue },
                 action: { Streams.Action.routeAction(.createStation($0)) }
             )
-            CreateStationView(store: store)
+            CreateStreamView(store: store)
                 .interactiveDismissDisabled()
         }
         .fullScreenCover(
@@ -368,7 +368,7 @@ struct SteamsView: View {
                 state: { _ in $value.wrappedValue },
                 action: { Streams.Action.routeAction(.editStation($0)) }
             )
-            EditStationView(store: store)
+            EditStreamView(store: store)
                 .interactiveDismissDisabled()
         }
         .fullScreenCover(

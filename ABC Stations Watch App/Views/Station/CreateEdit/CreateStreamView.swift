@@ -1,24 +1,13 @@
+
 import SwiftUI
 import ComposableArchitecture
 
-struct EditStation: ReducerProtocol {
+struct CreateStream: ReducerProtocol {
     struct State: Equatable {
-        let editedStation: Stream
         let containingDirectory: Directory
         var title: String = ""
         var url: String = ""
         var imageURL: String = ""
-        
-        init(
-            editedStation: Stream,
-            containingDirectory: Directory
-        ) {
-            self.editedStation = editedStation
-            self.containingDirectory = containingDirectory
-            self.title = editedStation.title
-            self.url = editedStation.url.absoluteString
-            self.imageURL = editedStation.imageURL?.absoluteString ?? ""
-        }
     }
     
     enum Action: Equatable {
@@ -28,7 +17,7 @@ struct EditStation: ReducerProtocol {
         case addStation
         
         enum Delegate {
-            case stationEdited
+            case stationAdded
         }
         case delegate(Delegate)
     }
@@ -52,20 +41,20 @@ struct EditStation: ReducerProtocol {
                 return .task { [state] in
                     
                     let station = Stream(
-                        id: state.editedStation.id,
-                        title: state.title,
-                        description: "",
-                        // TODO: These URLs have to be checked properly
-                        imageURL: URL(string: state.imageURL),
-                        url: URL(string: state.url)!
+                       id: UUID(),
+                       title: state.title,
+                       description: "",
+                       // TODO: These URLs have to be checked properly
+                       imageURL: URL(string: state.imageURL),
+                       url: URL(string: state.url)!
                     )
-                    
+                   
                     let file = try await state.containingDirectory.file(
                         name: station.id.uuidString
                     )
                     try await file.save(station)
                     
-                    return .delegate(.stationEdited)
+                    return .delegate(.stationAdded)
                 }
                 
             case .delegate:
@@ -75,11 +64,11 @@ struct EditStation: ReducerProtocol {
     }
 }
 
-struct EditStationView: View {
-    let store: StoreOf<EditStation>
-    @ObservedObject var viewStore: ViewStoreOf<EditStation>
+struct CreateStreamView: View {
+    let store: StoreOf<CreateStream>
+    @ObservedObject var viewStore: ViewStoreOf<CreateStream>
     
-    init(store: StoreOf<EditStation>) {
+    init(store: StoreOf<CreateStream>) {
         self.store = store
         viewStore = .init(store, observe: { $0 })
     }
@@ -91,7 +80,7 @@ struct EditStationView: View {
                     "Name",
                     text: viewStore.binding(
                         get: \.title,
-                        send: EditStation.Action.setTitle
+                        send: CreateStream.Action.setTitle
                     )
                 )
                 .textInputAutocapitalization(.never)
@@ -101,7 +90,7 @@ struct EditStationView: View {
                     "URL",
                     text: viewStore.binding(
                         get: \.url,
-                        send: EditStation.Action.setURL
+                        send: CreateStream.Action.setURL
                     )
                 )
                 .textInputAutocapitalization(.never)
@@ -111,16 +100,16 @@ struct EditStationView: View {
                     "Image URL",
                     text: viewStore.binding(
                         get: \.imageURL,
-                        send: EditStation.Action.setImageURL
+                        send: CreateStream.Action.setImageURL
                     )
                 )
                 .textInputAutocapitalization(.never)
                 .disableAutocorrection(true)
-                    
+                
                 Button {
                     viewStore.send(.addStation)
                 } label: {
-                    Text("Update")
+                    Text("Create")
                         .foregroundColor(.indigo)
                 }.disabled(viewStore.url.isEmpty || viewStore.title.isEmpty)
             }

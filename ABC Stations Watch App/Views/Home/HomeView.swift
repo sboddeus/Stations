@@ -159,14 +159,14 @@ struct HomeView: View {
                         }
                         
                         VStack(alignment: .leading, spacing: 10) {
-                            Text("Streams")
+                            Text("Your Audio")
                                 .font(.title3)
                                 .foregroundColor(LeincastColors.brand.color)
                             Divider()
                             Button {
                                 viewStore.send(.showStations)
                             } label: {
-                                Text("Your Streams")
+                                Text("Streams")
                             }
                         }
                         
@@ -213,7 +213,7 @@ struct HomeView: View {
                             state: { _ in $value.wrappedValue },
                             action: { Home.Action.routeAction(.stations($0)) }
                         )
-                        SteamsView(store: store)
+                        StreamsView(store: store)
                     }
                 )
                 .navigationDestination(
