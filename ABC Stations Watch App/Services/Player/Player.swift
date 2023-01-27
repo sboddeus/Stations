@@ -240,7 +240,8 @@ final class AVAudioPlayer: NSObject {
         // Stop and remove anything currently playing
         stop()
 
-        // Queue up new content
+        // Queue up new content and set loading status
+        playingState.send(.loading(item))
         let asset = AVURLAsset(playerItem: item)
         itemQueue.add([asset])
 

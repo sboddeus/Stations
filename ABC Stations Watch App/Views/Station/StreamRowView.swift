@@ -8,8 +8,9 @@ struct StreamRow: ReducerProtocol {
         let station: Station
         
         enum ActiveState: Equatable {
-            case idle
-            case isPlaying
+            case paused
+            case playing
+            case loading
             case unselected
         }
         var activeState: ActiveState
@@ -67,10 +68,12 @@ struct StreamRow: ReducerProtocol {
                         }
                         
                         switch value {
-                        case .loading, .paused:
-                            await send.send(.setActiveState(.idle))
+                        case .loading:
+                            await send.send(.setActiveState(.loading))
+                        case .paused:
+                            await send.send(.setActiveState(.paused))
                         case .playing:
-                            await send.send(.setActiveState(.isPlaying))
+                            await send.send(.setActiveState(.playing))
                         case .initial, .stopped:
                             await send.send(.setActiveState(.unselected))
                         }
@@ -109,24 +112,30 @@ struct StreamRowView: View {
                     .foregroundColor(viewStore.activeState == .unselected ? .white : .red)
                 Spacer()
                 
-                if viewStore.activeState != .unselected {
-                    if viewStore.activeState == .isPlaying {
-                        Image(systemName: "pause.circle")
-                            .resizable()
-                            .frame(width: 20, height: 20)
-                            .foregroundColor(.red)
-                            .onTapGesture {
-                                viewStore.send(.pause)
-                            }
-                    } else {
-                        Image(systemName: "play.circle")
-                            .resizable()
-                            .frame(width: 20, height: 20)
-                            .foregroundColor(.red)
-                            .onTapGesture {
-                                viewStore.send(.play)
-                            }
-                    }
+                switch viewStore.activeState {
+                case .loading:
+                    ProgressView()
+                        .foregroundColor(.red)
+                        .scaledToFit()
+                        .fixedSize()
+                case .playing:
+                    Image(systemName: "pause.circle")
+                        .resizable()
+                        .frame(width: 20, height: 20)
+                        .foregroundColor(.red)
+                        .onTapGesture {
+                            viewStore.send(.pause)
+                        }
+                case .paused:
+                    Image(systemName: "play.circle")
+                        .resizable()
+                        .frame(width: 20, height: 20)
+                        .foregroundColor(.red)
+                        .onTapGesture {
+                            viewStore.send(.play)
+                        }
+                case .unselected:
+                    EmptyView()
                 }
             }
         }
