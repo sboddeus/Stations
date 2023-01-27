@@ -10,7 +10,7 @@ struct RecentlyPlayed: ReducerProtocol {
     
     enum Action: Equatable {
         case onAppear
-        case update([Station])
+        case update([Stream])
         case station(id: StreamRow.State.ID, action: StreamRow.Action)
     }
     

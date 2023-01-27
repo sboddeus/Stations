@@ -3,14 +3,14 @@ import ComposableArchitecture
 
 struct EditStation: ReducerProtocol {
     struct State: Equatable {
-        let editedStation: Station
+        let editedStation: Stream
         let containingDirectory: Directory
         var title: String = ""
         var url: String = ""
         var imageURL: String = ""
         
         init(
-            editedStation: Station,
+            editedStation: Stream,
             containingDirectory: Directory
         ) {
             self.editedStation = editedStation
@@ -51,7 +51,7 @@ struct EditStation: ReducerProtocol {
             case .addStation:
                 return .task { [state] in
                     
-                    let station = Station(
+                    let station = Stream(
                         id: state.editedStation.id,
                         title: state.title,
                         description: "",

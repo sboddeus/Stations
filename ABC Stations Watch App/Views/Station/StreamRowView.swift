@@ -5,7 +5,7 @@ import SDWebImageSwiftUI
 
 struct StreamRow: ReducerProtocol {
     struct State: Equatable, Identifiable {
-        let station: Station
+        let station: Stream
         
         enum ActiveState: Equatable {
             case paused

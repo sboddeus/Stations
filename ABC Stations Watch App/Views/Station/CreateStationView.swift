@@ -40,7 +40,7 @@ struct CreateStation: ReducerProtocol {
             case .addStation:
                 return .task { [state] in
                     
-                    let station = Station(
+                    let station = Stream(
                        id: UUID(),
                        title: state.title,
                        description: "",

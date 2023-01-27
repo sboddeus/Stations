@@ -1,7 +1,7 @@
 
 import Foundation
 
-struct Station: Equatable, Identifiable, Codable {
+struct Stream: Equatable, Identifiable, Codable {
     let id: UUID
     let title: String
     let description: String

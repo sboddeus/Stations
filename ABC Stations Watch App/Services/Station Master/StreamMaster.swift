@@ -36,8 +36,8 @@ actor StreamMaster {
         )
     }()
     
-    func recents() async -> [Station] {
-        let recents = (try? await recentsFile.retrieve(as: Deque<Station>.self)) ?? []
+    func recents() async -> [Stream] {
+        let recents = (try? await recentsFile.retrieve(as: Deque<Stream>.self)) ?? []
         return Array(recents)
     }
     
@@ -45,7 +45,7 @@ actor StreamMaster {
     func bind(to player: AVAudioPlayer) {
         bindTask?.cancel()
         bindTask = Task {
-            var recents: Deque<Station>  = (try? await recentsFile.retrieve(as: Deque<Station>.self)) ?? []
+            var recents: Deque<Stream>  = (try? await recentsFile.retrieve(as: Deque<Stream>.self)) ?? []
             for await value in player.playingState.values {
                 switch value {
                 case let .loading(station):
@@ -109,13 +109,13 @@ actor StreamMaster {
 }
 
 extension Directory {
-    func getAllStations() async -> [Station] {
+    func getAllStations() async -> [Stream] {
         guard let files = try? await retrieveAllFiles() else {
             return []
         }
         
         let nilStations = await files.asyncMap {
-            try? await $0.retrieve(as: Station.self)
+            try? await $0.retrieve(as: Stream.self)
         }
         
         return nilStations.compactMap { $0 }

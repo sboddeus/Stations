@@ -45,7 +45,7 @@
 		26CFB88A296906920028EC29 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 26CFB889296906920028EC29 /* ComposableArchitecture */; };
 		26CFB88C296906920028EC29 /* Dependencies in Frameworks */ = {isa = PBXBuildFile; productRef = 26CFB88B296906920028EC29 /* Dependencies */; };
 		26CFB88E296906AA0028EC29 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26CFB88D296906AA0028EC29 /* Player.swift */; };
-		26CFB891296906F20028EC29 /* Station.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26CFB890296906F20028EC29 /* Station.swift */; };
+		26CFB891296906F20028EC29 /* Stream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26CFB890296906F20028EC29 /* Stream.swift */; };
 		26CFB894296907BE0028EC29 /* MediaMetaDataEnrichment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26CFB893296907BE0028EC29 /* MediaMetaDataEnrichment.swift */; };
 		26CFB89729693FAB0028EC29 /* ABCStations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26CFB89629693FAB0028EC29 /* ABCStations.swift */; };
 		26CFB89A296940D10028EC29 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26CFB899296940D10028EC29 /* HomeView.swift */; };
@@ -110,7 +110,7 @@
 		26CFB87A296906440028EC29 /* ABC_StationsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ABC_StationsApp.swift; sourceTree = "<group>"; };
 		26CFB87E296906460028EC29 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		26CFB88D296906AA0028EC29 /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
-		26CFB890296906F20028EC29 /* Station.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Station.swift; sourceTree = "<group>"; };
+		26CFB890296906F20028EC29 /* Stream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stream.swift; sourceTree = "<group>"; };
 		26CFB893296907BE0028EC29 /* MediaMetaDataEnrichment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaMetaDataEnrichment.swift; sourceTree = "<group>"; };
 		26CFB89629693FAB0028EC29 /* ABCStations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ABCStations.swift; sourceTree = "<group>"; };
 		26CFB899296940D10028EC29 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -305,7 +305,7 @@
 		26CFB892296906F80028EC29 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				26CFB890296906F20028EC29 /* Station.swift */,
+				26CFB890296906F20028EC29 /* Stream.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -508,7 +508,7 @@
 				26B8E817297E861800547AD4 /* NowPlayingView.swift in Sources */,
 				26AC14ED298327DE00AE4C0D /* HelpView.swift in Sources */,
 				26BA230A29734E5F0033793F /* Directory.swift in Sources */,
-				26CFB891296906F20028EC29 /* Station.swift in Sources */,
+				26CFB891296906F20028EC29 /* Stream.swift in Sources */,
 				26CFB87B296906440028EC29 /* ABC_StationsApp.swift in Sources */,
 				26BA230C29734E5F0033793F /* FileSystem.swift in Sources */,
 			);

@@ -7,9 +7,9 @@ import AVFAudio
 struct NowPlaying: ReducerProtocol {
     struct State: Equatable {
         enum Status: Equatable {
-            case isPlaying(Station)
-            case paused(Station)
-            case loading(Station)
+            case isPlaying(Stream)
+            case paused(Stream)
+            case loading(Stream)
             case initial
         }
         

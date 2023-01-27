@@ -47,7 +47,7 @@ final class NowPlayingControlsController {
 
     // MARK: Now Playing Controls
 
-    private func displayNowPlaying(playerItem: Station,
+    private func displayNowPlaying(playerItem: Stream,
                                    duration: CMTime,
                                    current: CMTime,
                                    rate: Float)

@@ -10,7 +10,7 @@ struct Home: ReducerProtocol {
     struct State: Equatable {
         enum Route: Equatable {
             case menu(Menu.State)
-            case stations(Stream.State)
+            case stations(Streams.State)
             case help(Help.State)
         }
         var route: Route?
@@ -45,7 +45,7 @@ struct Home: ReducerProtocol {
         // Routed actions
         enum RouteAction: Equatable {
             case menu(Menu.Action)
-            case stations(Stream.Action)
+            case stations(Streams.Action)
             case help(Help.Action)
         }
         case routeAction(RouteAction)
@@ -75,7 +75,7 @@ struct Home: ReducerProtocol {
                 return .task {
                     await stationMaster.constructInitialSystemIfNeeded()
                     let rootDir = await stationMaster.rootDirectory
-                    return .setRoute(.stations(Stream.State(rootDirectory: rootDir)))
+                    return .setRoute(.stations(Streams.State(rootDirectory: rootDir)))
                 }
                 
             case let .setRoute(route):
@@ -122,7 +122,7 @@ struct Home: ReducerProtocol {
                 Menu()
             }
             Scope(state: /State.Route.stations, action: /Action.RouteAction.stations) {
-                Stream()
+                Streams()
             }
             Scope(state: /State.Route.help, action: /Action.RouteAction.help) {
                 Help()

@@ -8,7 +8,7 @@
 import Foundation
 
 // Initial stations
-let news = Station(
+let news = Stream(
     id: UUID(),
     title: "ABC News",
     description: "ABC News Broadcast",
@@ -16,7 +16,7 @@ let news = Station(
     url: URL(string: "https://mediaserviceslive.akamaized.net/hls/live/2038311/newsradio/masterhq.m3u8")!
 )
 
-let tripleJ = Station(
+let tripleJ = Stream(
     id: UUID(),
     title: "Triple J",
     description: "ABC Youth Station",
@@ -24,7 +24,7 @@ let tripleJ = Station(
     url: URL(string: "https://mediaserviceslive.akamaized.net/hls/live/2038308/triplejnsw/masterlq.m3u8")!
 )
 
-let SBS = Station(
+let SBS = Stream(
     id: UUID(),
     title: "SBS",
     description: "SBS Broadcast",
@@ -32,7 +32,7 @@ let SBS = Station(
     url: URL(string: "https://sbs-hls.streamguys1.com/hls/sbs1/playlist.m3u8")!
 )
 
-let tikTokTrending = Station(
+let tikTokTrending = Stream(
     id: UUID(),
     title: "TikTok",
     description: "TikTok Trending",
@@ -40,7 +40,7 @@ let tikTokTrending = Station(
     url: URL(string: "https://ais-arn.streamguys1.com/au_032/playlist.m3u8")!
 )
 
-let classic = Station(
+let classic = Stream(
     id: UUID(),
     title: "ABC Classic",
     description: "Classical music broadcast",
@@ -48,7 +48,7 @@ let classic = Station(
     url: URL(string: "https://mediaserviceslive.akamaized.net/hls/live/2038316/classicfmnsw/masterhq.m3u8")!
 )
 
-let kids = Station(
+let kids = Stream(
     id: UUID(),
     title: "ABC Kids",
     description: "Kids music broadcast",
@@ -56,7 +56,7 @@ let kids = Station(
     url: URL(string: "https://mediaserviceslive.akamaized.net/hls/live/2038321/abcextra/masterhq.m3u8")!
 )
 
-let bbcWorldwide = Station(
+let bbcWorldwide = Stream(
     id: UUID(),
     title: "BBC Worldwide",
     description: "BCC Wordwide Service",
@@ -64,7 +64,7 @@ let bbcWorldwide = Station(
     url: URL(string: "https://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/nonuk/sbr_low/ak/bbc_world_service.m3u8")!
 )
 
-let bin = Station(
+let bin = Stream(
     id: UUID(),
     title: "BIN",
     description: "Black information network",
