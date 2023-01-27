@@ -19,6 +19,8 @@ struct Home: ReducerProtocol {
         var recentlyPlayed = RecentlyPlayed.State()
         
         var showFullScreenNowPlaying = false
+        
+        var alert: AlertState<Action>?
     }
     
     enum Action: Equatable {
@@ -27,11 +29,16 @@ struct Home: ReducerProtocol {
         case recentlyPlayed(RecentlyPlayed.Action)
         
         // Internal
+        case playerBinding
+        
         case showMenu
         case showHome
         case showNowPlaying(Bool)
         case showHelp
         case showStations
+        case showAssetLoadingAlert
+        
+        case alertDismissed
         
         case setRoute(State.Route?)
         
@@ -44,6 +51,7 @@ struct Home: ReducerProtocol {
         case routeAction(RouteAction)
     }
         
+    @Dependency(\.player) var player
     @Dependency(\.streamMaster) var stationMaster
     
     var body: some ReducerProtocol<State, Action> {
@@ -55,6 +63,14 @@ struct Home: ReducerProtocol {
         }
         Reduce { state, action in
             switch action {
+            case .playerBinding:
+                return .run { send in
+                    let values = player.playerErrorState.compactMap { $0 }.values
+                    for await _ in values {
+                        try Task.checkCancellation()
+                        await send(.showAssetLoadingAlert)
+                    }
+                }
             case .showStations:
                 return .task {
                     await stationMaster.constructInitialSystemIfNeeded()
@@ -80,6 +96,21 @@ struct Home: ReducerProtocol {
                 
             case let .showNowPlaying(show):
                 state.showFullScreenNowPlaying = show
+                return .none
+                
+            case .alertDismissed:
+                state.alert = nil
+                return .none
+            
+            case .showAssetLoadingAlert:
+                state.alert = .init(
+                    title: .init("Could not load stream"),
+                    message: .init("Ensure the stream url is correct and is a HLS stream. (They ususally end in .m3u8). See help for more details"),
+                    dismissButton: .default(
+                        .init("Ok"),
+                        action: .send(.alertDismissed)
+                    )
+                )
                 return .none
                 
             default:
@@ -227,6 +258,14 @@ struct HomeView: View {
                 EmptyView()
             }
         }
+        .task {
+            await viewStore.send(.playerBinding).finish()
+        }
+        .alert(
+            self.store.scope(
+                state: \.alert),
+            dismiss: Home.Action.alertDismissed
+        )
         .fullScreenCover(isPresented: viewStore.binding(
             get: \.showFullScreenNowPlaying,
             send: Home.Action.showNowPlaying

@@ -88,7 +88,6 @@ actor StreamMaster {
         
         let commercial = await aus.directory(path: URL(string: "Commercial")!)
         try? await commercial.file(name: tikTokTrending.id.uuidString).save(tikTokTrending)
-        try? await commercial.file(name: hitFM.id.uuidString).save(hitFM)
         
         // UK
         let uk = await dir.directory(path: URL(string: "UK")!)

@@ -32,14 +32,6 @@ let SBS = Station(
     url: URL(string: "https://sbs-hls.streamguys1.com/hls/sbs1/playlist.m3u8")!
 )
 
-let hitFM = Station(
-    id: UUID(),
-    title: "HitFM",
-    description: "HitFM",
-    imageURL: nil,
-    url: URL(string: "https://sbs-hls.streamguys1.com/hls/sbs1/playlist.m3u8")!
-)
-
 let tikTokTrending = Station(
     id: UUID(),
     title: "TikTok",

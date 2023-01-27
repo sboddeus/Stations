@@ -6,6 +6,14 @@ import MediaPlayer
 
 // MARK: - Types
 
+// This error is specifically for errors that occured before the item even started playing
+enum PlayerError: Error {
+    case assetIsNotPlayable
+    case assetFailedToPreLoad
+    case assetFailedToStream
+}
+
+// This error is specifically for errors occured when playback was already in progress
 enum PlayingError: Error {
     case unknown
     case streamingFailed
@@ -31,8 +39,6 @@ extension PlayingState {
     }
 }
 
-let playerMessags = CurrentValueSubject<String, Never>("Initial")
-
 /*
  The AVURLAssetQueue takes AVURLAssets and loads their meta-data on a background thread.
  It will then publish ready items on the readyItemSubject
@@ -42,9 +48,14 @@ let playerMessags = CurrentValueSubject<String, Never>("Initial")
 final class AVURLAssetQueue: NSObject {
     // MARK: - Interface
 
+    let playerErrorState: PassthroughSubject<PlayerError?, Never>
+    
+    init(playerErrorState: PassthroughSubject<PlayerError?, Never>) {
+        self.playerErrorState = playerErrorState
+    }
+    
     // Adds an item to the queue and starts pre-fetching it
     func add(_ items: [AVURLAsset]) {
-        playerMessags.send("ASSET QUEUE: Add")
         for item in items {
             queuedItems.append(item)
             if queuedItems.count == 1 {
@@ -56,7 +67,6 @@ final class AVURLAssetQueue: NSObject {
 
     // Nil will remove all items from the queue
     func remove(_ items: [AVURLAsset]?) {
-        playerMessags.send("ASSET QUEUE: Remove")
         if let items = items {
             let cancelled = queuedItems.filter { item -> Bool in items.contains { $0.playerItem == item.playerItem } }
             cancelled.forEach { $0.cancelLoading()
@@ -82,7 +92,6 @@ final class AVURLAssetQueue: NSObject {
     // MARK: - Private Functions
 
     private func addReady(_ asset: AVPlayerItem) {
-        playerMessags.send("ASSET QUEUE: Add ready")
         // First we double check it is still in queued items
         // there is a chance it was removed before this function was called!
         guard queuedItems.first?.playerItem == asset.asset.playerItem else { return }
@@ -108,7 +117,6 @@ final class AVURLAssetQueue: NSObject {
     // It will load (and add) items in the order that it
     // is given them.
     private func asyncLoadAsset(_ newAsset: AVURLAsset) {
-        playerMessags.send("ASSET QUEUE: Async load: \(newAsset.url)")
         /*
          Using AVAsset now runs the risk of blocking the current thread (the
          main UI thread) whilst I/O happens to populate the properties. It's
@@ -118,19 +126,19 @@ final class AVURLAssetQueue: NSObject {
             do {
                 guard try await newAsset.load(.isPlayable) else {
                     await MainActor.run {
-                        playerMessags.send("ASSET QUEUE: Not playable")
+                        playerErrorState.send(.assetIsNotPlayable)
                         remove(newAsset)
                     }
                     return
                 }
 
                 await MainActor.run {
-                    playerMessags.send("ASSET QUEUE: Asset added to ready")
+                    
                     addReady(AVPlayerItem(asset: newAsset))
                 }
             } catch {
                 await MainActor.run {
-                    playerMessags.send("ASSET QUEUE: Async load error: \(error.localizedDescription)")
+                    playerErrorState.send(.assetFailedToPreLoad)
                     remove(newAsset)
                 }
             }
@@ -181,6 +189,8 @@ final class AVAudioPlayer: NSObject {
     }
 
     var rate: Float { player.rate }
+    
+    let playerErrorState = PassthroughSubject<PlayerError?, Never>()
 
     // MARK: - Lifecycle
 
@@ -196,11 +206,11 @@ final class AVAudioPlayer: NSObject {
                     options: []
                 )
         } catch {
-            playerMessags.send("Audio Player: Failed to start session")
+            assertionFailure("Could not start session: \(error.localizedDescription)")
             return nil
         }
 
-        itemQueue = AVURLAssetQueue()
+        itemQueue = AVURLAssetQueue(playerErrorState: playerErrorState)
 
         player = AVQueuePlayer()
 
@@ -215,10 +225,8 @@ final class AVAudioPlayer: NSObject {
     /// - Parameter item: A PlayerItem describing the resource to be played. A nil value is continues playing
     /// the currently played item if it was paused.
     func play(_ item: Station? = nil) {
-        playerMessags.send("Audio Player: Request to play item")
         // Check if there is a new item to play, or if we are just toggling
         guard let item = item else {
-            playerMessags.send("Audio Player: No item play")
             player.play()
             return
         }
@@ -340,8 +348,6 @@ final class AVAudioPlayer: NSObject {
 
             guard let self = self, let asset = asset else { return }
 
-            playerMessags.send("Audio Player: Insert ready item")
-
             // Observe radio metadata if possible
             self.radioEnrichment.set(enrichmentSource: asset)
 
@@ -381,8 +387,6 @@ final class AVAudioPlayer: NSObject {
     // should only call this if we enter an unknown state.
     // Most of the time a caller should call pause
     func stop() {
-        playerMessags.send("Audio Player: Stop, hammer time")
-
         player.pause()
         player.removeAllItems()
         itemQueue.remove(nil)
@@ -438,15 +442,13 @@ extension AVAudioPlayer {
             case .readyToPlay:
                 if self?.forcePlayWhenReady ?? false {
                     Task { [player = self?.player] in
-                        playerMessags.send("Audio Player: Preroll ya k-hole")
                         await player?.preroll(atRate: 1.0)
-                        playerMessags.send("Audio Player: Play!!!!!")
                         player?.play()
                     }
                     self?.forcePlayWhenReady = false
                 }
             case .failed, .unknown:
-                playerMessags.send("Audio Player: Failed whale")
+                self?.playerErrorState.send(.assetFailedToStream)
                 // For debug builds stop here and investigate
                 // DEBUGGING TIP: It seems like some resources are links to html players and
                 // not the actual audio resource
@@ -454,7 +456,6 @@ extension AVAudioPlayer {
                 // Recover by removing pausing and removing all items from queue
                 self?.stop()
             @unknown default:
-                playerMessags.send("Audio Player: Extra failed")
                 // If we get here we sould probably handle the new case explicitly
                 assertionFailure()
                 // Recover by removing pausing and removing all items from queue
@@ -467,7 +468,6 @@ extension AVAudioPlayer {
         // Disabled because it is returned
         // swiftlint:disable:next discarded_notification_center_observer
         NotificationCenter.default.addObserver(forName: .AVPlayerItemNewErrorLogEntry, object: nil, queue: .main, using: { [weak self] thing in
-            playerMessags.send("Audio Player: Item error: \(thing.description)")
             self?.stop()
         })
     }
@@ -484,7 +484,6 @@ extension AVAudioPlayer {
             }
 
             // Switch over the interruption type.
-            playerMessags.send("Audio Player: Interruption type: \(type)")
             switch type {
             case .ended:
                 guard let optionsValue = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt else { return }
@@ -559,8 +558,6 @@ extension AVAudioPlayer {
             if let item = item.newValue, let safeItem = item {
                 self.observeItemStatus(safeItem)
             }
-            playerMessags.send("Audio Player: media item changed...")
-            print("media item changed...")
             // Update state, if no items and no queued items then stopped,
             // else if not items but items queued then loading
             // else still playing and do nothing
