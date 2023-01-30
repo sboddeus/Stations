@@ -39,9 +39,9 @@ struct HelpView: View {
                         .foregroundColor(LeincastColors.brand.color)
                     Divider()
                     Text("""
-                    HLS is a streaming format used to broadcast audio from service providers to your Apple Watch.
+                    HLS is a streaming format used to broadcast audio from service providers to your watch.
                     One way to tell if a URL points to a HLS stream is if it ends in the suffix "m3u8".
-                    You can search online for "m3u8" streams or "HLS" streams to find if you prefered streaming service or radio broadcast is available as a HLS stream.
+                    You can search online for "m3u8" streams or "HLS" streams to find if your prefered streaming service or radio broadcast is available as a HLS stream.
                     """)
                     
                     Text("Stream Icons")
