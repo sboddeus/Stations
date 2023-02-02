@@ -64,6 +64,9 @@ actor StreamMaster {
     }
     
     func constructInitialSystemIfNeeded() async {
+        // NOTE: App review did not like default streams
+        // Revisit in the future to see if we get lucky with a better reviewer
+        
 //        let initialConstructionKey = "fs.version.0";
 //        guard !defaults.bool(forKey: initialConstructionKey) else {
 //            // Our work is done
