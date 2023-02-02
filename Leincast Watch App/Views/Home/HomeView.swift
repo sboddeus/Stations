@@ -144,11 +144,7 @@ struct HomeView: View {
             NavigationStack {
                 ScrollView {
                     VStack(spacing: 20) {
-                        VStack(alignment: .leading, spacing: 10) {
-                            Text("Now Playing")
-                                .font(.title3)
-                                .foregroundColor(LeincastColors.brand.color)
-                            Divider()
+                        HomeViewSegment(title: "Now Playing") {
                             NowPlayingView(
                                 store: store.scope(
                                     state: \.nowPlaying,
@@ -157,23 +153,15 @@ struct HomeView: View {
                             ).environment(\.presentationContext, .embedded)
                         }
                         
-                        VStack(alignment: .leading, spacing: 10) {
-                            Text("Your Audio")
-                                .font(.title3)
-                                .foregroundColor(LeincastColors.brand.color)
-                            Divider()
+                        HomeViewSegment(title: "Your Audio") {
                             Button {
                                 viewStore.send(.showStations)
                             } label: {
-                                Text("Streams")
+                                Text("Live Streams")
                             }
                         }
                         
-                        VStack(alignment: .leading, spacing: 10) {
-                            Text("Recently Played")
-                                .font(.title3)
-                                .foregroundColor(LeincastColors.brand.color)
-                            Divider()
+                        HomeViewSegment(title: "Recently Played") {
                             RecentlyPlayedView(
                                 store: store.scope(
                                     state: \.recentlyPlayed,
@@ -181,22 +169,17 @@ struct HomeView: View {
                                 )
                             )
                         }
-                        VStack(alignment: .leading, spacing: 10) {
-                            Text("Help and Settings")
-                                .font(.title3)
-                                .foregroundColor(LeincastColors.brand.color)
-                            Divider()
-                            VStack(spacing: 5) {
-                                Button {
-                                    viewStore.send(.showMenu)
-                                } label: {
-                                    Text("Settings")
-                                }
-                                Button {
-                                    viewStore.send(.showHelp)
-                                } label: {
-                                    Text("Help")
-                                }
+                        
+                        HomeViewSegment(title: "Help and Settings") {
+                            Button {
+                                viewStore.send(.showMenu)
+                            } label: {
+                                Text("Settings")
+                            }
+                            Button {
+                                viewStore.send(.showHelp)
+                            } label: {
+                                Text("Help")
                             }
                         }
                     }
@@ -290,3 +273,19 @@ struct HomeView: View {
     }
 }
 
+
+struct HomeViewSegment<Content: View>: View {
+    let title: String
+    @ViewBuilder
+    let content: () -> Content
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text(title)
+                .font(.title3)
+                .foregroundColor(LeincastColors.brand.color)
+            Divider()
+            content()
+        }
+    }
+}

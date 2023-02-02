@@ -220,8 +220,8 @@
 			isa = PBXGroup;
 			children = (
 				2632CBF72984805A0041BB2D /* StreamsView.swift */,
-				2632CBF82984805A0041BB2D /* Rows */,
 				2632CBFB2984805A0041BB2D /* EditMenuView.swift */,
+				2632CBF82984805A0041BB2D /* Rows */,
 				2632CBFC2984805A0041BB2D /* CreateEdit */,
 			);
 			path = Station;

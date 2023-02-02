@@ -8,14 +8,22 @@ struct CreateStream: ReducerProtocol {
         var title: String = ""
         var url: String = ""
         var imageURL: String = ""
+        var alert: AlertState<Action>?
     }
     
     enum Action: Equatable {
+        
+        // Internal
         case setTitle(String)
         case setURL(String)
         case setImageURL(String)
         case addStation
+        case showInvalidImageURLAlert
+        case showInvalidContentURLAlert
+        case showEmptyTitleAlert
+        case alertDismissed
         
+        // Delegate
         enum Delegate {
             case stationAdded
         }
@@ -37,16 +45,72 @@ struct CreateStream: ReducerProtocol {
                 state.imageURL = url
                 return .none
                 
+            case .showInvalidImageURLAlert:
+                state.alert = .init(
+                    title: .init("Invalid Image URL"),
+                    message: .init("Ensure the image url is a valid URL and is a file of type PNG or JPEG"),
+                    dismissButton: .default(
+                        .init("Ok"),
+                        action: .send(.alertDismissed)
+                    )
+                )
+                return .none
+                
+            case .showInvalidContentURLAlert:
+                state.alert = .init(
+                    title: .init("Invalid stream URL"),
+                    message: .init("Ensure the stream url is a valid URL and is a HLS stream. Which usually ends in .m3u8"),
+                    dismissButton: .default(
+                        .init("Ok"),
+                        action: .send(.alertDismissed)
+                    )
+                )
+                return .none
+                
+            case .showEmptyTitleAlert:
+                state.alert = .init(
+                    title: .init("Empty Title"),
+                    message: .init("Ensure your stream has a name 😬"),
+                    dismissButton: .default(
+                        .init("Ok"),
+                        action: .send(.alertDismissed)
+                    )
+                )
+                return .none
+                
+            case .alertDismissed:
+                state.alert = nil
+                return .none
+                
             case .addStation:
+                guard !state.title.isEmpty else {
+                    return .task {
+                        return .showEmptyTitleAlert
+                    }
+                }
+                
+                guard !state.url.isEmpty, let contentURL = URL(string: state.url) else {
+                    return .task {
+                        return .showInvalidContentURLAlert
+                    }
+                }
+                
+                if !state.imageURL.isEmpty {
+                    guard URL(string: state.imageURL) != nil else {
+                        return .task {
+                            return .showInvalidImageURLAlert
+                        }
+                    }
+                }
+                
                 return .task { [state] in
                     
                     let station = Stream(
                        id: UUID(),
                        title: state.title,
                        description: "",
-                       // TODO: These URLs have to be checked properly
                        imageURL: URL(string: state.imageURL),
-                       url: URL(string: state.url)!
+                       url: contentURL
                     )
                    
                     let file = try await state.containingDirectory.file(
@@ -83,11 +147,11 @@ struct CreateStreamView: View {
                         send: CreateStream.Action.setTitle
                     )
                 )
-                .textInputAutocapitalization(.never)
+                .textInputAutocapitalization(.words)
                 .disableAutocorrection(true)
                 
                 TextField(
-                    "URL",
+                    "Stream URL",
                     text: viewStore.binding(
                         get: \.url,
                         send: CreateStream.Action.setURL
@@ -111,9 +175,14 @@ struct CreateStreamView: View {
                 } label: {
                     Text("Create")
                         .foregroundColor(.indigo)
-                }.disabled(viewStore.url.isEmpty || viewStore.title.isEmpty)
+                }
             }
-        }
+        }.alert(
+            self.store.scope(
+                state: \.alert
+            ),
+            dismiss: CreateStream.Action.alertDismissed
+        )
     }
 }
 

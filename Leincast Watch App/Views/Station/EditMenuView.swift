@@ -53,7 +53,7 @@ struct EditMenuView: View {
                 viewStore.send(.delegate(.addStation))
             } label: {
                 HStack {
-                    Text("Add stream")
+                    Text("Add live stream")
                         .foregroundColor(.green)
                     Spacer()
                     Image(systemName: "radio.fill")
