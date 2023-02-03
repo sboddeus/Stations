@@ -34,3 +34,14 @@ extension DependencyValues {
         static let liveValue: UserDefaults = .standard
     }
 }
+
+extension DependencyValues {
+    var clipBoard: ClipBoard {
+        get { self[ClipBoardKey.self] }
+        set { self[ClipBoardKey.self] = newValue }
+    }
+    
+    enum ClipBoardKey: DependencyKey {
+        static let liveValue: ClipBoard = .init()
+    }
+}

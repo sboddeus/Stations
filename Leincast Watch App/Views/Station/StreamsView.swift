@@ -55,6 +55,7 @@ struct Streams: ReducerProtocol {
     }
     
     @Dependency(\.player) var player
+    @Dependency(\.clipBoard) var clipBoard
     
     private var core: some ReducerProtocol<State, Action> {
         Reduce { state, action in
@@ -67,7 +68,8 @@ struct Streams: ReducerProtocol {
             case let .setRoute(route):
                 state.route = route
                 return .none
-                
+             
+                // MARK: - Station actions
             case let .station(id, action: .delegate(.delete)):
                 return .task { [state] in
                     // Stop playing the station if it is playing
@@ -100,6 +102,26 @@ struct Streams: ReducerProtocol {
                 } else {
                     return .none
                 }
+                
+            case let .station(id, action: .delegate(.edit)):
+                if let station = state.stations[id: id]?.station {
+                    state.route = .createStation(
+                        .init(
+                            containingDirectory: state.rootDirectory,
+                            mode: .edit(station)
+                        )
+                    )
+                }
+                return .none
+                
+            case let .station(id, action: .delegate(.copy)):
+                if let station = state.stations[id: id]?.station {
+                    return .task {
+                        await clipBoard.add(stream: station)
+                        return .station(id: id, action: .delegate(.delete))
+                    }
+                }
+                return .none
                 
             case .delegate:
                 return .none
@@ -150,16 +172,22 @@ struct Streams: ReducerProtocol {
                 )
                 return .none
                 
-            case let .station(id, action: .delegate(.edit)):
-                if let station = state.stations[id: id]?.station {
-                    state.route = .createStation(
-                        .init(
-                            containingDirectory: state.rootDirectory,
-                            mode: .edit(station)
-                        )
+            case .routeAction(.editMenu(.delegate(.paste))):
+                state.route = nil
+                return .task { [state] in
+                    guard let copiedStream = await clipBoard.content().last else {
+                        return .onAppear
+                    }
+                    let file = try await state.rootDirectory.file(
+                        name: copiedStream.id.uuidString
                     )
+                    
+                    try await file.save(copiedStream)
+                    
+                    await clipBoard.remove(stream: copiedStream)
+                    
+                    return .onAppear
                 }
-                return .none
                 
             case .routeAction(.createStation(.delegate(.stationAdded))):
                 state.route = nil
@@ -190,7 +218,7 @@ struct Streams: ReducerProtocol {
 
                 state.route = .editDirectory(.init(editedDirectory: dir))
                 return .none
-
+ 
             case let .directory(id, .delegate(.delete)):
                 return .task { [state] in
                     // TODO: Deal with error

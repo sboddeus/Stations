@@ -5,24 +5,39 @@ import ComposableArchitecture
 
 struct EditMenu: ReducerProtocol {
     struct State: Equatable {
-        // This is here to give this a stable state
-        // Not having any field here caused issues with creating a stream view.
-        // Kind of if the reducer stack was triggering state changes effecting child views.
-        // Not sure why that happened. But remove if other more important state is here.
-        let id = "Delete me if other state is here"
+        var showPasteOption = false
     }
     
     enum Action: Equatable {
         enum Delegate: Equatable {
             case addStation
             case addFolder
+            case paste
         }
         case delegate(Delegate)
+        
+        case onAppear
+        case setShowPasteOption(Bool)
     }
+    
+    @Dependency(\.clipBoard) var clipBoard
     
     var body: some ReducerProtocol<State, Action> {
         Reduce { state, action in
-            return .none
+            switch action {
+            case .onAppear:
+                return .task {
+                    let show = await !clipBoard.content().isEmpty
+                    return .setShowPasteOption(show)
+                }
+                
+            case let .setShowPasteOption(show):
+                state.showPasteOption = show
+                return .none
+                
+            case .delegate:
+                return .none
+            }
         }
     }
 }
@@ -67,6 +82,25 @@ struct EditMenuView: View {
                         .foregroundColor(.green)
                 }
             }
+            
+            if viewStore.showPasteOption {
+                Button {
+                    viewStore.send(.delegate(.paste))
+                } label: {
+                    HStack {
+                        Text("Paste")
+                            .foregroundColor(.indigo)
+                        Spacer()
+                        Image(systemName: "doc.on.clipboard")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(.indigo)
+                    }
+                }
+            }
+        }.onAppear {
+            viewStore.send(.onAppear)
         }
     }
 }

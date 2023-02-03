@@ -45,6 +45,8 @@
 		2632CC2E2984805A0041BB2D /* StreamMaster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2632CC122984805A0041BB2D /* StreamMaster.swift */; };
 		2632CC2F2984805A0041BB2D /* MediaMetaDataEnrichment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2632CC142984805A0041BB2D /* MediaMetaDataEnrichment.swift */; };
 		2632CC302984805A0041BB2D /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2632CC152984805A0041BB2D /* Player.swift */; };
+		26F13367298DC17C00060890 /* ClipBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26F13366298DC17C00060890 /* ClipBoard.swift */; };
+		26F1336A298DC76100060890 /* ClipBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26F13369298DC76100060890 /* ClipBoardView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -105,6 +107,8 @@
 		2632CC142984805A0041BB2D /* MediaMetaDataEnrichment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaMetaDataEnrichment.swift; sourceTree = "<group>"; };
 		2632CC152984805A0041BB2D /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		2632CC31298480BB0041BB2D /* Leincast-Watch-App-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Leincast-Watch-App-Info.plist"; sourceTree = SOURCE_ROOT; };
+		26F13366298DC17C00060890 /* ClipBoard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipBoard.swift; sourceTree = "<group>"; };
+		26F13369298DC76100060890 /* ClipBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipBoardView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -196,6 +200,7 @@
 		2632CBF02984805A0041BB2D /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				26F13368298DC75200060890 /* ClipBoard */,
 				26F13364298DB43700060890 /* Now Playing */,
 				2632CBF12984805A0041BB2D /* Home */,
 				2632CBF62984805A0041BB2D /* Station */,
@@ -280,6 +285,7 @@
 		2632CC0A2984805A0041BB2D /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				26F13365298DC16900060890 /* Clip Board */,
 				2632CC0B2984805A0041BB2D /* FileSystem */,
 				2632CC102984805A0041BB2D /* Stream Master */,
 				2632CC132984805A0041BB2D /* Player */,
@@ -322,6 +328,22 @@
 				2632CBF42984805A0041BB2D /* NowPlayingView.swift */,
 			);
 			path = "Now Playing";
+			sourceTree = "<group>";
+		};
+		26F13365298DC16900060890 /* Clip Board */ = {
+			isa = PBXGroup;
+			children = (
+				26F13366298DC17C00060890 /* ClipBoard.swift */,
+			);
+			path = "Clip Board";
+			sourceTree = "<group>";
+		};
+		26F13368298DC75200060890 /* ClipBoard */ = {
+			isa = PBXGroup;
+			children = (
+				26F13369298DC76100060890 /* ClipBoardView.swift */,
+			);
+			path = ClipBoard;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -447,6 +469,7 @@
 				2632CC2A2984805A0041BB2D /* Helpers.swift in Sources */,
 				2632CC282984805A0041BB2D /* PlayerDependency.swift in Sources */,
 				2632CBD629847EB80041BB2D /* DEBUG.swift in Sources */,
+				26F1336A298DC76100060890 /* ClipBoardView.swift in Sources */,
 				2632CC1E2984805A0041BB2D /* StreamRowView.swift in Sources */,
 				2632CC222984805A0041BB2D /* CreateStreamView.swift in Sources */,
 				2632CC302984805A0041BB2D /* Player.swift in Sources */,
@@ -461,6 +484,7 @@
 				2632CC182984805A0041BB2D /* HomeView.swift in Sources */,
 				2632CC2B2984805A0041BB2D /* FileSystem.swift in Sources */,
 				2632CC1A2984805A0041BB2D /* NowPlayingView.swift in Sources */,
+				26F13367298DC17C00060890 /* ClipBoard.swift in Sources */,
 				2632CC1C2984805A0041BB2D /* StreamsView.swift in Sources */,
 				2632CC252984805A0041BB2D /* Environments.swift in Sources */,
 				2632CC292984805A0041BB2D /* Directory.swift in Sources */,
@@ -599,7 +623,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = QCHSD48ZLT;
 				ENABLE_PREVIEWS = YES;
@@ -612,7 +636,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = au.com.syeboddeus.leincast.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -630,7 +654,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = QCHSD48ZLT;
 				ENABLE_PREVIEWS = YES;
@@ -643,7 +667,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = au.com.syeboddeus.leincast.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -661,10 +685,10 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = QCHSD48ZLT;
 				INFOPLIST_KEY_CFBundleDisplayName = Leincast;
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = au.com.syeboddeus.leincast;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -677,10 +701,10 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = QCHSD48ZLT;
 				INFOPLIST_KEY_CFBundleDisplayName = Leincast;
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = au.com.syeboddeus.leincast;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
