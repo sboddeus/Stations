@@ -19,7 +19,6 @@ struct Streams: ReducerProtocol {
         
         indirect enum Route: Equatable {
             case createStation(CreateStream.State)
-            case editStation(EditStream.State)
             case createDirectory(CreateDirectory.State)
             case editDirectory(EditDirectory.State)
             case subDirectory(Streams.State)
@@ -44,7 +43,6 @@ struct Streams: ReducerProtocol {
         // Child Actions
         indirect enum RouteAction: Equatable {
             case createStation(CreateStream.Action)
-            case editStation(EditStream.Action)
             case subDirectory(Streams.Action)
             case editDirectory(EditDirectory.Action)
             case createDirectory(CreateDirectory.Action)
@@ -68,17 +66,6 @@ struct Streams: ReducerProtocol {
                 
             case let .setRoute(route):
                 state.route = route
-                return .none
-                
-            case let .station(id, action: .delegate(.edit)):
-                if let station = state.stations[id: id]?.station {
-                    state.route = .editStation(
-                        .init(
-                            editedStation: station,
-                            containingDirectory: state.rootDirectory
-                        )
-                    )
-                }
                 return .none
                 
             case let .station(id, action: .delegate(.delete)):
@@ -157,17 +144,24 @@ struct Streams: ReducerProtocol {
             case .routeAction(.editMenu(.delegate(.addStation))):
                 state.route = .createStation(
                     .init(
-                        containingDirectory: state.rootDirectory
+                        containingDirectory: state.rootDirectory,
+                        mode: .create
                     )
                 )
                 return .none
                 
+            case let .station(id, action: .delegate(.edit)):
+                if let station = state.stations[id: id]?.station {
+                    state.route = .createStation(
+                        .init(
+                            containingDirectory: state.rootDirectory,
+                            mode: .edit(station)
+                        )
+                    )
+                }
+                return .none
+                
             case .routeAction(.createStation(.delegate(.stationAdded))):
-                state.route = nil
-                return EffectTask(value: .onAppear)
-            
-            case .routeAction(.editStation(.delegate(.stationEdited))):
-                // TODO: If the station edited was the currently playing station then reload it.
                 state.route = nil
                 return EffectTask(value: .onAppear)
                 
@@ -222,11 +216,6 @@ struct Streams: ReducerProtocol {
             CreateStream()
         }
     }
-    private var editStation: some ReducerProtocol<Streams.State.Route, Streams.Action.RouteAction> {
-        Scope(state: /State.Route.editStation, action: /Action.RouteAction.editStation) {
-            EditStream()
-        }
-    }
     private var createDirectory: some ReducerProtocol<Streams.State.Route, Streams.Action.RouteAction> {
         Scope(state: /State.Route.createDirectory, action: /Action.RouteAction.createDirectory) {
             CreateDirectory()
@@ -258,10 +247,10 @@ struct Streams: ReducerProtocol {
         }
         .ifLet(\.route, action: /Action.routeAction) {
             createStation
-            editStation
             createDirectory
             editDirectory
             subDirectory
+            editMenu
         }
     }
 }
@@ -355,20 +344,6 @@ struct StreamsView: View {
                 action: { Streams.Action.routeAction(.createStation($0)) }
             )
             CreateStreamView(store: store)
-                .interactiveDismissDisabled()
-        }
-        .fullScreenCover(
-            unwrapping: viewStore.binding(
-                get: \.route,
-                send: Streams.Action.setRoute
-            ),
-            case: /Streams.State.Route.editStation
-        ) { $value in
-            let store = store.scope(
-                state: { _ in $value.wrappedValue },
-                action: { Streams.Action.routeAction(.editStation($0)) }
-            )
-            EditStreamView(store: store)
                 .interactiveDismissDisabled()
         }
         .fullScreenCover(

@@ -29,7 +29,6 @@
 		2632CC1D2984805A0041BB2D /* DirectoryRowVIew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2632CBF92984805A0041BB2D /* DirectoryRowVIew.swift */; };
 		2632CC1E2984805A0041BB2D /* StreamRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2632CBFA2984805A0041BB2D /* StreamRowView.swift */; };
 		2632CC1F2984805A0041BB2D /* EditMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2632CBFB2984805A0041BB2D /* EditMenuView.swift */; };
-		2632CC202984805A0041BB2D /* EditStreamView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2632CBFD2984805A0041BB2D /* EditStreamView.swift */; };
 		2632CC212984805A0041BB2D /* EditDirectoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2632CBFE2984805A0041BB2D /* EditDirectoryView.swift */; };
 		2632CC222984805A0041BB2D /* CreateStreamView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2632CBFF2984805A0041BB2D /* CreateStreamView.swift */; };
 		2632CC232984805A0041BB2D /* CreateDirectoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2632CC002984805A0041BB2D /* CreateDirectoryView.swift */; };
@@ -89,7 +88,6 @@
 		2632CBF92984805A0041BB2D /* DirectoryRowVIew.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DirectoryRowVIew.swift; sourceTree = "<group>"; };
 		2632CBFA2984805A0041BB2D /* StreamRowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamRowView.swift; sourceTree = "<group>"; };
 		2632CBFB2984805A0041BB2D /* EditMenuView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditMenuView.swift; sourceTree = "<group>"; };
-		2632CBFD2984805A0041BB2D /* EditStreamView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditStreamView.swift; sourceTree = "<group>"; };
 		2632CBFE2984805A0041BB2D /* EditDirectoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditDirectoryView.swift; sourceTree = "<group>"; };
 		2632CBFF2984805A0041BB2D /* CreateStreamView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateStreamView.swift; sourceTree = "<group>"; };
 		2632CC002984805A0041BB2D /* CreateDirectoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateDirectoryView.swift; sourceTree = "<group>"; };
@@ -239,7 +237,6 @@
 		2632CBFC2984805A0041BB2D /* CreateEdit */ = {
 			isa = PBXGroup;
 			children = (
-				2632CBFD2984805A0041BB2D /* EditStreamView.swift */,
 				2632CBFE2984805A0041BB2D /* EditDirectoryView.swift */,
 				2632CBFF2984805A0041BB2D /* CreateStreamView.swift */,
 				2632CC002984805A0041BB2D /* CreateDirectoryView.swift */,
@@ -455,7 +452,6 @@
 				2632CC2F2984805A0041BB2D /* MediaMetaDataEnrichment.swift in Sources */,
 				2632CC182984805A0041BB2D /* HomeView.swift in Sources */,
 				2632CC2B2984805A0041BB2D /* FileSystem.swift in Sources */,
-				2632CC202984805A0041BB2D /* EditStreamView.swift in Sources */,
 				2632CC1A2984805A0041BB2D /* NowPlayingView.swift in Sources */,
 				2632CC1C2984805A0041BB2D /* StreamsView.swift in Sources */,
 				2632CC252984805A0041BB2D /* Environments.swift in Sources */,
@@ -595,7 +591,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = QCHSD48ZLT;
 				ENABLE_PREVIEWS = YES;
@@ -608,7 +604,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = au.com.syeboddeus.leincast.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -626,7 +622,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = QCHSD48ZLT;
 				ENABLE_PREVIEWS = YES;
@@ -639,7 +635,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = au.com.syeboddeus.leincast.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -657,10 +653,10 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = QCHSD48ZLT;
 				INFOPLIST_KEY_CFBundleDisplayName = Leincast;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = au.com.syeboddeus.leincast;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -673,10 +669,10 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = QCHSD48ZLT;
 				INFOPLIST_KEY_CFBundleDisplayName = Leincast;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = au.com.syeboddeus.leincast;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;

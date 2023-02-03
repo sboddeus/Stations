@@ -7,8 +7,34 @@ struct CreateStream: ReducerProtocol {
         let containingDirectory: Directory
         var title: String = ""
         var url: String = ""
+        var description: String = ""
         var imageURL: String = ""
         var alert: AlertState<Action>?
+        
+        enum Mode: Equatable {
+            case edit(Stream)
+            case create
+        }
+        
+        let mode: Mode
+        
+        init(containingDirectory: Directory, mode: Mode) {
+            self.mode = mode
+            self.containingDirectory = containingDirectory
+            switch mode {
+            case let .edit(stream):
+                title = stream.title
+                url = stream.url.absoluteString
+                description = stream.description
+                imageURL = stream.imageURL?.absoluteString ?? ""
+            case .create:
+                title = ""
+                url = ""
+                description = ""
+                imageURL = ""
+            }
+            alert = nil
+        }
     }
     
     enum Action: Equatable {
@@ -16,6 +42,7 @@ struct CreateStream: ReducerProtocol {
         // Internal
         case setTitle(String)
         case setURL(String)
+        case setDescription(String)
         case setImageURL(String)
         case addStation
         case showInvalidImageURLAlert
@@ -43,6 +70,10 @@ struct CreateStream: ReducerProtocol {
                 
             case let .setImageURL(url):
                 state.imageURL = url
+                return .none
+                
+            case let .setDescription(desc):
+                state.description = desc
                 return .none
                 
             case .showInvalidImageURLAlert:
@@ -104,11 +135,18 @@ struct CreateStream: ReducerProtocol {
                 }
                 
                 return .task { [state] in
+                    let id: UUID
+                    switch state.mode {
+                    case let .edit(stream):
+                        id = stream.id
+                    case .create:
+                        id = UUID()
+                    }
                     
                     let station = Stream(
-                       id: UUID(),
+                       id: id,
                        title: state.title,
-                       description: "",
+                       description: state.description,
                        imageURL: URL(string: state.imageURL),
                        url: contentURL
                     )
@@ -161,6 +199,16 @@ struct CreateStreamView: View {
                 .disableAutocorrection(true)
                 
                 TextField(
+                    "Description",
+                    text: viewStore.binding(
+                        get: \.description,
+                        send: CreateStream.Action.setDescription
+                    )
+                )
+                .textInputAutocapitalization(.sentences)
+                .disableAutocorrection(true)
+                
+                TextField(
                     "Image URL",
                     text: viewStore.binding(
                         get: \.imageURL,
@@ -173,8 +221,15 @@ struct CreateStreamView: View {
                 Button {
                     viewStore.send(.addStation)
                 } label: {
-                    Text("Create")
-                        .foregroundColor(.indigo)
+                    switch viewStore.mode {
+                    case .edit:
+                        Text("Update")
+                            .foregroundColor(.indigo)
+                    case .create:
+                        Text("Create")
+                            .foregroundColor(.indigo)
+                    }
+                    
                 }
             }
         }.alert(

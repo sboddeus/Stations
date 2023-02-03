@@ -5,7 +5,11 @@ import ComposableArchitecture
 
 struct EditMenu: ReducerProtocol {
     struct State: Equatable {
-        
+        // This is here to give this a stable state
+        // Not having any field here caused issues with creating a stream view.
+        // Kind of if the reducer stack was triggering state changes effecting child views.
+        // Not sure why that happened. But remove if other more important state is here.
+        let id = "Delete me if other state is here"
     }
     
     enum Action: Equatable {
