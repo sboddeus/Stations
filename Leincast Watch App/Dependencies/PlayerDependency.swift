@@ -23,3 +23,14 @@ extension DependencyValues {
         static let liveValue: StreamMaster = .init()
     }
 }
+
+extension DependencyValues {
+    var userDefaults: UserDefaults {
+        get { self[UserDefaultsKey.self] }
+        set { self[UserDefaultsKey.self] = newValue }
+    }
+    
+    enum UserDefaultsKey: DependencyKey {
+        static let liveValue: UserDefaults = .standard
+    }
+}

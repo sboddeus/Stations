@@ -16,7 +16,7 @@ struct NowPlaying: ReducerProtocol {
         var status: Status = .initial
         var isVolumeFocused: Bool = false
         var volume: Double = 0
-        
+        var showVolumeCaption = false
         var context: PresentationContext = .embedded
     }
     
@@ -31,12 +31,23 @@ struct NowPlaying: ReducerProtocol {
     
     @Dependency(\.player) var player
     @Dependency(\.streamMaster) var stationMaster
+    @Dependency(\.userDefaults) var userDefaults
+    
+    static let volumeCaptionUserDefaultsKey = "volume.caption"
     
     var body: some ReducerProtocol<State, Action> {
         Reduce { state, action in
             switch action {
             case let .setPresentationContext(context):
                 state.context = context
+                switch context {
+                case .embedded:
+                    state.showVolumeCaption = (userDefaults.value(
+                        forKey: Self.volumeCaptionUserDefaultsKey
+                    ) as? Bool) ?? true
+                case .fullScreen:
+                    state.showVolumeCaption = false
+                }
                 return .none
                 
             case .playBinding:
@@ -68,8 +79,11 @@ struct NowPlaying: ReducerProtocol {
                 }
                 
             case .toggleVolumeControl:
+                state.showVolumeCaption = false
                 state.isVolumeFocused.toggle()
-                return .none
+                return .fireAndForget {
+                    userDefaults.set(false, forKey: Self.volumeCaptionUserDefaultsKey)
+                }
                 
             case let .updateVolume(volume):
                 state.volume = volume
@@ -86,6 +100,7 @@ struct NowPlayingView: View {
         let imageURL: URL?
         let isVolumeFocused: Bool
         let volume: Double
+        let showVolumeCaption: Bool
         
         enum PlayButtonState {
             case play
@@ -121,6 +136,7 @@ struct NowPlayingView: View {
             // Volume is focused if isVolumeFocused or if the presentatio context is full screen
             isVolumeFocused = state.isVolumeFocused || state.context == .fullScreen
             volume = state.volume
+            showVolumeCaption = state.showVolumeCaption
         }
     }
     
@@ -184,26 +200,33 @@ struct NowPlayingView: View {
                             }
                         }
                         .clipShape(Circle())
-                        HStack {
-                            Group {
-                                if viewStore.isVolumeFocused {
-                                    Image(systemName: "speaker.fill")
-                                        .resizable()
-                                        .scaledToFit()
-                                } else {
-                                    Image(systemName: "speaker")
-                                        .resizable()
-                                        .scaledToFit()
+                        VStack {
+                            HStack {
+                                Group {
+                                    if viewStore.isVolumeFocused {
+                                        Image(systemName: "speaker.fill")
+                                            .resizable()
+                                            .scaledToFit()
+                                    } else {
+                                        Image(systemName: "speaker")
+                                            .resizable()
+                                            .scaledToFit()
+                                    }
                                 }
+                                .foregroundColor(LeincastColors.brand.color)
+                                .frame(width: 15, height: 15)
+                                
+                                ProgressView(value: viewStore.volume, total: 1)
+                                    .frame(maxHeight: 2)
+                                    .opacity(viewStore.isVolumeFocused ? 1 : 0.5)
+                                    .fixedSize(horizontal: false, vertical: true)
+                                    .tint(LeincastColors.brand.color)
                             }
-                            .foregroundColor(LeincastColors.brand.color)
-                            .frame(width: 15, height: 15)
-                            
-                            ProgressView(value: viewStore.volume, total: 1)
-                                .frame(maxHeight: 2)
-                                .opacity(viewStore.isVolumeFocused ? 1 : 0.5)
-                                .fixedSize(horizontal: false, vertical: true)
-                                .tint(LeincastColors.brand.color)
+                            if viewStore.state.showVolumeCaption {
+                                Text("Tap to control volume with digital crown. Tap again to scroll with digital crown.")
+                                    .font(.footnote)
+                                    .foregroundColor(.secondary)
+                            }
                            
                         }.onTapGesture {
                             viewStore.send(.toggleVolumeControl)
