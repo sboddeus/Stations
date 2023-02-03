@@ -196,6 +196,7 @@
 		2632CBF02984805A0041BB2D /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				26F13364298DB43700060890 /* Now Playing */,
 				2632CBF12984805A0041BB2D /* Home */,
 				2632CBF62984805A0041BB2D /* Station */,
 				2632CC012984805A0041BB2D /* Help */,
@@ -208,7 +209,6 @@
 			children = (
 				2632CBF22984805A0041BB2D /* HomeView.swift */,
 				2632CBF32984805A0041BB2D /* RecentlyPlayedView.swift */,
-				2632CBF42984805A0041BB2D /* NowPlayingView.swift */,
 				2632CBF52984805A0041BB2D /* MenuView.swift */,
 			);
 			path = Home;
@@ -314,6 +314,14 @@
 				2632CC152984805A0041BB2D /* Player.swift */,
 			);
 			path = Player;
+			sourceTree = "<group>";
+		};
+		26F13364298DB43700060890 /* Now Playing */ = {
+			isa = PBXGroup;
+			children = (
+				2632CBF42984805A0041BB2D /* NowPlayingView.swift */,
+			);
+			path = "Now Playing";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
