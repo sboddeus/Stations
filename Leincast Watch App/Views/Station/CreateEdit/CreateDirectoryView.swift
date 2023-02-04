@@ -30,10 +30,14 @@ struct CreateDirectory: ReducerProtocol {
                         .directory(
                             // TODO: URL validation here
                             path: URL(string:
-                                        state.title.trimmingCharacters(
-                                            in: .whitespacesAndNewlines
-                                        )
-                                     )!
+                                        state.title
+                                .trimmingCharacters(
+                                    in: .whitespacesAndNewlines
+                                )
+                                .addingPercentEncoding(
+                                    withAllowedCharacters: .urlPathAllowed
+                                )!
+                            )!
                         )
                         .create()
                     

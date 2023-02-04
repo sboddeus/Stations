@@ -99,6 +99,12 @@ public extension Directory {
     func exists() async -> Bool {
         await fileSystem.exists(self)
     }
+    
+    /// Moves the given directory into the given directory.
+    /// Then returns a new Directory object with the correct paths
+    func move(into: Directory) async throws -> Directory {
+        return try await fileSystem.move(directory: self, into: into)
+    }
 }
 
 extension Directory: Equatable {

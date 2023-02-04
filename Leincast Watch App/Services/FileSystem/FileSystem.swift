@@ -176,13 +176,15 @@ extension FileSystem {
     nonisolated func retrieveAllSubDirectories(from directory: Directory) async throws -> [Directory] {
         let url = try await directory.url(fileManager: fileManager)
 
-        let contents = try fileManager.contentsOfDirectory(at: url, includingPropertiesForKeys: nil, options: [])
+        let contents = try fileManager.contentsOfDirectory(
+            at: url,
+            includingPropertiesForKeys: nil,
+            options: []
+        )
         
         var results = [Directory]()
         for content in contents {
-            let directory =  Directory(baseDirectory: directory.baseDirectory,
-                                       path: directory.path.appendingPathComponent(content.lastPathComponent),
-                                       fileSystem: self)
+            let directory = await directory.directory(path: URL(string: content.lastPathComponent)!)
              if await exists(directory) {
                 results.append(directory)
             }
@@ -219,6 +221,14 @@ extension FileSystem {
             path: new,
             fileSystem: self
         )
+    }
+    
+    nonisolated func move(directory: Directory, into: Directory) async throws -> Directory {
+        let original = try await directory.url(fileManager: fileManager)
+        let intoURL = try await into.url(fileManager: fileManager).appending(component: directory.name)
+        try fileManager.moveItem(at: original, to: intoURL)
+        
+        return await into.directory(path: URL(string: directory.name)!)
     }
 
     // Returns BOOL indicating whether the file exists

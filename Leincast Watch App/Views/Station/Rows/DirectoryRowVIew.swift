@@ -17,6 +17,7 @@ struct DirectoryRow: ReducerProtocol {
             case selected
             case edit
             case delete
+            case copy
         }
         case delegate(Delegate)
     }
@@ -54,6 +55,14 @@ struct DirectoryRowView: View {
             }
             .tint(.indigo)
 
+            Button {
+                viewStore.send(.delegate(.copy))
+            } label: {
+                Image(systemName: "scissors")
+            }
+            .tint(.indigo)
+        }
+        .swipeActions(edge: .leading) {
             Button(role: .destructive) {
                 viewStore.send(.delegate(.delete))
             } label: {

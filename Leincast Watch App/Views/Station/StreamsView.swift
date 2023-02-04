@@ -175,16 +175,23 @@ struct Streams: ReducerProtocol {
             case .routeAction(.editMenu(.delegate(.paste))):
                 state.route = nil
                 return .task { [state] in
-                    guard let copiedStream = await clipBoard.content().last else {
+                    guard let copiedContent = await clipBoard.content().last else {
                         return .onAppear
                     }
-                    let file = try await state.rootDirectory.file(
-                        name: copiedStream.id.uuidString
-                    )
                     
-                    try await file.save(copiedStream)
+                    switch copiedContent {
+                    case let .directory(copiedDir):
+                        _ = try await copiedDir.move(into: state.rootDirectory)
+                        
+                    case let .stream(copiedStream):
+                        let file = try await state.rootDirectory.file(
+                            name: copiedStream.id.uuidString
+                        )
+                        
+                        try await file.save(copiedStream)
+                    }
                     
-                    await clipBoard.remove(stream: copiedStream)
+                    await clipBoard.remove(content: copiedContent)
                     
                     return .onAppear
                 }
@@ -211,6 +218,7 @@ struct Streams: ReducerProtocol {
             case .station:
                 return .none
             
+                // MARK: Directory Row Actions
             case let .directory(id, .delegate(.edit)):
                 guard let dir = state.directories[id: id]?.directory else {
                     return .none
@@ -226,6 +234,20 @@ struct Streams: ReducerProtocol {
                     // If yes, stop playing first. (This doesn't have to be recursion. Could be done based on the file path)
                     try await state.directories[id: id]?.directory.remove()
                     
+                    return .onAppear
+                }
+                
+            case let .directory(id, .delegate(.copy)):
+                guard let dir = state.directories[id: id] else {
+                    return .none
+                }
+                                
+                return .task {
+                    // TODO: Deal with error
+                    // TODO: Recursively check folders if they contain the station currently playing,
+                    // If yes, stop playing first. (This doesn't have to be recursion. Could be done based on the file path)
+                    await clipBoard.add(directory: dir.directory)
+                                        
                     return .onAppear
                 }
                 
