@@ -42,10 +42,7 @@ struct DirectoryRowView: View {
         Button {
             viewStore.send(.delegate(.selected))
         } label: {
-            HStack {
-                Text(viewStore.directory.name)
-                Spacer()
-            }
+            DirectoryRowCoreView(title: viewStore.directory.name)
         }
         .swipeActions(edge: .trailing) {
             Button {
@@ -69,6 +66,22 @@ struct DirectoryRowView: View {
                 Image(systemName: "trash")
             }
             .tint(.red)
+        }
+    }
+}
+
+struct DirectoryRowCoreView: View {
+
+    let title: String
+
+    var body: some View {
+        HStack {
+            Image(systemName: "folder.fill")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 20, height: 20)
+            Text(title)
+            Spacer()
         }
     }
 }

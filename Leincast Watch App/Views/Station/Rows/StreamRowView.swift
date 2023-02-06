@@ -98,47 +98,36 @@ struct StreamRowView: View {
         Button {
             viewStore.send(.delegate(.selected))
         } label: {
-            HStack(alignment: .center) {
-                ZStack {
-                    Color.white
-                    WebImage(url: viewStore.station.imageURL)
-                        .resizable()
-                        .padding(2)
-                        .scaledToFit()
+            StreamRowCoreView(
+                imageURL: viewStore.station.imageURL,
+                title: viewStore.station.title,
+                isActive: viewStore.activeState == .unselected) {
+                    switch viewStore.activeState {
+                    case .loading:
+                        ProgressView()
+                            .foregroundColor(.red)
+                            .scaledToFit()
+                            .fixedSize()
+                    case .playing:
+                        Image(systemName: "pause.circle")
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(.red)
+                            .onTapGesture {
+                                viewStore.send(.pause)
+                            }
+                    case .paused:
+                        Image(systemName: "play.circle")
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(.red)
+                            .onTapGesture {
+                                viewStore.send(.play)
+                            }
+                    case .unselected:
+                        EmptyView()
+                    }
                 }
-                .frame(maxWidth: 30, maxHeight: 30)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
-                
-                Text(viewStore.station.title)
-                    .foregroundColor(viewStore.activeState == .unselected ? .white : .red)
-                Spacer()
-                
-                switch viewStore.activeState {
-                case .loading:
-                    ProgressView()
-                        .foregroundColor(.red)
-                        .scaledToFit()
-                        .fixedSize()
-                case .playing:
-                    Image(systemName: "pause.circle")
-                        .resizable()
-                        .frame(width: 20, height: 20)
-                        .foregroundColor(.red)
-                        .onTapGesture {
-                            viewStore.send(.pause)
-                        }
-                case .paused:
-                    Image(systemName: "play.circle")
-                        .resizable()
-                        .frame(width: 20, height: 20)
-                        .foregroundColor(.red)
-                        .onTapGesture {
-                            viewStore.send(.play)
-                        }
-                case .unselected:
-                    EmptyView()
-                }
-            }
         }
         .task {
             await viewStore.send(.playerBinding).finish()
@@ -165,6 +154,46 @@ struct StreamRowView: View {
                 Image(systemName: "trash")
             }
             .tint(.red)
+        }
+    }
+}
+
+struct StreamRowCoreView<Content: View>: View {
+
+    let imageURL: URL?
+    let title: String
+    let isActive: Bool
+    let content: () -> Content
+    init(
+        imageURL: URL?,
+        title: String,
+        isActive: Bool,
+        @ViewBuilder content: @escaping () -> Content
+    ) {
+        self.imageURL = imageURL
+        self.title = title
+        self.isActive = isActive
+        self.content = content
+    }
+
+    var body: some View {
+        HStack(alignment: .center) {
+
+            ZStack {
+                Color.white
+                WebImage(url: imageURL)
+                    .resizable()
+                    .padding(2)
+                    .scaledToFit()
+            }
+            .frame(maxWidth: 30, maxHeight: 30)
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+
+            Text(title)
+                .foregroundColor(isActive ? .white : .red)
+            Spacer()
+
+            content()
         }
     }
 }

@@ -13,9 +13,18 @@ actor ClipBoard {
         )
     }
     
-    enum ContentType: Equatable {
+    enum ContentType: Equatable, Identifiable {
         case stream(Stream)
         case directory(Directory)
+
+        var id: String {
+            switch self {
+            case let .stream(stream):
+                return stream.id.uuidString
+            case let .directory(dir):
+                return dir.path.absoluteString
+            }
+        }
     }
     private var _content: [ContentType] = []
 
@@ -25,6 +34,7 @@ actor ClipBoard {
     
     func add(directory: Directory) async {
         // First move into a temp directory
+
         if let dir = try? await directory.move(into: rootDirectory) {
             // Then add to clipboard
             _content.append(.directory(dir))
@@ -37,5 +47,12 @@ actor ClipBoard {
     
     func remove(content: ContentType) {
         _content = _content.filter { $0 != content }
+    }
+
+    func clearDirectory() async {
+        let dirs = (try? await rootDirectory.retrieveAllSubDirectories()) ?? []
+        for dir in dirs {
+            try? await dir.remove()
+        }
     }
 }

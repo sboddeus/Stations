@@ -66,7 +66,7 @@ actor StreamMaster {
     func constructInitialSystemIfNeeded() async {
         // NOTE: App review did not like default streams
         // Revisit in the future to see if we get lucky with a better reviewer
-        
+//        
 //        let initialConstructionKey = "fs.version.0";
 //        guard !defaults.bool(forKey: initialConstructionKey) else {
 //            // Our work is done
@@ -96,7 +96,7 @@ actor StreamMaster {
 //        let uk = await dir.directory(path: URL(string: "UK")!)
 //        let bbc = await uk.directory(path: URL(string: "BBC")!)
 //        try? await bbc.file(name: bbcWorldwide.id.uuidString).save(bbcWorldwide)
-//        
+//
 //        // US
 //        let us = await dir.directory(path: URL(string: "US")!)
 //        try? await us.file(name: bin.id.uuidString).save(bin)

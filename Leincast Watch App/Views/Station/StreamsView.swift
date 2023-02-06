@@ -23,6 +23,7 @@ struct Streams: ReducerProtocol {
             case editDirectory(EditDirectory.State)
             case subDirectory(Streams.State)
             case editMenu(EditMenu.State)
+            case clipBoard(ClipBoardReducer.State)
         }
         var route: Route?
     }
@@ -47,6 +48,7 @@ struct Streams: ReducerProtocol {
             case editDirectory(EditDirectory.Action)
             case createDirectory(CreateDirectory.Action)
             case editMenu(EditMenu.Action)
+            case clipBoard(ClipBoardReducer.Action)
         }
         case routeAction(RouteAction)
         
@@ -171,29 +173,53 @@ struct Streams: ReducerProtocol {
                     )
                 )
                 return .none
-                
-            case .routeAction(.editMenu(.delegate(.paste))):
+
+            case let .routeAction(.clipBoard(.delegate(.selected(content)))):
                 state.route = nil
                 return .task { [state] in
-                    guard let copiedContent = await clipBoard.content().last else {
-                        return .onAppear
-                    }
-                    
-                    switch copiedContent {
+
+                    switch content {
                     case let .directory(copiedDir):
                         _ = try await copiedDir.move(into: state.rootDirectory)
-                        
+
                     case let .stream(copiedStream):
                         let file = try await state.rootDirectory.file(
                             name: copiedStream.id.uuidString
                         )
-                        
+
                         try await file.save(copiedStream)
                     }
-                    
-                    await clipBoard.remove(content: copiedContent)
-                    
+
+                    await clipBoard.remove(content: content)
+
                     return .onAppear
+                }
+
+            case .routeAction(.editMenu(.delegate(.paste))):
+                return .run { [state] send in
+
+                    let content = await clipBoard.content()
+                    if content.count > 1 {
+                        await send(.setRoute(.clipBoard(.init())))
+                    } else if let content = content.first {
+
+                        switch content {
+                        case let .directory(copiedDir):
+                            _ = try await copiedDir.move(into: state.rootDirectory)
+
+                        case let .stream(copiedStream):
+                            let file = try await state.rootDirectory.file(
+                                name: copiedStream.id.uuidString
+                            )
+
+                            try await file.save(copiedStream)
+                        }
+
+                        await clipBoard.remove(content: content)
+
+                        await send(.setRoute(nil))
+                        await send(.onAppear)
+                    }
                 }
                 
             case .routeAction(.createStation(.delegate(.stationAdded))):
@@ -286,6 +312,11 @@ struct Streams: ReducerProtocol {
             EditMenu()
         }
     }
+    private var clipBoardReducer: some ReducerProtocol<Streams.State.Route, Streams.Action.RouteAction> {
+        Scope(state: /State.Route.clipBoard, action: /Action.RouteAction.clipBoard) {
+            ClipBoardReducer()
+        }
+    }
     
     var body: some ReducerProtocol<State, Action> {
         core
@@ -301,6 +332,7 @@ struct Streams: ReducerProtocol {
             editDirectory
             subDirectory
             editMenu
+            clipBoardReducer
         }
     }
 }
@@ -381,6 +413,19 @@ struct StreamsView: View {
                 action: { Streams.Action.routeAction(.editMenu($0)) }
             )
             EditMenuView(store: store)
+        }
+        .fullScreenCover(
+            unwrapping: viewStore.binding(
+                get: \.route,
+                send: Streams.Action.setRoute
+            ),
+            case: /Streams.State.Route.clipBoard
+        ) { $value in
+            let store = store.scope(
+                state: { _ in $value.wrappedValue },
+                action: { Streams.Action.routeAction(.clipBoard($0)) }
+            )
+            ClipBoardView(store: store)
         }
         .fullScreenCover(
             unwrapping: viewStore.binding(

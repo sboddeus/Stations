@@ -184,7 +184,15 @@ extension FileSystem {
         
         var results = [Directory]()
         for content in contents {
-            let directory = await directory.directory(path: URL(string: content.lastPathComponent)!)
+            guard let pathComponent = content
+                .lastPathComponent
+                .addingPercentEncoding(
+                    withAllowedCharacters: .urlPathAllowed
+                ),
+                let path = URL(string: pathComponent) else {
+                continue
+            }
+            let directory = await directory.directory(path: path)
              if await exists(directory) {
                 results.append(directory)
             }
