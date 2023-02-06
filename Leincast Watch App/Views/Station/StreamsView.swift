@@ -224,19 +224,19 @@ struct Streams: ReducerProtocol {
                 
             case .routeAction(.createStation(.delegate(.stationAdded))):
                 state.route = nil
-                return EffectTask(value: .onAppear)
+                return .task { .onAppear }
                 
             case .routeAction(.editDirectory(.delegate(.directoryEdited))):
                 state.route = nil
-                return EffectTask(value: .onAppear)
+                return .task { .onAppear }
 
             case .routeAction(.createDirectory(.delegate(.directoryAdded))):
                 state.route = nil
-                return EffectTask(value: .onAppear)
+                return .task { .onAppear }
 
             case let .routeAction(.subDirectory(.delegate(.selected(station)))):
                 // Propogate selected station
-                return EffectTask(value: .delegate(.selected(station)))
+                return .task { .delegate(.selected(station)) }
                 
             case .routeAction:
                 return .none
