@@ -5,6 +5,11 @@ import Foundation
 // Most applications should only have one instance of this actor in use at any given time.
 // To make this convienient there is the 'default' instance that can be accessed.
 public actor FileSystem {
+
+
+    enum FileSystemError: Error {
+        case corruptURL
+    }
     
     /// The default instance of a DeputyFileSystem to use within an app.
     public static var `default` = FileSystem()
@@ -235,8 +240,20 @@ extension FileSystem {
         let original = try await directory.url(fileManager: fileManager)
         let intoURL = try await into.url(fileManager: fileManager).appending(component: directory.name)
         try fileManager.moveItem(at: original, to: intoURL)
-        
-        return await into.directory(path: URL(string: directory.name)!)
+        guard let directoryName = directory.name
+            .addingPercentEncoding(withAllowedCharacters: .urlPathAllowed),
+              let directoryNameURL = URL(string: directoryName) else {
+            throw FileSystemError.corruptURL
+        }
+        return await into.directory(path: directoryNameURL)
+    }
+
+    nonisolated func duplicate(directory: Directory) async throws -> Directory {
+        let original = try await directory.url(fileManager: fileManager)
+        let newName = (directory.name + " (copy)")
+            let intoURL = original.deletingLastPathComponent().appending(path: newName)
+            try fileManager.copyItem(at: original, to: intoURL)
+            return Directory(baseDirectory: directory.baseDirectory, path: intoURL, fileSystem: directory.fileSystem)
     }
 
     // Returns BOOL indicating whether the file exists

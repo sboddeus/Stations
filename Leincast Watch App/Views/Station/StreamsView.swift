@@ -124,6 +124,27 @@ struct Streams: ReducerProtocol {
                     }
                 }
                 return .none
+
+            case let .station(id, action: .delegate(.duplicate)):
+                if let station = state.stations[id: id]?.station {
+                    return .task { [state] in
+                        let newStream = Stream(
+                            id: .init(),
+                            title: station.title + " (copy)",
+                            description: station.description,
+                            imageURL: station.imageURL,
+                            url: station.url
+                        )
+
+                        let file = try await state.rootDirectory.file(
+                            name: newStream.id.uuidString
+                        )
+                        try await file.save(newStream)
+
+                        return .onAppear
+                    }
+                }
+                return .none
                 
             case .delegate:
                 return .none
@@ -283,6 +304,15 @@ struct Streams: ReducerProtocol {
                 }
                 state.route = .subDirectory(.init(rootDirectory: dir.directory))
                 return .none
+
+            case let .directory(id, .delegate(.duplicate)):
+                guard let dir = state.directories[id: id] else {
+                    return .none
+                }
+                return .task {
+                    _ = try await dir.directory.duplicate()
+                    return .onAppear
+                }
             }
         }
     }

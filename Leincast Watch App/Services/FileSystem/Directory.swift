@@ -105,6 +105,11 @@ public extension Directory {
     func move(into: Directory) async throws -> Directory {
         return try await fileSystem.move(directory: self, into: into)
     }
+
+    /// Duplicates the given directory and returns the new directory
+    func duplicate() async throws -> Directory {
+        return try await fileSystem.duplicate(directory: self)
+    }
 }
 
 extension Directory: Equatable {
