@@ -10,6 +10,7 @@ struct Home: ReducerProtocol {
         enum Route: Equatable {
             case menu(Menu.State)
             case stations(Streams.State)
+            case podcasts(Podcasts.State)
             case help(Help.State)
         }
         var route: Route?
@@ -36,6 +37,7 @@ struct Home: ReducerProtocol {
         case showHelp
         case showStations
         case showAssetLoadingAlert
+        case showPodcasts
         
         case alertDismissed
         
@@ -46,6 +48,7 @@ struct Home: ReducerProtocol {
             case menu(Menu.Action)
             case stations(Streams.Action)
             case help(Help.Action)
+            case podcasts(Podcasts.Action)
         }
         case routeAction(RouteAction)
     }
@@ -76,6 +79,10 @@ struct Home: ReducerProtocol {
                     let rootDir = await stationMaster.rootDirectory
                     return .setRoute(.stations(Streams.State(rootDirectory: rootDir)))
                 }
+
+            case .showPodcasts:
+                state.route = .podcasts(.init())
+                return .none
                 
             case let .setRoute(route):
                 state.route = route
@@ -126,6 +133,9 @@ struct Home: ReducerProtocol {
             Scope(state: /State.Route.help, action: /Action.RouteAction.help) {
                 Help()
             }
+            Scope(state: /State.Route.podcasts, action: /Action.RouteAction.podcasts) {
+                Podcasts()
+            }
         }
     }
 }
@@ -158,6 +168,11 @@ struct HomeView: View {
                                 viewStore.send(.showStations)
                             } label: {
                                 Text("Live Streams")
+                            }
+                            Button {
+                                viewStore.send(.showPodcasts)
+                            } label: {
+                                Text("Podcasts")
                             }
                         }
                         
@@ -196,6 +211,20 @@ struct HomeView: View {
                             action: { Home.Action.routeAction(.stations($0)) }
                         )
                         StreamsView(store: store)
+                    }
+                )
+                .navigationDestination(
+                    unwrapping: viewStore.binding(
+                        get: \.route,
+                        send: Home.Action.setRoute
+                    ),
+                    case: /Home.State.Route.podcasts,
+                    destination: { $value in
+                        let store = store.scope(
+                            state: { $0.route.flatMap(/Home.State.Route.podcasts) ?? value },
+                            action: { Home.Action.routeAction(.podcasts($0)) }
+                        )
+                        PodcastsView(store: store)
                     }
                 )
                 .navigationDestination(

@@ -45,6 +45,10 @@
 		2632CC2E2984805A0041BB2D /* StreamMaster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2632CC122984805A0041BB2D /* StreamMaster.swift */; };
 		2632CC2F2984805A0041BB2D /* MediaMetaDataEnrichment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2632CC142984805A0041BB2D /* MediaMetaDataEnrichment.swift */; };
 		2632CC302984805A0041BB2D /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2632CC152984805A0041BB2D /* Player.swift */; };
+		2672C32829A1CB4A00950DA5 /* SyndiKit in Frameworks */ = {isa = PBXBuildFile; productRef = 2672C32729A1CB4A00950DA5 /* SyndiKit */; };
+		2672C32B29A1CB8A00950DA5 /* PodcastsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2672C32A29A1CB8A00950DA5 /* PodcastsView.swift */; };
+		2672C32E29A1D21900950DA5 /* PodcastMaster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2672C32D29A1D21900950DA5 /* PodcastMaster.swift */; };
+		2672C33029A1D29300950DA5 /* Podcast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2672C32F29A1D29300950DA5 /* Podcast.swift */; };
 		26F13367298DC17C00060890 /* ClipBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26F13366298DC17C00060890 /* ClipBoard.swift */; };
 		26F1336A298DC76100060890 /* ClipBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26F13369298DC76100060890 /* ClipBoardView.swift */; };
 /* End PBXBuildFile section */
@@ -107,6 +111,9 @@
 		2632CC142984805A0041BB2D /* MediaMetaDataEnrichment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaMetaDataEnrichment.swift; sourceTree = "<group>"; };
 		2632CC152984805A0041BB2D /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		2632CC31298480BB0041BB2D /* Leincast-Watch-App-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Leincast-Watch-App-Info.plist"; sourceTree = SOURCE_ROOT; };
+		2672C32A29A1CB8A00950DA5 /* PodcastsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastsView.swift; sourceTree = "<group>"; };
+		2672C32D29A1D21900950DA5 /* PodcastMaster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastMaster.swift; sourceTree = "<group>"; };
+		2672C32F29A1D29300950DA5 /* Podcast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Podcast.swift; sourceTree = "<group>"; };
 		26F13366298DC17C00060890 /* ClipBoard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipBoard.swift; sourceTree = "<group>"; };
 		26F13369298DC76100060890 /* ClipBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipBoardView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -123,6 +130,7 @@
 				2632CBBA29847CFA0041BB2D /* Collections in Frameworks */,
 				2632CBB129847C9C0041BB2D /* ComposableArchitecture in Frameworks */,
 				2632CBC129847D1B0041BB2D /* AsyncAlgorithms in Frameworks */,
+				2672C32829A1CB4A00950DA5 /* SyndiKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -193,6 +201,7 @@
 			isa = PBXGroup;
 			children = (
 				2632CBEF2984805A0041BB2D /* Stream.swift */,
+				2672C32F29A1D29300950DA5 /* Podcast.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -200,6 +209,7 @@
 		2632CBF02984805A0041BB2D /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				2672C32929A1CB6E00950DA5 /* Podcasts */,
 				26F13368298DC75200060890 /* ClipBoard */,
 				26F13364298DB43700060890 /* Now Playing */,
 				2632CBF12984805A0041BB2D /* Home */,
@@ -285,6 +295,7 @@
 		2632CC0A2984805A0041BB2D /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				2672C32C29A1D20500950DA5 /* Poscast Master */,
 				26F13365298DC16900060890 /* Clip Board */,
 				2632CC0B2984805A0041BB2D /* FileSystem */,
 				2632CC102984805A0041BB2D /* Stream Master */,
@@ -320,6 +331,22 @@
 				2632CC152984805A0041BB2D /* Player.swift */,
 			);
 			path = Player;
+			sourceTree = "<group>";
+		};
+		2672C32929A1CB6E00950DA5 /* Podcasts */ = {
+			isa = PBXGroup;
+			children = (
+				2672C32A29A1CB8A00950DA5 /* PodcastsView.swift */,
+			);
+			path = Podcasts;
+			sourceTree = "<group>";
+		};
+		2672C32C29A1D20500950DA5 /* Poscast Master */ = {
+			isa = PBXGroup;
+			children = (
+				2672C32D29A1D21900950DA5 /* PodcastMaster.swift */,
+			);
+			path = "Poscast Master";
 			sourceTree = "<group>";
 		};
 		26F13364298DB43700060890 /* Now Playing */ = {
@@ -387,6 +414,7 @@
 				2632CBBB29847CFA0041BB2D /* DequeModule */,
 				2632CBBD29847CFA0041BB2D /* OrderedCollections */,
 				2632CBC029847D1B0041BB2D /* AsyncAlgorithms */,
+				2672C32729A1CB4A00950DA5 /* SyndiKit */,
 			);
 			productName = "Leincast Watch App";
 			productReference = 2632CB9729847AFD0041BB2D /* Leincast Watch App.app */;
@@ -425,6 +453,7 @@
 				2632CBB529847CDD0041BB2D /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 				2632CBB829847CFA0041BB2D /* XCRemoteSwiftPackageReference "swift-collections" */,
 				2632CBBF29847D1B0041BB2D /* XCRemoteSwiftPackageReference "swift-async-algorithms" */,
+				2672C32629A1CB4A00950DA5 /* XCRemoteSwiftPackageReference "SyndiKit" */,
 			);
 			productRefGroup = 2632CB9229847AFD0041BB2D /* Products */;
 			projectDirPath = "";
@@ -468,6 +497,7 @@
 				2632CC2E2984805A0041BB2D /* StreamMaster.swift in Sources */,
 				2632CC2A2984805A0041BB2D /* Helpers.swift in Sources */,
 				2632CC282984805A0041BB2D /* PlayerDependency.swift in Sources */,
+				2672C32E29A1D21900950DA5 /* PodcastMaster.swift in Sources */,
 				2632CBD629847EB80041BB2D /* DEBUG.swift in Sources */,
 				26F1336A298DC76100060890 /* ClipBoardView.swift in Sources */,
 				2632CC1E2984805A0041BB2D /* StreamRowView.swift in Sources */,
@@ -476,6 +506,7 @@
 				2632CC272984805A0041BB2D /* NowPlayingControls.swift in Sources */,
 				2632CC242984805A0041BB2D /* HelpView.swift in Sources */,
 				2632CC1D2984805A0041BB2D /* DirectoryRowVIew.swift in Sources */,
+				2672C32B29A1CB8A00950DA5 /* PodcastsView.swift in Sources */,
 				2632CC162984805A0041BB2D /* LeinColors.swift in Sources */,
 				2632CC2D2984805A0041BB2D /* ABCStreams.swift in Sources */,
 				2632CC232984805A0041BB2D /* CreateDirectoryView.swift in Sources */,
@@ -487,6 +518,7 @@
 				26F13367298DC17C00060890 /* ClipBoard.swift in Sources */,
 				2632CC1C2984805A0041BB2D /* StreamsView.swift in Sources */,
 				2632CC252984805A0041BB2D /* Environments.swift in Sources */,
+				2672C33029A1D29300950DA5 /* Podcast.swift in Sources */,
 				2632CC292984805A0041BB2D /* Directory.swift in Sources */,
 				2632CC172984805A0041BB2D /* Stream.swift in Sources */,
 				2632CC1F2984805A0041BB2D /* EditMenuView.swift in Sources */,
@@ -786,6 +818,14 @@
 				minimumVersion = 0.0.4;
 			};
 		};
+		2672C32629A1CB4A00950DA5 /* XCRemoteSwiftPackageReference "SyndiKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/brightdigit/SyndiKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.3.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -823,6 +863,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2632CBBF29847D1B0041BB2D /* XCRemoteSwiftPackageReference "swift-async-algorithms" */;
 			productName = AsyncAlgorithms;
+		};
+		2672C32729A1CB4A00950DA5 /* SyndiKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2672C32629A1CB4A00950DA5 /* XCRemoteSwiftPackageReference "SyndiKit" */;
+			productName = SyndiKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

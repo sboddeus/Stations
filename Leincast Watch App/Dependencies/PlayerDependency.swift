@@ -25,6 +25,17 @@ extension DependencyValues {
 }
 
 extension DependencyValues {
+    var podcastMaster: PodcastMaster {
+        get { self[PodcastMasterKey.self] }
+        set { self[PodcastMasterKey.self] = newValue }
+    }
+
+    enum PodcastMasterKey: DependencyKey {
+        static let liveValue: PodcastMaster = .init()
+    }
+}
+
+extension DependencyValues {
     var userDefaults: UserDefaults {
         get { self[UserDefaultsKey.self] }
         set { self[UserDefaultsKey.self] = newValue }
