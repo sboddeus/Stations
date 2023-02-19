@@ -12,7 +12,7 @@ struct Leincast_Watch_AppApp: App {
     init() {
         nowPlaying.bind(toPlayer: .shared!)
         Task { [stationMaster, clipBoard] in
-            await clipBoard.clearDirectory()
+            await clipBoard.initialise()
             await stationMaster.bind(to: .shared!)
         }
     }

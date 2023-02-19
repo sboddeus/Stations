@@ -8,7 +8,7 @@ actor StreamMaster {
     
     private var filesystem: FileSystem = .default
     private var defaults: UserDefaults = .standard
-    private var rootPath = URL(string: "/Streams")!
+    private var rootPath = URL(string: "Streams")!
     private var volumeObserver: NSKeyValueObservation?
     
     nonisolated
@@ -26,7 +26,7 @@ actor StreamMaster {
     private lazy var recentsFile: File = {
         let dir = Directory(
             baseDirectory: .documents,
-            path: URL(string: "/recents")!,
+            path: URL(string: "recents")!,
             fileSystem: filesystem
         )
         return File(

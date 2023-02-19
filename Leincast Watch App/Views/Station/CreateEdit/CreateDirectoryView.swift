@@ -2,15 +2,22 @@
 import SwiftUI
 import ComposableArchitecture
 
+enum CreateDirectoryError: Error {
+    case couldntCreateValidURL
+}
+
 struct CreateDirectory: ReducerProtocol {
     struct State: Equatable {
         let containingDirectory: Directory
         var title: String = ""
+        var alert: AlertState<Action>?
     }
     
     enum Action: Equatable {
         case setTitle(String)
         case addDirectory
+        case showDirectoryAlert
+        case alertDismissed
         
         enum Delegate {
             case directoryAdded
@@ -24,24 +31,46 @@ struct CreateDirectory: ReducerProtocol {
             case let .setTitle(title):
                 state.title = title
                 return .none
+
+            case .alertDismissed:
+                state.alert = nil
+                return .none
+
+            case .showDirectoryAlert:
+                state.alert = .init(
+                    title: .init("Could not create folder"),
+                    message: .init("Ensure the folder has a unique name and that device storage is not full."),
+                    dismissButton: .default(
+                        .init("Ok"),
+                        action: .send(.alertDismissed)
+                    )
+                )
+                return .none
+
             case .addDirectory:
                 return .task { [state] in
-                    try await state.containingDirectory
-                        .directory(
-                            // TODO: URL validation here
-                            path: URL(string:
-                                        state.title
-                                .trimmingCharacters(
-                                    in: .whitespacesAndNewlines
-                                )
-                                .addingPercentEncoding(
-                                    withAllowedCharacters: .urlPathAllowed
-                                )!
-                            )!
-                        )
-                        .create()
-                    
-                    return .delegate(.directoryAdded)
+                    do {
+                        guard let stringPath = state.title
+                            .trimmingCharacters(
+                                in: .whitespacesAndNewlines
+                            )
+                            .addingPercentEncoding(
+                                withAllowedCharacters: .urlPathAllowed
+                            ) else {
+                            throw CreateDirectoryError.couldntCreateValidURL
+                        }
+                        guard let path = URL(string: stringPath) else {
+                            throw CreateDirectoryError.couldntCreateValidURL
+                        }
+
+                        try await state.containingDirectory
+                            .directory(path: path)
+                            .create()
+
+                        return .delegate(.directoryAdded)
+                    } catch {
+                        return .showDirectoryAlert
+                    }
                 }
                 
             case .delegate:
@@ -80,6 +109,9 @@ struct CreateDirectoryView: View {
                         .foregroundColor(.indigo)
                 }.disabled(viewStore.title.isEmpty)
             }
-        }
+        }.alert(
+            self.store.scope(state: \.alert),
+            dismiss: CreateDirectory.Action.alertDismissed
+        )
     }
 }

@@ -4,7 +4,7 @@ import Foundation
 actor ClipBoard {
     
     private var filesystem: FileSystem = .default
-    private var rootPath = URL(string: "/CopyCache")!
+    private var rootPath = URL(string: "CopyCache")!
     
     private var rootDirectory: Directory {
         filesystem.directory(
@@ -32,13 +32,12 @@ actor ClipBoard {
         _content.append(.stream(stream))
     }
     
-    func add(directory: Directory) async {
+    func add(directory: Directory) async throws {
         // First move into a temp directory
+        let dir = try await directory.move(into: rootDirectory)
 
-        if let dir = try? await directory.move(into: rootDirectory) {
-            // Then add to clipboard
-            _content.append(.directory(dir))
-        }
+        // Then add to clipboard
+        _content.append(.directory(dir))
     }
     
     func content() -> [ContentType] {
@@ -49,7 +48,8 @@ actor ClipBoard {
         _content = _content.filter { $0 != content }
     }
 
-    func clearDirectory() async {
+    func initialise() async {
+        try? await rootDirectory.create()
         let dirs = (try? await rootDirectory.retrieveAllSubDirectories()) ?? []
         for dir in dirs {
             try? await dir.remove()

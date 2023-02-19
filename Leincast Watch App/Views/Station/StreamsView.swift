@@ -26,6 +26,8 @@ struct Streams: ReducerProtocol {
             case clipBoard(ClipBoardReducer.State)
         }
         var route: Route?
+
+        var alert: AlertState<Action>?
     }
     
     indirect enum Action: Equatable {
@@ -40,6 +42,9 @@ struct Streams: ReducerProtocol {
         case onAppear
         case loadedStations([Stream])
         case loadedSubDirectories([Directory])
+        case showPasteError
+        case showClipboardCopyError(String)
+        case alertDismissed
 
         // Child Actions
         indirect enum RouteAction: Equatable {
@@ -62,13 +67,40 @@ struct Streams: ReducerProtocol {
     private var core: some ReducerProtocol<State, Action> {
         Reduce { state, action in
             switch action {
-                
+            case .alertDismissed:
+                state.alert = nil
+                return .none
+
             case .showEditOptions:
                 state.route = .editMenu(.init())
                 return .none
                 
             case let .setRoute(route):
                 state.route = route
+                return .none
+
+            case .showPasteError:
+                state.route = nil
+                state.alert = .init(
+                    title: .init("Could not paste item"),
+                    message: .init("Ensure the folder has a unique name and that device storage is not full."),
+                    dismissButton: .default(
+                        .init("Ok"),
+                        action: .send(.alertDismissed)
+                    )
+                )
+                return .none
+
+            case let .showClipboardCopyError(message):
+                state.route = nil
+                state.alert = .init(
+                    title: .init("Could not copy item"),
+                    message: .init(verbatim: message),
+                    dismissButton: .default(
+                        .init("Ok"),
+                        action: .send(.alertDismissed)
+                    )
+                )
                 return .none
              
                 // MARK: - Station actions
@@ -197,33 +229,8 @@ struct Streams: ReducerProtocol {
 
             case let .routeAction(.clipBoard(.delegate(.selected(content)))):
                 state.route = nil
-                return .task { [state] in
-
-                    switch content {
-                    case let .directory(copiedDir):
-                        _ = try await copiedDir.move(into: state.rootDirectory)
-
-                    case let .stream(copiedStream):
-                        let file = try await state.rootDirectory.file(
-                            name: copiedStream.id.uuidString
-                        )
-
-                        try await file.save(copiedStream)
-                    }
-
-                    await clipBoard.remove(content: content)
-
-                    return .onAppear
-                }
-
-            case .routeAction(.editMenu(.delegate(.paste))):
                 return .run { [state] send in
-
-                    let content = await clipBoard.content()
-                    if content.count > 1 {
-                        await send(.setRoute(.clipBoard(.init())))
-                    } else if let content = content.first {
-
+                    do {
                         switch content {
                         case let .directory(copiedDir):
                             _ = try await copiedDir.move(into: state.rootDirectory)
@@ -238,8 +245,41 @@ struct Streams: ReducerProtocol {
 
                         await clipBoard.remove(content: content)
 
-                        await send(.setRoute(nil))
                         await send(.onAppear)
+                    } catch {
+                        await send(.setRoute(nil))
+                        await send(.showPasteError)
+                    }
+                }
+
+            case .routeAction(.editMenu(.delegate(.paste))):
+                return .run { [state] send in
+
+                    let content = await clipBoard.content()
+                    if content.count > 1 {
+                        await send(.setRoute(.clipBoard(.init())))
+                    } else if let content = content.first {
+                        do {
+                            switch content {
+                            case let .directory(copiedDir):
+                                _ = try await copiedDir.move(into: state.rootDirectory)
+
+                            case let .stream(copiedStream):
+                                let file = try await state.rootDirectory.file(
+                                    name: copiedStream.id.uuidString
+                                )
+
+                                try await file.save(copiedStream)
+                            }
+
+                            await clipBoard.remove(content: content)
+
+                            await send(.setRoute(nil))
+                            await send(.onAppear)
+                        } catch {
+                            await send(.setRoute(nil))
+                            await send(.showPasteError)
+                        }
                     }
                 }
                 
@@ -290,12 +330,15 @@ struct Streams: ReducerProtocol {
                 }
                                 
                 return .task {
-                    // TODO: Deal with error
                     // TODO: Recursively check folders if they contain the station currently playing,
                     // If yes, stop playing first. (This doesn't have to be recursion. Could be done based on the file path)
-                    await clipBoard.add(directory: dir.directory)
-                                        
-                    return .onAppear
+                    do {
+                        try await clipBoard.add(directory: dir.directory)
+
+                        return .onAppear
+                    } catch {
+                        return .showClipboardCopyError(error.localizedDescription)
+                    }
                 }
                 
             case let .directory(id, .delegate(.selected)):
@@ -417,6 +460,10 @@ struct StreamsView: View {
         .onAppear {
             viewStore.send(.onAppear)
         }
+        .alert(
+            self.store.scope(state: \.alert),
+            dismiss: Streams.Action.alertDismissed
+        )
         .navigationDestination(
             unwrapping: viewStore.binding(
                 get: \.route,
@@ -425,7 +472,7 @@ struct StreamsView: View {
             case: /Streams.State.Route.subDirectory,
             destination: { $value in
                 let store = store.scope(
-                    state: { _ in $value.wrappedValue },
+                    state: { $0.route.flatMap(/Streams.State.Route.subDirectory) ?? value },
                     action: { Streams.Action.routeAction(.subDirectory($0)) }
                 )
                 StreamsView(store: store)
@@ -439,7 +486,7 @@ struct StreamsView: View {
             case: /Streams.State.Route.editMenu
         ) { $value in
             let store = store.scope(
-                state: { _ in $value.wrappedValue },
+                state: { $0.route.flatMap(/Streams.State.Route.editMenu) ?? value },
                 action: { Streams.Action.routeAction(.editMenu($0)) }
             )
             EditMenuView(store: store)
@@ -452,7 +499,7 @@ struct StreamsView: View {
             case: /Streams.State.Route.clipBoard
         ) { $value in
             let store = store.scope(
-                state: { _ in $value.wrappedValue },
+                state: { $0.route.flatMap(/Streams.State.Route.clipBoard) ?? value },
                 action: { Streams.Action.routeAction(.clipBoard($0)) }
             )
             ClipBoardView(store: store)
@@ -465,7 +512,7 @@ struct StreamsView: View {
             case: /Streams.State.Route.createStation
         ) { $value in
             let store = store.scope(
-                state: { _ in $value.wrappedValue },
+                state: { $0.route.flatMap(/Streams.State.Route.createStation) ?? value },
                 action: { Streams.Action.routeAction(.createStation($0)) }
             )
             CreateStreamView(store: store)
@@ -479,7 +526,7 @@ struct StreamsView: View {
             case: /Streams.State.Route.editDirectory
         ) { $value in
             let store = store.scope(
-                state: { _ in $value.wrappedValue },
+                state: { $0.route.flatMap(/Streams.State.Route.editDirectory) ?? value },
                 action: { Streams.Action.routeAction(.editDirectory($0)) }
             )
             EditDirectoryView(store: store)
@@ -493,7 +540,7 @@ struct StreamsView: View {
             case: /Streams.State.Route.createDirectory
         ) { $value in
             let store = store.scope(
-                state: { _ in $value.wrappedValue },
+                state: { $0.route.flatMap(/Streams.State.Route.createDirectory) ?? value },
                 action: { Streams.Action.routeAction(.createDirectory($0)) }
             )
             CreateDirectoryView(store: store)

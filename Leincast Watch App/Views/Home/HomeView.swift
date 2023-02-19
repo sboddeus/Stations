@@ -192,7 +192,7 @@ struct HomeView: View {
                     case: /Home.State.Route.stations,
                     destination: { $value in
                         let store = store.scope(
-                            state: { _ in $value.wrappedValue },
+                            state: { $0.route.flatMap(/Home.State.Route.stations) ?? value },
                             action: { Home.Action.routeAction(.stations($0)) }
                         )
                         StreamsView(store: store)
@@ -206,7 +206,7 @@ struct HomeView: View {
                     case: /Home.State.Route.menu
                 ) { $value in
                     let store = store.scope(
-                        state: { _ in $value.wrappedValue },
+                        state: { $0.route.flatMap(/Home.State.Route.menu) ?? value },
                         action: { Home.Action.routeAction(.menu($0)) }
                     )
                     MenuView(store: store)
@@ -219,7 +219,7 @@ struct HomeView: View {
                     case: /Home.State.Route.help
                 ) { $value in
                     let store = store.scope(
-                        state: { _ in $value.wrappedValue },
+                        state: { $0.route.flatMap(/Home.State.Route.help) ?? value },
                         action: { Home.Action.routeAction(.help($0)) }
                     )
                     HelpView(store: store)

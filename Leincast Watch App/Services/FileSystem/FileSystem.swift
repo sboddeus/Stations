@@ -9,6 +9,7 @@ public actor FileSystem {
 
     enum FileSystemError: Error {
         case corruptURL
+        case folderAlreadyExists
     }
     
     /// The default instance of a DeputyFileSystem to use within an app.
@@ -80,8 +81,14 @@ extension FileSystem {
 
     // Creates the given directory
     nonisolated func create(directory: Directory) async throws {
-        try await fileManager.createDirectory(at: directory.url(fileManager: fileManager),
-                                              withIntermediateDirectories: true)
+        let url = try await directory.url(fileManager: fileManager)
+        if fileManager.fileExists(atPath: url.path) {
+            throw FileSystemError.folderAlreadyExists
+        }
+        try fileManager.createDirectory(
+            at: url,
+            withIntermediateDirectories: true
+        )
     }
 
     // Saves the given object as the given file's contents, overriding any existing content
@@ -226,7 +233,11 @@ extension FileSystem {
         let new = original
             .deletingLastPathComponent()
             .appending(path: to)
-        
+
+        if fileManager.fileExists(atPath: new.path) {
+            throw FileSystemError.folderAlreadyExists
+        }
+
         try fileManager.moveItem(at: original, to: new)
         
         return Directory(
@@ -239,6 +250,11 @@ extension FileSystem {
     nonisolated func move(directory: Directory, into: Directory) async throws -> Directory {
         let original = try await directory.url(fileManager: fileManager)
         let intoURL = try await into.url(fileManager: fileManager).appending(component: directory.name)
+
+        if fileManager.fileExists(atPath: intoURL.path) {
+            throw FileSystemError.folderAlreadyExists
+        }
+
         try fileManager.moveItem(at: original, to: intoURL)
         guard let directoryName = directory.name
             .addingPercentEncoding(withAllowedCharacters: .urlPathAllowed),
