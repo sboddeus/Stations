@@ -200,6 +200,8 @@ struct StreamRowCoreView<Content: View>: View {
 
             Text(title)
                 .foregroundColor(isActive ? .white : .red)
+                .minimumScaleFactor(0.5)
+                .lineLimit(2)
             Spacer()
 
             content()
