@@ -49,6 +49,10 @@
 		2672C32B29A1CB8A00950DA5 /* PodcastsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2672C32A29A1CB8A00950DA5 /* PodcastsView.swift */; };
 		2672C32E29A1D21900950DA5 /* PodcastMaster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2672C32D29A1D21900950DA5 /* PodcastMaster.swift */; };
 		2672C33029A1D29300950DA5 /* Podcast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2672C32F29A1D29300950DA5 /* Podcast.swift */; };
+		2672C33229A2206300950DA5 /* MediaItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2672C33129A2206300950DA5 /* MediaItem.swift */; };
+		26C08E4929F37C9100226BE8 /* PodcastDetailFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C08E4829F37C9100226BE8 /* PodcastDetailFeature.swift */; };
+		26C08E4B29F37CB900226BE8 /* AddPodcastFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C08E4A29F37CB900226BE8 /* AddPodcastFeature.swift */; };
+		26C08E4D29F389D200226BE8 /* String+Filenames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C08E4C29F389D200226BE8 /* String+Filenames.swift */; };
 		26F13367298DC17C00060890 /* ClipBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26F13366298DC17C00060890 /* ClipBoard.swift */; };
 		26F1336A298DC76100060890 /* ClipBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26F13369298DC76100060890 /* ClipBoardView.swift */; };
 /* End PBXBuildFile section */
@@ -114,6 +118,10 @@
 		2672C32A29A1CB8A00950DA5 /* PodcastsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastsView.swift; sourceTree = "<group>"; };
 		2672C32D29A1D21900950DA5 /* PodcastMaster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastMaster.swift; sourceTree = "<group>"; };
 		2672C32F29A1D29300950DA5 /* Podcast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Podcast.swift; sourceTree = "<group>"; };
+		2672C33129A2206300950DA5 /* MediaItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaItem.swift; sourceTree = "<group>"; };
+		26C08E4829F37C9100226BE8 /* PodcastDetailFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastDetailFeature.swift; sourceTree = "<group>"; };
+		26C08E4A29F37CB900226BE8 /* AddPodcastFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPodcastFeature.swift; sourceTree = "<group>"; };
+		26C08E4C29F389D200226BE8 /* String+Filenames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Filenames.swift"; sourceTree = "<group>"; };
 		26F13366298DC17C00060890 /* ClipBoard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipBoard.swift; sourceTree = "<group>"; };
 		26F13369298DC76100060890 /* ClipBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipBoardView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -202,6 +210,7 @@
 			children = (
 				2632CBEF2984805A0041BB2D /* Stream.swift */,
 				2672C32F29A1D29300950DA5 /* Podcast.swift */,
+				2672C33129A2206300950DA5 /* MediaItem.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -272,6 +281,7 @@
 			children = (
 				2632CC042984805A0041BB2D /* Environments.swift */,
 				2632CC052984805A0041BB2D /* VolumeControl.swift */,
+				26C08E4C29F389D200226BE8 /* String+Filenames.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -337,6 +347,8 @@
 			isa = PBXGroup;
 			children = (
 				2672C32A29A1CB8A00950DA5 /* PodcastsView.swift */,
+				26C08E4829F37C9100226BE8 /* PodcastDetailFeature.swift */,
+				26C08E4A29F37CB900226BE8 /* AddPodcastFeature.swift */,
 			);
 			path = Podcasts;
 			sourceTree = "<group>";
@@ -490,6 +502,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2632CC2C2984805A0041BB2D /* File.swift in Sources */,
+				26C08E4D29F389D200226BE8 /* String+Filenames.swift in Sources */,
 				2632CB9D29847AFD0041BB2D /* LeincastApp.swift in Sources */,
 				2632CC1B2984805A0041BB2D /* MenuView.swift in Sources */,
 				2632CC212984805A0041BB2D /* EditDirectoryView.swift in Sources */,
@@ -502,9 +515,12 @@
 				26F1336A298DC76100060890 /* ClipBoardView.swift in Sources */,
 				2632CC1E2984805A0041BB2D /* StreamRowView.swift in Sources */,
 				2632CC222984805A0041BB2D /* CreateStreamView.swift in Sources */,
+				26C08E4B29F37CB900226BE8 /* AddPodcastFeature.swift in Sources */,
 				2632CC302984805A0041BB2D /* Player.swift in Sources */,
 				2632CC272984805A0041BB2D /* NowPlayingControls.swift in Sources */,
+				2672C33229A2206300950DA5 /* MediaItem.swift in Sources */,
 				2632CC242984805A0041BB2D /* HelpView.swift in Sources */,
+				26C08E4929F37C9100226BE8 /* PodcastDetailFeature.swift in Sources */,
 				2632CC1D2984805A0041BB2D /* DirectoryRowVIew.swift in Sources */,
 				2672C32B29A1CB8A00950DA5 /* PodcastsView.swift in Sources */,
 				2632CC162984805A0041BB2D /* LeinColors.swift in Sources */,
@@ -655,7 +671,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = QCHSD48ZLT;
 				ENABLE_PREVIEWS = YES;
@@ -668,7 +684,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = au.com.syeboddeus.leincast.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -686,7 +702,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = QCHSD48ZLT;
 				ENABLE_PREVIEWS = YES;
@@ -699,7 +715,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = au.com.syeboddeus.leincast.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -717,10 +733,10 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_TEAM = QCHSD48ZLT;
 				INFOPLIST_KEY_CFBundleDisplayName = Leincast;
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = au.com.syeboddeus.leincast;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -733,10 +749,10 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_TEAM = QCHSD48ZLT;
 				INFOPLIST_KEY_CFBundleDisplayName = Leincast;
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = au.com.syeboddeus.leincast;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;

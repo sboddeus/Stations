@@ -16,7 +16,7 @@ struct StreamRow: ReducerProtocol {
         var activeState: ActiveState
         
         var id: String {
-            station.id.uuidString
+            station.id
         }
     }
     

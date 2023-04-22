@@ -107,7 +107,7 @@ struct Streams: ReducerProtocol {
             case let .station(id, action: .delegate(.delete)):
                 return .task { [state] in
                     // Stop playing the station if it is playing
-                    if player.currentItem?.id.uuidString == id {
+                    if player.currentItem?.id == id {
                         player.stop()
                     }
                     
@@ -169,7 +169,7 @@ struct Streams: ReducerProtocol {
                         )
 
                         let file = try await state.rootDirectory.file(
-                            name: newStream.id.uuidString
+                            name: newStream.id
                         )
                         try await file.save(newStream)
 
@@ -237,7 +237,7 @@ struct Streams: ReducerProtocol {
 
                         case let .stream(copiedStream):
                             let file = try await state.rootDirectory.file(
-                                name: copiedStream.id.uuidString
+                                name: copiedStream.id
                             )
 
                             try await file.save(copiedStream)
@@ -266,7 +266,7 @@ struct Streams: ReducerProtocol {
 
                             case let .stream(copiedStream):
                                 let file = try await state.rootDirectory.file(
-                                    name: copiedStream.id.uuidString
+                                    name: copiedStream.id
                                 )
 
                                 try await file.save(copiedStream)

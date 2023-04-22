@@ -29,7 +29,7 @@ enum PlayingState {
 }
 
 extension PlayingState {
-    var stationId: UUID? {
+    var stationId: String? {
         switch self {
         case  let .playing(station, _, _, _), let .paused(station), let .loading(station):
             return station.id

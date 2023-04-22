@@ -2,9 +2,27 @@
 import SyndiKit
 import Foundation
 
+enum PodcastMasterErrors: Error {
+    case podcastAlreadyExists
+}
+
 actor PodcastMaster {
 
-    func synthesisePodcast(from url: URL) async throws -> Podcast {
+    private var filesystem: FileSystem = .default
+    private var rootPath = URL(string: "Podcasts")!
+
+    private var rootDirectory: Directory {
+        filesystem.directory(
+            inBase: .documents,
+            path: rootPath
+        )
+    }
+
+    func initialise() async {
+        try? await rootDirectory.create()
+    }
+
+    private func synthesisePodcast(from url: URL) async throws -> Podcast {
         let data = try await URLSession.shared.data(from: url).0
         let decoder = SynDecoder()
         let podcastRSSFeed = try decoder.decode(data)
@@ -21,7 +39,7 @@ actor PodcastMaster {
                     return nil
                 }
                 return Stream(
-                    id: .init(),
+                    id: podcast.enclosure.url.absoluteString,
                     title: title,
                     description: podcast.summary ?? "",
                     imageURL: podcast.image?.href ?? imageURL,
@@ -32,12 +50,48 @@ actor PodcastMaster {
         }
 
         return Podcast(
-            id: UUID(),
+            id: url.absoluteString,
             url: url,
             title: title,
             description: description,
             imageURL: imageURL,
             streams: streams
         )
+    }
+
+    func addPodcast(at url: URL) async throws -> Podcast {
+        let podcast = try await synthesisePodcast(from: url)
+
+        let file = try await rootDirectory.file(name: podcast.id.fileNameSanitized())
+        guard await !file.exists() else {
+            throw PodcastMasterErrors.podcastAlreadyExists
+        }
+
+        try await file.save(podcast)
+
+        return podcast
+    }
+
+    func refresh(podcast: Podcast) async throws -> Podcast {
+        let podcast = try await synthesisePodcast(from: podcast.url)
+
+        let file = try await rootDirectory.file(name: podcast.id.fileNameSanitized())
+
+        try await file.save(podcast)
+
+        return podcast
+    }
+
+    // Public Functions
+    func getAllPodcasts() async -> [Podcast] {
+        guard let files = try? await rootDirectory.retrieveAllFiles() else {
+            return []
+        }
+
+        let nilPodcasts = await files.asyncMap {
+            try? await $0.retrieve(as: Podcast.self)
+        }
+
+        return nilPodcasts.compactMap { $0 }
     }
 }

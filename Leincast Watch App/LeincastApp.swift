@@ -8,11 +8,13 @@ struct Leincast_Watch_AppApp: App {
     
     @Dependency(\.streamMaster) var stationMaster
     @Dependency(\.clipBoard) var clipBoard
+    @Dependency(\.podcastMaster) var podcastMaster
     
     init() {
         nowPlaying.bind(toPlayer: .shared!)
-        Task { [stationMaster, clipBoard] in
+        Task { [stationMaster, clipBoard, podcastMaster] in
             await clipBoard.initialise()
+            await podcastMaster.initialise()
             await stationMaster.bind(to: .shared!)
         }
     }

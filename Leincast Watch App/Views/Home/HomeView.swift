@@ -291,6 +291,7 @@ struct HomeView: View {
                     )
                 )
                 .environment(\.presentationContext, .fullScreen)
+                .interactiveDismissDisabled()
             }.toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button(action: { viewStore.send(.showNowPlaying(false)) }) {

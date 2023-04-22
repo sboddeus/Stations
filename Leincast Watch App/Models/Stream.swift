@@ -2,7 +2,7 @@
 import Foundation
 
 struct Stream: Equatable, Identifiable, Codable {
-    let id: UUID
+    let id: String
     let title: String
     let description: String
     let imageURL: URL?

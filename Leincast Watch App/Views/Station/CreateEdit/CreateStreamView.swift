@@ -135,12 +135,12 @@ struct CreateStream: ReducerProtocol {
                 }
                 
                 return .task { [state] in
-                    let id: UUID
+                    let id: String
                     switch state.mode {
                     case let .edit(stream):
                         id = stream.id
                     case .create:
-                        id = UUID()
+                        id = UUID().uuidString
                     }
                     
                     let station = Stream(
@@ -152,7 +152,7 @@ struct CreateStream: ReducerProtocol {
                     )
                    
                     let file = try await state.containingDirectory.file(
-                        name: station.id.uuidString
+                        name: station.id
                     )
                     try await file.save(station)
                     

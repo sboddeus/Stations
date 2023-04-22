@@ -2,7 +2,7 @@
 import Foundation
 
 struct Podcast: Equatable, Identifiable, Codable {
-    let id: UUID
+    let id: String
     let url: URL
     let title: String
     let description: String?

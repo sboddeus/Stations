@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SDWebImage/SDWebImage.git",
       "state" : {
-        "revision" : "7ccdcb02fb0ab47409a6602769cea0486be2a209",
-        "version" : "5.15.2"
+        "revision" : "fb50c1d20f24db5322b2f8f379de3618f75fe08e",
+        "version" : "5.15.5"
       }
     },
     {
@@ -32,8 +32,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-async-algorithms.git",
       "state" : {
-        "revision" : "aed5422380244498344a036b8d94e27f370d9a22",
-        "version" : "0.0.4"
+        "revision" : "9cfed92b026c524674ed869a4ff2dcfdeedf8a2a",
+        "version" : "0.1.0"
       }
     },
     {
@@ -41,8 +41,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-case-paths",
       "state" : {
-        "revision" : "c3a42e8d1a76ff557cf565ed6d8b0aee0e6e75af",
-        "version" : "0.11.0"
+        "revision" : "fc45e7b2cfece9dd80b5a45e6469ffe67fe67984",
+        "version" : "0.14.1"
       }
     },
     {
@@ -68,8 +68,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-composable-architecture",
       "state" : {
-        "revision" : "b690a617d1366bd36f047e5da5d3185f20daac71",
-        "version" : "0.50.1"
+        "revision" : "3e8eee1efe99d06e99426d421733b858b332186b",
+        "version" : "0.52.0"
       }
     },
     {
@@ -77,8 +77,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-custom-dump",
       "state" : {
-        "revision" : "dd86159e25c749873f144577e5d18309bf57534f",
-        "version" : "0.8.0"
+        "revision" : "84b30e1af72e0ffe6dfbfe39d53b8173caacf224",
+        "version" : "0.10.2"
       }
     },
     {
@@ -86,8 +86,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-dependencies",
       "state" : {
-        "revision" : "8282b0c59662eb38946afe30eb403663fc2ecf76",
-        "version" : "0.1.4"
+        "revision" : "98650d886ec950b587d671261f06d6b59dec4052",
+        "version" : "0.4.1"
       }
     },
     {
@@ -95,8 +95,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-identified-collections",
       "state" : {
-        "revision" : "fd34c544ad27f3ba6b19142b348005bfa85b6005",
-        "version" : "0.6.0"
+        "revision" : "f52eee28bdc6065aa2f8424067e6f04c74bda6e6",
+        "version" : "0.7.1"
       }
     },
     {
@@ -104,8 +104,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swiftui-navigation",
       "state" : {
-        "revision" : "270a754308f5440be52fc295242eb7031638bd15",
-        "version" : "0.6.1"
+        "revision" : "47dd574b900ba5ba679f56ea00d4d282fc7305a6",
+        "version" : "0.7.1"
       }
     },
     {
@@ -122,8 +122,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/xctest-dynamic-overlay",
       "state" : {
-        "revision" : "ace21305e0dd3a9e749aef79fef14be79a3b4669",
-        "version" : "0.8.2"
+        "revision" : "4af50b38daf0037cfbab15514a241224c3f62f98",
+        "version" : "0.8.5"
       }
     },
     {
@@ -131,8 +131,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/MaxDesiatov/XMLCoder",
       "state" : {
-        "revision" : "c438dad94f6a243b411b70a4b4bac54595064808",
-        "version" : "0.15.0"
+        "revision" : "666227de3b4cf4adcce7c70b8b89f98c7df02754",
+        "version" : "0.16.0"
       }
     }
   ],

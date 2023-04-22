@@ -20,7 +20,7 @@ actor ClipBoard {
         var id: String {
             switch self {
             case let .stream(stream):
-                return stream.id.uuidString
+                return stream.id
             case let .directory(dir):
                 return dir.path.absoluteString
             }
