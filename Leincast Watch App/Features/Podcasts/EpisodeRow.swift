@@ -3,10 +3,10 @@ import SwiftUI
 import ComposableArchitecture
 import SDWebImageSwiftUI
 
-struct StreamRow: ReducerProtocol {
+struct EpisodeRowFeature: ReducerProtocol {
     struct State: Equatable, Identifiable {
-        let station: Stream
-        
+        let episode: Podcast.Episode
+
         enum ActiveState: Equatable {
             case paused
             case playing
@@ -14,58 +14,55 @@ struct StreamRow: ReducerProtocol {
             case unselected
         }
         var activeState: ActiveState
-        
+
         var id: String {
-            station.id
+            episode.id
         }
     }
-    
+
     enum Action: Equatable {
+
         enum Delegate: Equatable {
             case selected
-            case edit
-            case delete
-            case copy
-            case duplicate
         }
         case delegate(Delegate)
-        
+
         case play
         case pause
-        
+
         case playerBinding
-        
+
         case setActiveState(State.ActiveState)
     }
-    
+
     @Dependency(\.player) var player
-    
+
     var body: some ReducerProtocol<State, Action> {
         Reduce { state, action in
             switch action {
             case let .setActiveState(activeState):
                 state.activeState = activeState
                 return .none
+
             case .play:
                 return .fireAndForget {
                     player.play()
                 }
+
             case .pause:
                 return .fireAndForget {
                     player.pause()
                 }
-            case .delegate:
-                return .none
-                
+
             case .playerBinding:
-                let stationId = state.station.id
+                let itemId = state.episode.id
                 return .run { send in
                     for await value in player.playingState.values {
-                        guard value.stationId == stationId else {
+                        guard value.stationId == itemId else {
                             await send.send(.setActiveState(.unselected))
                             continue
                         }
-                        
+
                         switch value {
                         case .loading:
                             await send.send(.setActiveState(.loading))
@@ -78,27 +75,30 @@ struct StreamRow: ReducerProtocol {
                         }
                     }
                 }
+
+            case .delegate:
+                return .none
             }
         }
     }
 }
 
-struct StreamRowView: View {
-    let store: StoreOf<StreamRow>
-    @ObservedObject var viewStore: ViewStoreOf<StreamRow>
-    
-    init(store: StoreOf<StreamRow>) {
+struct EpisodeRowView: View {
+    let store: StoreOf<EpisodeRowFeature>
+    @ObservedObject var viewStore: ViewStoreOf<EpisodeRowFeature>
+
+    init(store: StoreOf<EpisodeRowFeature>) {
         self.store = store
         viewStore = .init(store, observe: { $0 })
     }
-    
+
     var body: some View {
         Button {
             viewStore.send(.delegate(.selected))
         } label: {
             StreamRowCoreView(
-                imageURL: viewStore.station.imageURL,
-                title: viewStore.station.title,
+                imageURL: viewStore.episode.imageURL,
+                title: viewStore.episode.title,
                 isActive: viewStore.activeState == .unselected) {
                     switch viewStore.activeState {
                     case .loading:
@@ -125,82 +125,12 @@ struct StreamRowView: View {
                     case .unselected:
                         EmptyView()
                     }
-                }
-        }
-        .task {
-            await viewStore.send(.playerBinding).finish()
-        }
-        .swipeActions(edge: .trailing) {
-            Button {
-                viewStore.send(.delegate(.edit))
-            } label: {
-                Image(systemName: "pencil")
             }
-            .tint(.indigo)
-
-            Button(role: .destructive) {
-                viewStore.send(.delegate(.delete))
-            } label: {
-                Image(systemName: "trash")
+            .task {
+                await viewStore.send(.playerBinding).finish()
             }
-            .tint(.red)
-        }
-        .swipeActions(edge: .leading) {
-            Button {
-                viewStore.send(.delegate(.copy))
-            } label: {
-                Image(systemName: "scissors")
-            }
-            .tint(.indigo)
-            Button {
-                viewStore.send(.delegate(.duplicate))
-            } label: {
-                Image(systemName: "doc.on.doc.fill")
-            }
-            .tint(.indigo)
         }
     }
 }
 
-struct StreamRowCoreView<Content: View>: View {
 
-    let imageURL: URL?
-    let title: String
-    let isActive: Bool
-    let content: () -> Content
-    init(
-        imageURL: URL?,
-        title: String,
-        isActive: Bool,
-        @ViewBuilder content: @escaping () -> Content
-    ) {
-        self.imageURL = imageURL
-        self.title = title
-        self.isActive = isActive
-        self.content = content
-    }
-
-    var body: some View {
-        HStack(alignment: .center) {
-            if let imageURL = imageURL {
-                WebImage(url: imageURL)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(maxWidth: 30, maxHeight: 30)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
-            } else {
-                Color.white
-                    .frame(maxWidth: 30, maxHeight: 30)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
-            }
-
-            Text(title)
-                .foregroundColor(isActive ? .white : .red)
-                .minimumScaleFactor(0.5)
-                .lineLimit(2)
-            Spacer()
-
-            content()
-        }
-    }
-}

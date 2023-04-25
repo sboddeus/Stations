@@ -73,16 +73,17 @@ actor PodcastMaster {
         return podcast
     }
 
-    func delete(podcast: Podcast) async throws {
-        let file = try await rootDirectory.file(name: podcast.id.fileNameSanitized())
+    func delete(podcastId: String) async throws {
+        let file = try await rootDirectory.file(name: podcastId.fileNameSanitized())
         try await file.delete()
     }
 
-    func refresh(podcast: Podcast) async throws -> Podcast {
-        let podcast = try await PodcastMaster.synthesisePodcast(from: podcast.url)
+    func refresh(podcastId: String, url: URL) async throws -> Podcast {
+        let podcast = try await PodcastMaster.synthesisePodcast(from: url)
 
-        let file = try await rootDirectory.file(name: podcast.id.fileNameSanitized())
+        try Task.checkCancellation()
 
+        let file = try await rootDirectory.file(name: podcastId.fileNameSanitized())
         try await file.save(podcast)
 
         return podcast

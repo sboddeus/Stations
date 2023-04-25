@@ -1,137 +1,69 @@
 
+import Foundation
 import SwiftUI
 import ComposableArchitecture
 import SDWebImageSwiftUI
 
-struct EpisodeRowFeature: ReducerProtocol {
+struct PodcastRowFeature: ReducerProtocol {
     struct State: Equatable, Identifiable {
-        let episode: Podcast.Episode
-
-        enum ActiveState: Equatable {
-            case paused
-            case playing
-            case loading
-            case unselected
-        }
-        var activeState: ActiveState
-
-        var id: String {
-            episode.id
-        }
+        let id: String
+        let title: String
+        let imageURL: URL?
     }
 
     enum Action: Equatable {
-
         enum Delegate: Equatable {
             case selected
+            case deleted
         }
+
         case delegate(Delegate)
-
-        case play
-        case pause
-
-        case playerBinding
-
-        case setActiveState(State.ActiveState)
     }
-
-    @Dependency(\.player) var player
 
     var body: some ReducerProtocol<State, Action> {
         Reduce { state, action in
-            switch action {
-            case let .setActiveState(activeState):
-                state.activeState = activeState
-                return .none
-            case .play:
-                return .fireAndForget {
-                    player.play()
-                }
-            case .pause:
-                return .fireAndForget {
-                    player.pause()
-                }
-
-            case .playerBinding:
-                let itemId = state.episode.id
-                struct PlayerBindingID {}
-                return .run { send in
-                    for await value in player.playingState.values {
-                        try Task.checkCancellation()
-
-                        guard value.stationId == itemId else {
-                            await send.send(.setActiveState(.unselected))
-                            continue
-                        }
-
-                        switch value {
-                        case .loading:
-                            await send.send(.setActiveState(.loading))
-                        case .paused:
-                            await send.send(.setActiveState(.paused))
-                        case .playing:
-                            await send.send(.setActiveState(.playing))
-                        case .initial, .stopped:
-                            await send.send(.setActiveState(.unselected))
-                        }
-                    }
-                }.cancellable(id: PlayerBindingID.self, cancelInFlight: true)
-
-            case .delegate:
-                return .none
-            }
+            return .none
         }
     }
 }
 
-struct EpisodeRowView: View {
-    let store: StoreOf<EpisodeRowFeature>
-    @ObservedObject var viewStore: ViewStoreOf<EpisodeRowFeature>
+struct PodcastRow: View {
+    let store: StoreOf<PodcastRowFeature>
+    @ObservedObject var viewStore: ViewStoreOf<PodcastRowFeature>
 
-    init(store: StoreOf<EpisodeRowFeature>) {
+    init(store: StoreOf<PodcastRowFeature>) {
         self.store = store
         viewStore = .init(store, observe: { $0 })
     }
 
     var body: some View {
-        Button {
-            viewStore.send(.delegate(.selected))
-        } label: {
-            StreamRowCoreView(
-                imageURL: viewStore.episode.imageURL,
-                title: viewStore.episode.title,
-                isActive: viewStore.activeState == .unselected) {
-                    switch viewStore.activeState {
-                    case .loading:
-                        ProgressView()
-                            .foregroundColor(.red)
-                            .scaledToFit()
-                            .fixedSize()
-                    case .playing:
-                        Image(systemName: "pause.circle")
-                            .resizable()
-                            .frame(width: 20, height: 20)
-                            .foregroundColor(.red)
-                            .onTapGesture {
-                                viewStore.send(.pause)
-                            }
-                    case .paused:
-                        Image(systemName: "play.circle")
-                            .resizable()
-                            .frame(width: 20, height: 20)
-                            .foregroundColor(.red)
-                            .onTapGesture {
-                                viewStore.send(.play)
-                            }
-                    case .unselected:
-                        EmptyView()
-                    }
-                }
+        HStack {
+            if let imageURL = viewStore.imageURL {
+                WebImage(url: imageURL)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(maxWidth: 30, maxHeight: 30)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+            } else {
+                Color.white
+                    .frame(maxWidth: 30, maxHeight: 30)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+            }
+
+            Text(viewStore.title)
+
+            Spacer()
         }
-        .task {
-            await viewStore.send(.playerBinding).finish()
+        .onTapGesture {
+            viewStore.send(.delegate(.selected))
+        }
+        .swipeActions(edge: .trailing) {
+            Button(role: .destructive) {
+                viewStore.send(.delegate(.deleted))
+            } label: {
+                Image(systemName: "trash")
+            }
+            .tint(.red)
         }
     }
 }
-
-

@@ -6,7 +6,6 @@ import SDWebImageSwiftUI
 
 struct Podcasts: ReducerProtocol {
     struct State: Equatable {
-        var isLoading = true
         var podcasts: [Podcast] = []
 
         enum Route: Equatable {
@@ -14,16 +13,16 @@ struct Podcasts: ReducerProtocol {
             case addPodcast(AddPodcastFeature.State)
         }
         var route: Route?
+
+        var podcastRows: IdentifiedArrayOf<PodcastRowFeature.State> = []
     }
 
     enum Action: Equatable {
         // Internal
         case onAppear
         case setPodcasts([Podcast])
-        case selected(Podcast)
         case showAddPodcast
         case setRoute(State.Route?)
-        case delete(Podcast)
 
         // Child
         enum RouteAction: Equatable {
@@ -31,6 +30,8 @@ struct Podcasts: ReducerProtocol {
             case addPodcast(AddPodcastFeature.Action)
         }
         case routeAction(RouteAction)
+
+        case podcastRow(id: PodcastRowFeature.State.ID, action: PodcastRowFeature.Action)
     }
 
     @Dependency(\.podcastMaster) var podcastMaster
@@ -39,24 +40,21 @@ struct Podcasts: ReducerProtocol {
         Reduce { state, action in
             switch action {
             case .onAppear:
-                struct CancelID {}
                 return .task {
                     let podcasts = await podcastMaster.getAllPodcasts()
 
                     return .setPodcasts(podcasts)
-                }.cancellable(id: CancelID.self, cancelInFlight: true)
+                }
 
             case let .setPodcasts(podcasts):
                 state.podcasts = podcasts
-                state.isLoading = false
+                state.podcastRows = .init(uniqueElements: podcasts.map {
+                    PodcastRowFeature.State(id: $0.id, title: $0.title, imageURL: $0.imageURL)
+                })
                 return .none
 
             case .showAddPodcast:
                 state.route = .addPodcast(.init())
-                return .none
-
-            case let .selected(podcast):
-                state.route = .podcastDetails(.init(podcast: podcast))
                 return .none
 
             case let .setRoute(route):
@@ -70,13 +68,21 @@ struct Podcasts: ReducerProtocol {
             case .routeAction:
                 return .none
 
-            case let .delete(podcast):
+
+            case let .podcastRow(id, .delegate(.deleted)):
                 return .task {
-                    try await podcastMaster.delete(podcast: podcast)
+                    try await  podcastMaster.delete(podcastId: id)
                     return .onAppear
                 }
+
+            case let .podcastRow(id, .delegate(.selected)):
+                if let podcast = state.podcasts.first(where: { $0.id == id }) {
+                    state.route = .podcastDetails(.init(podcast: podcast))
+                }
+                return .none
             }
-        }.ifLet(\.route, action: /Action.routeAction) {
+        }
+        .ifLet(\.route, action: /Action.routeAction) {
             Scope(state: /State.Route.addPodcast, action: /Action.RouteAction.addPodcast) {
                 AddPodcastFeature()
             }
@@ -84,56 +90,38 @@ struct Podcasts: ReducerProtocol {
                 PodcastDetails()
             }
         }
+        .forEach(\.podcastRows, action: /Action.podcastRow(id:action:)) {
+            PodcastRowFeature()
+        }
     }
 }
 
 struct PodcastsView: View {
+    struct ViewState: Equatable {
+        let route: Podcasts.State.Route?
+        let podcastRows: IdentifiedArrayOf<PodcastRowFeature.State>
+
+        init(state: Podcasts.State) {
+            route = state.route
+            podcastRows = state.podcastRows
+        }
+    }
+
     let store: StoreOf<Podcasts>
-    @ObservedObject var viewStore: ViewStoreOf<Podcasts>
+    @ObservedObject var viewStore: ViewStore<ViewState, Podcasts.Action>
 
     init(store: StoreOf<Podcasts>) {
         self.store = store
-        viewStore = .init(store, observe: { $0 })
+        viewStore = .init(store, observe: ViewState.init)
     }
 
     var body: some View {
         List {
-            if viewStore.isLoading {
-                HStack {
-                    Text("Lorem ipsum podcastium")
-                    Spacer()
-                }
-                .redacted(reason: .placeholder)
-            }
-            ForEach(viewStore.podcasts) { podcast in
-                HStack {
-                    if let imageURL = podcast.imageURL {
-                        WebImage(url: imageURL)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(maxWidth: 30, maxHeight: 30)
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
-                    } else {
-                        Color.white
-                            .frame(maxWidth: 30, maxHeight: 30)
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
-                    }
-
-                    Text(podcast.title)
-
-                    Spacer()
-                }
-                .onTapGesture {
-                    viewStore.send(.selected(podcast))
-                }
-                .swipeActions(edge: .trailing) {
-                    Button(role: .destructive) {
-                        viewStore.send(.delete(podcast))
-                    } label: {
-                        Image(systemName: "trash")
-                    }
-                    .tint(.red)
-                }
+            ForEachStore(self.store.scope(
+                state: \.podcastRows,
+                action: Podcasts.Action.podcastRow(id:action:))
+            ) { store in
+                PodcastRow(store: store)
             }
 
             Section {
@@ -181,8 +169,8 @@ struct PodcastsView: View {
             AddPodcast(store: store)
                 .interactiveDismissDisabled()
         }
-        .onAppear {
-            viewStore.send(.onAppear)
+        .task {
+            await viewStore.send(.onAppear).finish()
         }
     }
 }

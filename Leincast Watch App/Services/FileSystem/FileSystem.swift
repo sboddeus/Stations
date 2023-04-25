@@ -6,10 +6,10 @@ import Foundation
 // To make this convienient there is the 'default' instance that can be accessed.
 public actor FileSystem {
 
-
     enum FileSystemError: Error {
         case corruptURL
         case folderAlreadyExists
+        case dataTransformFailure
     }
     
     /// The default instance of a DeputyFileSystem to use within an app.
@@ -17,6 +17,7 @@ public actor FileSystem {
     
     private let fileManager: ABCFileManager
     private var fileRegistry = [URL: File]()
+    private let dispatchQueue = DispatchQueue(label: "FileSystem", qos: .userInitiated)
     
     /// Create a managed file system using a Foundation FileManager.
     /// In general, you should create one FileSystem per app instance.
@@ -108,7 +109,16 @@ extension FileSystem {
         
         // We make use of an OutputStream so that we can better handle writing errors.
         // At this time, FileHandle.write is deprecated and throws Objective-C Exceptions.
-        try OutputStream.write(data: data, toFile: url.path)
+        try await withCheckedThrowingContinuation { cont in
+            dispatchQueue.async {
+                do {
+                    try OutputStream.write(data: data, toFile: url.path)
+                    cont.resume()
+                } catch {
+                    cont.resume(with: .failure(error))
+                }
+            }
+        }
     }
     
     // Appends the given object to the given file. All objects appended to a same file can be retrieved with
@@ -143,12 +153,23 @@ extension FileSystem {
         if !fileManager.fileExists(atPath: url.path) {
             return nil
         }
-        guard let data = try? String(contentsOfFile: url.path, encoding: .utf8).data(using: .utf8) else {
-            return nil
+
+        return try await withCheckedThrowingContinuation { cont in
+            dispatchQueue.async {
+                guard let data = try? String(contentsOfFile: url.path, encoding: .utf8).data(using: .utf8) else {
+                    cont.resume(with: .failure(FileSystemError.dataTransformFailure))
+                    return
+                }
+
+                do {
+                    let thing = try JSONDecoder().decode(type, from: data)
+                    cont.resume(with: .success(thing))
+                } catch {
+                    cont.resume(with: .failure(error))
+                }
+            }
         }
 
-        let thing = try JSONDecoder().decode(type, from: data)
-        return thing
     }
 
     // Retrieves all objects that were appended to the given file

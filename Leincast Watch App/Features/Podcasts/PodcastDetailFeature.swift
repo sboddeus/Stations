@@ -7,12 +7,14 @@ import SDWebImageSwiftUI
 
 struct PodcastDetails: ReducerProtocol {
     struct State: Equatable {
-        let podcast: Podcast
+        let id: String
+        let contentURL: URL
         var hasAppeared = false
         var episodes: IdentifiedArrayOf<EpisodeRowFeature.State>
 
         init(podcast: Podcast) {
-            self.podcast = podcast
+            id = podcast.id
+            contentURL = podcast.url
             episodes = .init(
                 uniqueElements: podcast.episodes.map {
                     EpisodeRowFeature.State(
@@ -39,8 +41,8 @@ struct PodcastDetails: ReducerProtocol {
             case .onAppear:
                 guard !state.hasAppeared else { return .none }
                 state.hasAppeared = true
-                return .task { [podcast = state.podcast] in
-                    let podcast = try await podcastMaster.refresh(podcast: podcast)
+                return .task { [url = state.contentURL, id = state.id] in
+                    let podcast = try await podcastMaster.refresh(podcastId: id, url: url)
                     return .podcastReloaded(podcast)
                 }
 
@@ -91,6 +93,8 @@ struct PodcastDetailsView: View {
             ) { store in
                 EpisodeRowView(store: store)
             }
+        }.task {
+            await viewStore.send(.onAppear).finish()
         }
     }
 }
