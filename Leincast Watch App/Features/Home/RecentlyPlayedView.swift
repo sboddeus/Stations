@@ -42,7 +42,7 @@ struct RecentlyPlayed: ReducerProtocol {
                                 return
                             }
                             
-                            player.play(station.station)
+                            player.play(.stream(station.station))
                         }
                         
                     }

@@ -31,14 +31,14 @@ actor PodcastMaster {
         let description = podcastRSSFeed.summary
         let imageURL = podcastRSSFeed.image
 
-        let streams: [Stream] = podcastRSSFeed.children
-            .compactMap { item -> Stream? in
+        let streams: [Podcast.Episode] = podcastRSSFeed.children
+            .compactMap { item -> Podcast.Episode? in
             switch item.media {
               case .podcast(let podcast):
                 guard let title = podcast.title else {
                     return nil
                 }
-                return Stream(
+                return Podcast.Episode(
                     id: podcast.enclosure.url.absoluteString,
                     title: title,
                     description: podcast.summary ?? "",
@@ -55,7 +55,7 @@ actor PodcastMaster {
             title: title,
             description: description,
             imageURL: imageURL,
-            streams: streams
+            episodes: streams
         )
     }
 

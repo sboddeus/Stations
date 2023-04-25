@@ -23,9 +23,9 @@ enum PlayingError: Error {
 enum PlayingState {
     case initial
     case stopped(PlayingError?)
-    case playing(Stream, duration: CMTime, current: CMTime, rate: Float)
-    case paused(Stream)
-    case loading(Stream) // loading or buffering
+    case playing(MediaItem, duration: CMTime, current: CMTime, rate: Float)
+    case paused(MediaItem)
+    case loading(MediaItem) // loading or buffering
 }
 
 extension PlayingState {
@@ -179,9 +179,9 @@ final class AVAudioPlayer: NSObject {
     // MARK: - Accessing Player State
 
     let playingState = CurrentValueSubject<PlayingState, Never>(.initial)
-    let queueState = CurrentValueSubject<[Stream], Never>([])
+    let queueState = CurrentValueSubject<[MediaItem], Never>([])
 
-    var currentItem: Stream? {
+    var currentItem: MediaItem? {
         if let item = player.currentItem?.asset.playerItem { return item }
         if let item = player.items().first?.asset.playerItem { return item }
         if let item = itemQueue.queuedItems.first?.playerItem { return item }
@@ -224,7 +224,7 @@ final class AVAudioPlayer: NSObject {
     /// Starts playing the item passed immediately
     /// - Parameter item: A PlayerItem describing the resource to be played. A nil value is continues playing
     /// the currently played item if it was paused.
-    func play(_ item: Stream? = nil) {
+    func play(_ item: MediaItem? = nil) {
         // Check if there is a new item to play, or if we are just toggling
         guard let item = item else {
             player.play()
@@ -282,7 +282,7 @@ final class AVAudioPlayer: NSObject {
 
     // MARK: Public Queue Items
 
-    func addQueue(items: [Stream]) {
+    func addQueue(items: [MediaItem]) {
         // Filter out premium content if we are not premium
         // let items = items.filter { !($0.item.isPrem && !userIsPremium) }
 
@@ -295,7 +295,7 @@ final class AVAudioPlayer: NSObject {
     }
 
     /// Remove specififed items from queue
-    func removeFromQueue(items: [Stream]?) {
+    func removeFromQueue(items: [MediaItem]?) {
 
         guard let items = items else {
             stop()
@@ -395,7 +395,7 @@ final class AVAudioPlayer: NSObject {
         playingState.send(.stopped(nil))
     }
 
-    private func allQueuedItems() -> [Stream] {
+    private func allQueuedItems() -> [MediaItem] {
         player.items().dropFirst().compactMap(\.asset.playerItem) + itemQueue.queuedItems.compactMap(\.playerItem)
     }
 
@@ -499,7 +499,7 @@ extension AVAudioPlayer {
 
     private func timeObserver() -> Any {
         // Notify every half second
-        let time = CMTime(seconds: 0.5, preferredTimescale: .default)
+        let time = CMTime(seconds: 1, preferredTimescale: .default)
 
         return player.addPeriodicTimeObserver(forInterval: time, queue: .main) { [weak self] _ in
             guard let self = self else { return }
@@ -512,7 +512,13 @@ extension AVAudioPlayer {
 
             // If the item is a radio station we will
             // enrich it with approariate metadata
-            item = self.radioEnrichment.enrich(radio: item)
+            switch item {
+            case let .stream(stream):
+                item = .stream(self.radioEnrichment.enrich(radio: stream))
+            default:
+                break
+            }
+
 
             switch self.player.timeControlStatus {
             case .paused: break // Picked up elsewhere
@@ -584,7 +590,7 @@ extension AVAudioPlayer {
 // MARK: - Helpers
 
 extension Double {
-    static var seekTime = 15.0
+    static var seekTime = 30.0
 }
 
 extension CMTime {
@@ -613,9 +619,9 @@ import ObjectiveC
 private var associatedObjectHandle: UInt8 = 0
 
 extension AVAsset {
-    var playerItem: Stream? {
+    var playerItem: MediaItem? {
         get {
-            objc_getAssociatedObject(self, &associatedObjectHandle) as? Stream
+            objc_getAssociatedObject(self, &associatedObjectHandle) as? MediaItem
         }
         set {
             objc_setAssociatedObject(self, &associatedObjectHandle, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
@@ -624,7 +630,7 @@ extension AVAsset {
 }
 
 extension AVURLAsset {
-    convenience init(playerItem: Stream) {
+    convenience init(playerItem: MediaItem) {
         self.init(url: playerItem.url)
         self.playerItem = playerItem
     }

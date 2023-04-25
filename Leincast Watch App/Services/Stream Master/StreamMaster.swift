@@ -48,7 +48,7 @@ actor StreamMaster {
             var recents: Deque<Stream>  = (try? await recentsFile.retrieve(as: Deque<Stream>.self)) ?? []
             for await value in player.playingState.values {
                 switch value {
-                case let .loading(station):
+                case let .loading(.stream(station)):
                     recents.removeAll { $0.id == station.id }
                     recents.insert(station, at: 0)
                     if recents.count > 3 {

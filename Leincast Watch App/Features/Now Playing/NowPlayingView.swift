@@ -7,9 +7,9 @@ import AVFAudio
 struct NowPlaying: ReducerProtocol {
     struct State: Equatable {
         enum Status: Equatable {
-            case isPlaying(Stream)
-            case paused(Stream)
-            case loading(Stream)
+            case isPlaying(MediaItem)
+            case paused(MediaItem)
+            case loading(MediaItem)
             case initial
         }
         
@@ -18,6 +18,9 @@ struct NowPlaying: ReducerProtocol {
         var volume: Double = 0
         var showVolumeCaption = false
         var context: PresentationContext = .embedded
+        var showSkipButtons = false
+        var showPlayPosition = false
+        var playPosition: Double?
     }
     
     enum Action: Equatable {
@@ -27,6 +30,9 @@ struct NowPlaying: ReducerProtocol {
         case togglePlay
         case toggleVolumeControl
         case updateVolume(Double)
+        case updatePlayPosition(Double?)
+        case skipForward
+        case skipBackward
     }
     
     @Dependency(\.player) var player
@@ -38,6 +44,10 @@ struct NowPlaying: ReducerProtocol {
     var body: some ReducerProtocol<State, Action> {
         Reduce { state, action in
             switch action {
+            case let .updatePlayPosition(position):
+                state.playPosition = position
+                return .none
+
             case let .setPresentationContext(context):
                 state.context = context
                 switch context {
@@ -60,8 +70,16 @@ struct NowPlaying: ReducerProtocol {
                                 await send(.update(.paused(station)))
                             case .initial, .stopped:
                                 await send(.update(.initial))
-                            case let .playing(station, _, _, _):
+                            case let .playing(station, total, current, _):
                                 await send(.update(.isPlaying(station)))
+                                switch station {
+                                case .podcastEpisode:
+                                    let playPercentage = current.seconds / total.seconds
+                                    print("Progress: \(playPercentage) \(current.seconds) \(total.seconds)")
+                                    await send(.updatePlayPosition(playPercentage))
+                                case .stream:
+                                    await send(.updatePlayPosition(nil))
+                                }
                             }
                         }
                     }
@@ -88,6 +106,16 @@ struct NowPlaying: ReducerProtocol {
             case let .updateVolume(volume):
                 state.volume = volume
                 return .none
+
+            case .skipBackward:
+                return .fireAndForget {
+                    player.seekBackward()
+                }
+
+            case .skipForward:
+                return .fireAndForget {
+                    player.seekForward()
+                }
             }
         }
     }
@@ -101,6 +129,9 @@ struct NowPlayingView: View {
         let isVolumeFocused: Bool
         let volume: Double
         let showVolumeCaption: Bool
+        var showSkipButtons: Bool
+        var showPlayPosition: Bool
+        var progressPercentage: Double
         
         enum PlayButtonState {
             case play
@@ -113,30 +144,40 @@ struct NowPlayingView: View {
             switch state.status {
             case let .isPlaying(station):
                 title = station.title
-                description = station.description
+                description = station.description ?? ""
                 playButton = .pause
                 imageURL = station.imageURL
+                showSkipButtons = !station.isLiveContent
+                showPlayPosition = !station.isLiveContent
             case .initial:
                 title = "Not playing"
                 description = "Select a station"
                 playButton = .hidden
                 imageURL = nil
+                showSkipButtons = false
+                showPlayPosition = false
+                progressPercentage = 0
             case let .loading(station):
                 title = station.title
                 description = "Loading..."
                 playButton = .play
                 imageURL = station.imageURL
+                showSkipButtons = !station.isLiveContent
+                showPlayPosition = !station.isLiveContent
             case let .paused(station):
                 title = station.title
-                description = station.description
+                description = station.description ?? ""
                 playButton = .play
                 imageURL = station.imageURL
+                showSkipButtons = !station.isLiveContent
+                showPlayPosition = !station.isLiveContent
             }
             
             // Volume is focused if isVolumeFocused or if the presentatio context is full screen
             isVolumeFocused = state.isVolumeFocused || state.context == .fullScreen
             volume = state.volume
             showVolumeCaption = state.showVolumeCaption
+            progressPercentage = state.playPosition ?? 0
         }
     }
     
@@ -148,6 +189,110 @@ struct NowPlayingView: View {
     init(store: StoreOf<NowPlaying>) {
         self.store = store
         viewStore = .init(store, observe: { ViewState(state: $0) })
+    }
+
+    var playControls: some View {
+        HStack(spacing: 10) {
+            Spacer()
+            if viewStore.showSkipButtons {
+                Button {
+                    viewStore.send(.skipBackward)
+                } label: {
+                    Image(systemName: "gobackward.30")
+                        .resizable()
+                        .scaledToFit()
+                        .foregroundColor(.secondary)
+                        .frame(width: 25, height: 25)
+                        .padding()
+                }
+                .clipShape(Circle())
+                .frame(width: 25, height: 25)
+            }
+            Button {
+                viewStore.send(.togglePlay)
+            } label: {
+                ZStack {
+                    Circle()
+                        .trim(from: 0, to: viewStore.progressPercentage) // 1
+                        .stroke(
+                            LeincastColors.brand.color.opacity(0.5),
+                            lineWidth: 4
+                        )
+                        .frame(width: 42, height: 42)
+                    switch viewStore.playButton {
+                    case .play:
+                        Image(systemName: "play.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .foregroundColor(LeincastColors.brand.color)
+                            .frame(width: 25, height: 25)
+                            .padding()
+                    case .pause:
+                        Image(systemName: "pause.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .foregroundColor(LeincastColors.brand.color)
+                            .frame(width: 25, height: 25)
+                            .padding()
+                    case .hidden:
+                        EmptyView()
+                    }
+                }
+            }
+            .clipShape(Circle())
+            if viewStore.showSkipButtons {
+                Button {
+                    viewStore.send(.skipForward)
+                } label: {
+                    Image(systemName: "goforward.30")
+                        .resizable()
+                        .scaledToFit()
+                        .foregroundColor(.secondary)
+                        .frame(width: 25, height: 25)
+                        .padding()
+                }
+                .clipShape(Circle())
+                .frame(width: 25, height: 25)
+                Spacer()
+            }
+        }
+    }
+
+    var controlStack: some View {
+        VStack(spacing: 10) {
+            playControls
+            VStack {
+                HStack {
+                    Group {
+                        if viewStore.isVolumeFocused {
+                            Image(systemName: "speaker.fill")
+                                .resizable()
+                                .scaledToFit()
+                        } else {
+                            Image(systemName: "speaker")
+                                .resizable()
+                                .scaledToFit()
+                        }
+                    }
+                    .foregroundColor(LeincastColors.brand.color)
+                    .frame(width: 15, height: 15)
+
+                    ProgressView(value: viewStore.volume, total: 1)
+                        .frame(maxHeight: 2)
+                        .opacity(viewStore.isVolumeFocused ? 1 : 0.5)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .tint(LeincastColors.brand.color)
+                }
+                if viewStore.state.showVolumeCaption {
+                    Text("Tap to control volume with digital crown. Tap again to scroll with digital crown.")
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
+                }
+
+            }.onTapGesture {
+                viewStore.send(.toggleVolumeControl)
+            }
+        }
     }
     
     var body: some View {
@@ -176,62 +321,7 @@ struct NowPlayingView: View {
                     .foregroundColor(.secondary)
                     .minimumScaleFactor(0.7)
                 if viewStore.playButton != .hidden {
-                    VStack(spacing: 10) {
-                        Button {
-                            viewStore.send(.togglePlay)
-                        } label: {
-                            switch viewStore.playButton {
-                            case .play:
-                                Image(systemName: "play.fill")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .foregroundColor(LeincastColors.brand.color)
-                                    .frame(width: 30, height: 30)
-                                    .padding()
-                            case .pause:
-                                Image(systemName: "pause.fill")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .foregroundColor(LeincastColors.brand.color)
-                                    .frame(width: 30, height: 30)
-                                    .padding()
-                            case .hidden:
-                                EmptyView()
-                            }
-                        }
-                        .clipShape(Circle())
-                        VStack {
-                            HStack {
-                                Group {
-                                    if viewStore.isVolumeFocused {
-                                        Image(systemName: "speaker.fill")
-                                            .resizable()
-                                            .scaledToFit()
-                                    } else {
-                                        Image(systemName: "speaker")
-                                            .resizable()
-                                            .scaledToFit()
-                                    }
-                                }
-                                .foregroundColor(LeincastColors.brand.color)
-                                .frame(width: 15, height: 15)
-                                
-                                ProgressView(value: viewStore.volume, total: 1)
-                                    .frame(maxHeight: 2)
-                                    .opacity(viewStore.isVolumeFocused ? 1 : 0.5)
-                                    .fixedSize(horizontal: false, vertical: true)
-                                    .tint(LeincastColors.brand.color)
-                            }
-                            if viewStore.state.showVolumeCaption {
-                                Text("Tap to control volume with digital crown. Tap again to scroll with digital crown.")
-                                    .font(.footnote)
-                                    .foregroundColor(.secondary)
-                            }
-                           
-                        }.onTapGesture {
-                            viewStore.send(.toggleVolumeControl)
-                        }
-                    }
+                    controlStack
                 }
             }
         }

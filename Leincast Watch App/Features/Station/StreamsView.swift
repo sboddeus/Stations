@@ -128,7 +128,7 @@ struct Streams: ReducerProtocol {
                             }
                             
                             Task {
-                                player.play(station)
+                                player.play(.stream(station))
                                 await send(.delegate(.selected(station)))
                             }
                         }

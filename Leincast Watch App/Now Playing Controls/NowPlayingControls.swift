@@ -23,14 +23,14 @@ final class NowPlayingControlsController {
             case .stopped: self.stopNowPlaying()
                 MPNowPlayingInfoCenter.default().playbackState = .stopped
             case let .playing(item, duration, current, rate):
-                self.displayNowPlaying(playerItem: item, duration: duration, current: current, rate: rate)
+                self.displayNowPlaying(item: item, duration: duration, current: current, rate: rate)
                 self.lastKnownDuration = duration
                 self.lastKnownCurrentTime = current
                 if MPNowPlayingInfoCenter.default().playbackState != .playing {
                     MPNowPlayingInfoCenter.default().playbackState = .playing
                 }
             case let .paused(item):
-                self.displayNowPlaying(playerItem: item,
+                self.displayNowPlaying(item: item,
                                        duration: self.lastKnownDuration ?? .init(value: 0, timescale: .default),
                                        current: self.lastKnownCurrentTime ?? .init(value: 0, timescale: .default),
                                        rate: 0.0)
@@ -41,30 +41,36 @@ final class NowPlayingControlsController {
 
     // MARK: Now Playing Controls
 
-    private func displayNowPlaying(playerItem: Stream,
+    private func displayNowPlaying(item: MediaItem,
                                    duration: CMTime,
                                    current: CMTime,
                                    rate: Float)
     {
         // Create initial metadata info
-        nowPlayingInfo[MPMediaItemPropertyTitle] = playerItem.title
-        nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = playerItem.description.truncatedForNowPlaying()
+        nowPlayingInfo[MPMediaItemPropertyTitle] = item.title
+        nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = item.description?.truncatedForNowPlaying()
 
         nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = current.seconds
         nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = duration.seconds
         nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = rate
 
-        nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = true
+        switch item {
+        case .podcastEpisode:
+            nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = false
+        case .stream:
+            nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = true
+        }
+
 
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
 
         // Set the image metadata
         if let currentURL = nowPlayingInfo[NowPlayingControlsController.imageURLIdKey] as? URL {
-            if currentURL == playerItem.imageURL {
+            if currentURL == item.imageURL {
                 return
             }
         }
-        SDWebImageDownloader.shared.downloadImage(with: playerItem.imageURL) { [weak self] image, _, _, _ in
+        SDWebImageDownloader.shared.downloadImage(with: item.imageURL) { [weak self] image, _, _, _ in
             guard let self = self else { return }
             if let image = image {
                 self.nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
@@ -72,13 +78,19 @@ final class NowPlayingControlsController {
                 MPNowPlayingInfoCenter.default().nowPlayingInfo = self.nowPlayingInfo
             }
         }
-        nowPlayingInfo[NowPlayingControlsController.imageURLIdKey] = playerItem.imageURL
+        nowPlayingInfo[NowPlayingControlsController.imageURLIdKey] = item.imageURL
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
 
         // Modify remote controls for item kind
         let commandCenter = MPRemoteCommandCenter.shared()
-        commandCenter.skipBackwardCommand.isEnabled = false
-        commandCenter.skipForwardCommand.isEnabled = false
+        switch item {
+        case .podcastEpisode:
+            commandCenter.skipBackwardCommand.isEnabled = true
+            commandCenter.skipForwardCommand.isEnabled = true
+        case .stream:
+            commandCenter.skipBackwardCommand.isEnabled = false
+            commandCenter.skipForwardCommand.isEnabled = false
+        }
     }
 
     private func stopNowPlaying() {
@@ -115,13 +127,13 @@ extension AVAudioPlayer {
             return .success
         }
 
-        commandCenter.skipForwardCommand.preferredIntervals = [15]
+        commandCenter.skipForwardCommand.preferredIntervals = [30]
         commandCenter.skipForwardCommand.addTarget { [unowned self] _ in
             self.seekForward()
             return .success
         }
 
-        commandCenter.skipBackwardCommand.preferredIntervals = [15]
+        commandCenter.skipBackwardCommand.preferredIntervals = [30]
         commandCenter.skipBackwardCommand.addTarget { [unowned self] _ in
             self.seekBackward()
             return .success

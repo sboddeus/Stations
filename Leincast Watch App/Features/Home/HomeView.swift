@@ -255,7 +255,7 @@ struct HomeView: View {
                 }
             }
             switch viewStore.route {
-            case .stations, .help:
+            case .stations, .help, .podcasts:
                 Button {
                     viewStore.send(.showNowPlaying(true))
                 } label: {
