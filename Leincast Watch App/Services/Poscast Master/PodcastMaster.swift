@@ -24,8 +24,17 @@ actor PodcastMaster {
 
     private static func synthesisePodcast(from url: URL) async throws -> Podcast {
         let data = try await URLSession.shared.data(from: url).0
-        let decoder = SynDecoder()
-        let podcastRSSFeed = try decoder.decode(data)
+        let podcastRSSFeed: Feedable = try await withCheckedThrowingContinuation({ cont in
+            DispatchQueue.global(qos: .background).async {
+                do {
+                    let decoder = SynDecoder()
+                    let podcastRSSFeed = try decoder.decode(data)
+                    cont.resume(returning: podcastRSSFeed)
+                } catch {
+                    cont.resume(throwing: error)
+                }
+            }
+        })
 
         let title = podcastRSSFeed.title
         let description = podcastRSSFeed.summary

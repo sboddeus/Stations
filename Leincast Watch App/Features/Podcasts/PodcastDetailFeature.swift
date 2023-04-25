@@ -11,17 +11,28 @@ struct PodcastDetails: ReducerProtocol {
         let contentURL: URL
         var hasAppeared = false
         var episodes: IdentifiedArrayOf<EpisodeRowFeature.State>
+        var _episodes: [Podcast.Episode]
 
         init(podcast: Podcast) {
             id = podcast.id
             contentURL = podcast.url
+            _episodes = podcast.episodes
             episodes = .init(
                 uniqueElements: podcast.episodes.map {
                     EpisodeRowFeature.State(
-                        episode: $0,
+                        id: $0.id,
+                        title: $0.title,
+                        imageURL: $0.imageURL,
                         activeState: .unselected
                     )
             })
+        }
+
+        static func == (lhs: State, rhs: State) -> Bool {
+            lhs.id == rhs.id &&
+            lhs.contentURL == rhs.contentURL &&
+            lhs.hasAppeared == rhs.hasAppeared &&
+            lhs.episodes == rhs.episodes
         }
     }
 
@@ -51,7 +62,7 @@ struct PodcastDetails: ReducerProtocol {
                 return .none
 
             case .episode(id: let id, action: .delegate(.selected)):
-                guard let episode = state.episodes[id: id]?.episode else {
+                guard let episode = state._episodes.first(where: { $0.id == id }) else {
                     return .none
                 }
 

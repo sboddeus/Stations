@@ -5,7 +5,9 @@ import SDWebImageSwiftUI
 
 struct EpisodeRowFeature: ReducerProtocol {
     struct State: Equatable, Identifiable {
-        let episode: Podcast.Episode
+        let id: String
+        let title: String
+        let imageURL: URL?
 
         enum ActiveState: Equatable {
             case paused
@@ -14,10 +16,6 @@ struct EpisodeRowFeature: ReducerProtocol {
             case unselected
         }
         var activeState: ActiveState
-
-        var id: String {
-            episode.id
-        }
     }
 
     enum Action: Equatable {
@@ -55,7 +53,7 @@ struct EpisodeRowFeature: ReducerProtocol {
                 }
 
             case .playerBinding:
-                let itemId = state.episode.id
+                let itemId = state.id
                 return .run { send in
                     for await value in player.playingState.values {
                         guard value.stationId == itemId else {
@@ -97,8 +95,8 @@ struct EpisodeRowView: View {
             viewStore.send(.delegate(.selected))
         } label: {
             StreamRowCoreView(
-                imageURL: viewStore.episode.imageURL,
-                title: viewStore.episode.title,
+                imageURL: viewStore.imageURL,
+                title: viewStore.title,
                 isActive: viewStore.activeState == .unselected) {
                     switch viewStore.activeState {
                     case .loading:

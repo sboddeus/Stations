@@ -15,6 +15,11 @@ struct Podcasts: ReducerProtocol {
         var route: Route?
 
         var podcastRows: IdentifiedArrayOf<PodcastRowFeature.State> = []
+
+        static func == (lhs: State, rhs: State) -> Bool {
+            lhs.podcastRows == rhs.podcastRows &&
+            lhs.route == rhs.route
+        }
     }
 
     enum Action: Equatable {
