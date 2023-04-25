@@ -29,24 +29,25 @@ actor PodcastMaster {
 
         let title = podcastRSSFeed.title
         let description = podcastRSSFeed.summary
-        let imageURL = podcastRSSFeed.image
+        var imageURL = podcastRSSFeed.image
 
         let streams: [Podcast.Episode] = podcastRSSFeed.children
             .compactMap { item -> Podcast.Episode? in
             switch item.media {
               case .podcast(let podcast):
-                guard let title = podcast.title else {
-                    return nil
-                }
                 return Podcast.Episode(
                     id: podcast.enclosure.url.absoluteString,
-                    title: title,
-                    description: podcast.summary ?? "",
-                    imageURL: podcast.image?.href ?? imageURL,
+                    title: podcast.title ?? item.title,
+                    description: (podcast.summary ?? item.summary) ?? "",
+                    imageURL: (podcast.image?.href ?? item.imageURL) ?? imageURL,
                     url: podcast.enclosure.url)
               default:
                 return nil
             }
+        }
+
+        if imageURL == nil {
+            imageURL = streams.first(where: { $0.imageURL != nil })?.imageURL
         }
 
         return Podcast(
@@ -70,6 +71,11 @@ actor PodcastMaster {
         try await file.save(podcast)
 
         return podcast
+    }
+
+    func delete(podcast: Podcast) async throws {
+        let file = try await rootDirectory.file(name: podcast.id.fileNameSanitized())
+        try await file.delete()
     }
 
     func refresh(podcast: Podcast) async throws -> Podcast {

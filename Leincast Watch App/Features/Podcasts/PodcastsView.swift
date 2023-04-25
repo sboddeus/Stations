@@ -23,6 +23,7 @@ struct Podcasts: ReducerProtocol {
         case selected(Podcast)
         case showAddPodcast
         case setRoute(State.Route?)
+        case delete(Podcast)
 
         // Child
         enum RouteAction: Equatable {
@@ -67,6 +68,12 @@ struct Podcasts: ReducerProtocol {
 
             case .routeAction:
                 return .none
+
+            case let .delete(podcast):
+                return .task {
+                    try await podcastMaster.delete(podcast: podcast)
+                    return .onAppear
+                }
             }
         }.ifLet(\.route, action: /Action.routeAction) {
             Scope(state: /State.Route.addPodcast, action: /Action.RouteAction.addPodcast) {
@@ -99,11 +106,17 @@ struct PodcastsView: View {
             }
             ForEach(viewStore.podcasts) { podcast in
                 HStack {
-                    WebImage(url: podcast.imageURL)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(maxWidth: 30, maxHeight: 30)
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                    if let imageURL = podcast.imageURL {
+                        WebImage(url: imageURL)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(maxWidth: 30, maxHeight: 30)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                    } else {
+                        Color.white
+                            .frame(maxWidth: 30, maxHeight: 30)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                    }
 
                     Text(podcast.title)
 
@@ -111,6 +124,14 @@ struct PodcastsView: View {
                 }
                 .onTapGesture {
                     viewStore.send(.selected(podcast))
+                }
+                .swipeActions(edge: .trailing) {
+                    Button(role: .destructive) {
+                        viewStore.send(.delete(podcast))
+                    } label: {
+                        Image(systemName: "trash")
+                    }
+                    .tint(.red)
                 }
             }
 

@@ -147,8 +147,6 @@ struct StreamRowView: View {
                 Image(systemName: "trash")
             }
             .tint(.red)
-
-
         }
         .swipeActions(edge: .leading) {
             Button {
@@ -187,16 +185,17 @@ struct StreamRowCoreView<Content: View>: View {
 
     var body: some View {
         HStack(alignment: .center) {
-
-            ZStack {
-                Color.white
+            if let imageURL = imageURL {
                 WebImage(url: imageURL)
                     .resizable()
-                    .padding(2)
-                    .scaledToFit()
+                    .scaledToFill()
+                    .frame(maxWidth: 30, maxHeight: 30)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+            } else {
+                Color.white
+                    .frame(maxWidth: 30, maxHeight: 30)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
             }
-            .frame(maxWidth: 30, maxHeight: 30)
-            .clipShape(RoundedRectangle(cornerRadius: 8))
 
             Text(title)
                 .foregroundColor(isActive ? .white : .red)
