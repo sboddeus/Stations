@@ -22,7 +22,7 @@ actor PodcastMaster {
         try? await rootDirectory.create()
     }
 
-    private func synthesisePodcast(from url: URL) async throws -> Podcast {
+    private static func synthesisePodcast(from url: URL) async throws -> Podcast {
         let data = try await URLSession.shared.data(from: url).0
         let decoder = SynDecoder()
         let podcastRSSFeed = try decoder.decode(data)
@@ -61,7 +61,7 @@ actor PodcastMaster {
     }
 
     func addPodcast(at url: URL) async throws -> Podcast {
-        let podcast = try await synthesisePodcast(from: url)
+        let podcast = try await PodcastMaster.synthesisePodcast(from: url)
 
         let file = try await rootDirectory.file(name: podcast.id.fileNameSanitized())
         guard await !file.exists() else {
@@ -79,7 +79,7 @@ actor PodcastMaster {
     }
 
     func refresh(podcast: Podcast) async throws -> Podcast {
-        let podcast = try await synthesisePodcast(from: podcast.url)
+        let podcast = try await PodcastMaster.synthesisePodcast(from: podcast.url)
 
         let file = try await rootDirectory.file(name: podcast.id.fileNameSanitized())
 

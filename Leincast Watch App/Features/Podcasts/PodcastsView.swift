@@ -39,11 +39,12 @@ struct Podcasts: ReducerProtocol {
         Reduce { state, action in
             switch action {
             case .onAppear:
+                struct CancelID {}
                 return .task {
                     let podcasts = await podcastMaster.getAllPodcasts()
 
                     return .setPodcasts(podcasts)
-                }
+                }.cancellable(id: CancelID.self, cancelInFlight: true)
 
             case let .setPodcasts(podcasts):
                 state.podcasts = podcasts

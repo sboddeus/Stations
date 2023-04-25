@@ -38,6 +38,7 @@ struct PodcastDetails: ReducerProtocol {
             switch action {
             case .onAppear:
                 guard !state.hasAppeared else { return .none }
+                state.hasAppeared = true
                 return .task { [podcast = state.podcast] in
                     let podcast = try await podcastMaster.refresh(podcast: podcast)
                     return .podcastReloaded(podcast)
