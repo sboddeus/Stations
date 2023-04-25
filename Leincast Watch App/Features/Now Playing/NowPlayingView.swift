@@ -75,7 +75,6 @@ struct NowPlaying: ReducerProtocol {
                                 switch station {
                                 case .podcastEpisode:
                                     let playPercentage = current.seconds / total.seconds
-                                    print("Progress: \(playPercentage) \(current.seconds) \(total.seconds)")
                                     await send(.updatePlayPosition(playPercentage))
                                 case .stream:
                                     await send(.updatePlayPosition(nil))

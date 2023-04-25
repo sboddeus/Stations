@@ -1,6 +1,7 @@
 
 import Foundation
 import SwiftUI
+import AVFAudio
 import ComposableArchitecture
 import SDWebImageSwiftUI
 
@@ -52,7 +53,14 @@ struct PodcastDetails: ReducerProtocol {
                 }
 
                 return .fireAndForget {
-                    player.play(.podcastEpisode(episode))
+                    AVAudioSession.sharedInstance().activate { _, error in
+                        guard error == nil else {
+                            // TODO: Deal with error
+                            assertionFailure("Couldn't activate session")
+                            return
+                        }
+                        player.play(.podcastEpisode(episode))
+                    }
                 }
 
             case .episode:

@@ -75,7 +75,7 @@ struct EpisodeRowFeature: ReducerProtocol {
                             await send.send(.setActiveState(.unselected))
                         }
                     }
-                }.cancellable(id: PlayerBindingID.self)
+                }.cancellable(id: PlayerBindingID.self, cancelInFlight: true)
 
             case .delegate:
                 return .none

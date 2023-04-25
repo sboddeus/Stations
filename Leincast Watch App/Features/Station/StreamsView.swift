@@ -161,7 +161,7 @@ struct Streams: ReducerProtocol {
                 if let station = state.stations[id: id]?.station {
                     return .task { [state] in
                         let newStream = Stream(
-                            id: .init(),
+                            id: UUID().uuidString,
                             title: station.title + " (copy)",
                             description: station.description,
                             imageURL: station.imageURL,
