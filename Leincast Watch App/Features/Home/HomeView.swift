@@ -54,7 +54,7 @@ struct Home: ReducerProtocol {
     }
         
     @Dependency(\.player) var player
-    @Dependency(\.streamMaster) var stationMaster
+    @Dependency(\.streamDataService) var streamDataService
     
     var body: some ReducerProtocol<State, Action> {
         Scope(state: \.nowPlaying, action: /Action.nowPlaying) {
@@ -75,8 +75,7 @@ struct Home: ReducerProtocol {
                 }
             case .showStations:
                 return .task {
-                    await stationMaster.constructInitialSystemIfNeeded()
-                    let rootDir = await stationMaster.rootDirectory
+                    let rootDir = await streamDataService.rootDirectory
                     return .setRoute(.stations(Streams.State(rootDirectory: rootDir)))
                 }
 

@@ -176,6 +176,8 @@ final class AVAudioPlayer: NSObject {
 
     private var forcePlayWhenReady: Bool = false
 
+    private var pendingPosition: Double?
+
     // MARK: - Accessing Player State
 
     let playingState = CurrentValueSubject<PlayingState, Never>(.initial)
@@ -224,7 +226,7 @@ final class AVAudioPlayer: NSObject {
     /// Starts playing the item passed immediately
     /// - Parameter item: A PlayerItem describing the resource to be played. A nil value is continues playing
     /// the currently played item if it was paused.
-    func play(_ item: MediaItem? = nil) {
+    func play(_ item: MediaItem? = nil, fromPosition: Double? = nil) {
         // Check if there is a new item to play, or if we are just toggling
         guard let item = item else {
             player.play()
@@ -244,6 +246,8 @@ final class AVAudioPlayer: NSObject {
         playingState.send(.loading(item))
         let asset = AVURLAsset(playerItem: item)
         itemQueue.add([asset])
+
+        pendingPosition = fromPosition
 
         // It is a radio station, force to play when ready
         forcePlayWhenReady = true
@@ -442,9 +446,13 @@ extension AVAudioPlayer {
             switch item.status {
             case .readyToPlay:
                 if self?.forcePlayWhenReady ?? false {
-                    Task { [player = self?.player] in
+                    Task { [player = self?.player, pendingPos = self?.pendingPosition, weak self] in
                         await player?.preroll(atRate: 1.0)
                         player?.play()
+
+                        if let pendingPos {
+                            self?.seek(to: Float(pendingPos))
+                        }
                     }
                     self?.forcePlayWhenReady = false
                 }

@@ -39,14 +39,14 @@ struct Podcasts: ReducerProtocol {
         case podcastRow(id: PodcastRowFeature.State.ID, action: PodcastRowFeature.Action)
     }
 
-    @Dependency(\.podcastMaster) var podcastMaster
+    @Dependency(\.podcastDataService) var podcastDataService
 
     var body: some ReducerProtocol<State, Action> {
         Reduce { state, action in
             switch action {
             case .onAppear:
                 return .task {
-                    let podcasts = await podcastMaster.getAllPodcasts()
+                    let podcasts = await podcastDataService.getAllPodcasts()
 
                     return .setPodcasts(podcasts)
                 }
@@ -76,7 +76,7 @@ struct Podcasts: ReducerProtocol {
 
             case let .podcastRow(id, .delegate(.deleted)):
                 return .task {
-                    try await  podcastMaster.delete(podcastId: id)
+                    try await  podcastDataService.delete(podcastId: id)
                     return .onAppear
                 }
 

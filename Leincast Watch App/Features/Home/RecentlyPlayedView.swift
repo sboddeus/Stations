@@ -5,16 +5,16 @@ import AVFAudio
 
 struct RecentlyPlayed: ReducerProtocol {
     struct State: Equatable {
-        var stations: IdentifiedArrayOf<StreamRow.State> = []
+        var items: IdentifiedArrayOf<RecentlyPlayedRowFeature.State> = []
     }
     
     enum Action: Equatable {
         case onAppear
-        case update([Stream])
-        case station(id: StreamRow.State.ID, action: StreamRow.Action)
+        case update([MediaItem])
+        case item(id: RecentlyPlayedRowFeature.State.ID, action: RecentlyPlayedRowFeature.Action)
     }
     
-    @Dependency(\.streamMaster) var stationMaster
+    @Dependency(\.playStatisticsDataService) var playStatisticsDataService
     @Dependency(\.player) var player
     
     var body: some ReducerProtocol<State, Action> {
@@ -22,18 +22,18 @@ struct RecentlyPlayed: ReducerProtocol {
             switch action {
             case .onAppear:
                 return .task {
-                    let recents = await stationMaster.recents()
+                    let recents = await playStatisticsDataService.recents()
                     return .update(recents)
                 }
-            case let .update(stations):
-                state.stations = IdentifiedArray(
-                    uniqueElements: stations.map {
-                        StreamRow.State(station: $0, activeState: .unselected)
+            case let .update(items):
+                state.items = IdentifiedArray(
+                    uniqueElements: items.map {
+                        RecentlyPlayedRowFeature.State(item: $0, activeState: .unselected)
                     }
                 )
                 return .none
-            case let .station(id, .delegate(.selected)):
-                if let station = state.stations[id: id] {
+            case let .item(id, .delegate(.selected)):
+                if let item = state.items[id: id] {
                     return .fireAndForget {
                         AVAudioSession.sharedInstance().activate { _, error in
                             guard error == nil else {
@@ -42,19 +42,19 @@ struct RecentlyPlayed: ReducerProtocol {
                                 return
                             }
                             
-                            player.play(.stream(station.station))
+                            player.play(item.item)
                         }
                         
                     }
                 }
                 return .none
                 
-            case .station:
+            case .item:
                 return .none
             }
         }
-        .forEach(\.stations, action: /Action.station) {
-            StreamRow()
+        .forEach(\.items, action: /Action.item) {
+            RecentlyPlayedRowFeature()
         }
     }
 }
@@ -70,19 +70,150 @@ struct RecentlyPlayedView: View {
     
     var body: some View {
         VStack {
-            if viewStore.stations.isEmpty {
+            if viewStore.items.isEmpty {
                 Text("No streams played yet").font(.body)
             }
             ForEachStore(
                 store.scope(
-                    state: \.stations,
-                    action: RecentlyPlayed.Action.station(id:action:))
+                    state: \.items,
+                    action: RecentlyPlayed.Action.item(id:action:))
             ) { store in
-                StreamRowView(store: store)
+                RecentlyPlayedRow(store: store)
             }
         }
         .onAppear {
             viewStore.send(.onAppear)
+        }
+    }
+}
+
+import SDWebImageSwiftUI
+
+struct RecentlyPlayedRowFeature: ReducerProtocol {
+    struct State: Equatable, Identifiable {
+        let item: MediaItem
+
+        enum ActiveState: Equatable {
+            case paused
+            case playing
+            case loading
+            case unselected
+        }
+        var activeState: ActiveState
+
+        var id: String {
+            item.id
+        }
+    }
+
+    enum Action: Equatable {
+        enum Delegate: Equatable {
+            case selected
+        }
+        case delegate(Delegate)
+
+        case play
+        case pause
+
+        case playerBinding
+
+        case setActiveState(State.ActiveState)
+    }
+
+    @Dependency(\.player) var player
+
+    var body: some ReducerProtocol<State, Action> {
+        Reduce { state, action in
+            switch action {
+            case let .setActiveState(activeState):
+                state.activeState = activeState
+                return .none
+
+            case .play:
+                return .fireAndForget {
+                    player.play()
+                }
+
+            case .pause:
+                return .fireAndForget {
+                    player.pause()
+                }
+
+            case .delegate:
+                return .none
+
+            case .playerBinding:
+                let stationId = state.item.id
+                return .run { send in
+                    for await value in player.playingState.values {
+                        guard value.stationId == stationId else {
+                            await send.send(.setActiveState(.unselected))
+                            continue
+                        }
+
+                        switch value {
+                        case .loading:
+                            await send.send(.setActiveState(.loading))
+                        case .paused:
+                            await send.send(.setActiveState(.paused))
+                        case .playing:
+                            await send.send(.setActiveState(.playing))
+                        case .initial, .stopped:
+                            await send.send(.setActiveState(.unselected))
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+struct RecentlyPlayedRow: View {
+    let store: StoreOf<RecentlyPlayedRowFeature>
+    @ObservedObject var viewStore: ViewStoreOf<RecentlyPlayedRowFeature>
+
+    init(store: StoreOf<RecentlyPlayedRowFeature>) {
+        self.store = store
+        viewStore = .init(store, observe: { $0 })
+    }
+
+    var body: some View {
+        Button {
+            viewStore.send(.delegate(.selected))
+        } label: {
+            StreamRowCoreView(
+                imageURL: viewStore.item.imageURL,
+                title: viewStore.item.title,
+                isActive: viewStore.activeState == .unselected) {
+                    switch viewStore.activeState {
+                    case .loading:
+                        ProgressView()
+                            .foregroundColor(.red)
+                            .scaledToFit()
+                            .fixedSize()
+                    case .playing:
+                        Image(systemName: "pause.circle")
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(.red)
+                            .onTapGesture {
+                                viewStore.send(.pause)
+                            }
+                    case .paused:
+                        Image(systemName: "play.circle")
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(.red)
+                            .onTapGesture {
+                                viewStore.send(.play)
+                            }
+                    case .unselected:
+                        EmptyView()
+                    }
+                }
+        }
+        .task {
+            await viewStore.send(.playerBinding).finish()
         }
     }
 }

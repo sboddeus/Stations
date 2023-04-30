@@ -6,16 +6,16 @@ import ComposableArchitecture
 struct Leincast_Watch_AppApp: App {
     let nowPlaying = NowPlayingControlsController()
     
-    @Dependency(\.streamMaster) var stationMaster
+    @Dependency(\.playStatisticsDataService) var playStatisticsDataService
     @Dependency(\.clipBoard) var clipBoard
-    @Dependency(\.podcastMaster) var podcastMaster
+    @Dependency(\.podcastDataService) var podcastDataService
     
     init() {
         nowPlaying.bind(toPlayer: .shared!)
-        Task { [stationMaster, clipBoard, podcastMaster] in
+        Task { [playStatisticsDataService, clipBoard, podcastDataService] in
             await clipBoard.initialise()
-            await podcastMaster.initialise()
-            await stationMaster.bind(to: .shared!)
+            await podcastDataService.initialise(with: .shared!)
+            await playStatisticsDataService.bind(to: .shared!)
         }
     }
     

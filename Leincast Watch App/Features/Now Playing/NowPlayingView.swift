@@ -36,7 +36,7 @@ struct NowPlaying: ReducerProtocol {
     }
     
     @Dependency(\.player) var player
-    @Dependency(\.streamMaster) var stationMaster
+    @Dependency(\.streamDataService) var streamDataService
     @Dependency(\.userDefaults) var userDefaults
     
     static let volumeCaptionUserDefaultsKey = "volume.caption"
@@ -85,8 +85,8 @@ struct NowPlaying: ReducerProtocol {
                 
             case let .update(status):
                 state.status = status
-                if state.volume != stationMaster.volume {
-                    state.volume = stationMaster.volume
+                if state.volume != streamDataService.volume {
+                    state.volume = streamDataService.volume
                 }
                 return .none
                 

@@ -2,11 +2,31 @@
 import SyndiKit
 import Foundation
 
-enum PodcastMasterErrors: Error {
+enum PodcastDataServiceErrors: Error {
     case podcastAlreadyExists
 }
 
-actor PodcastMaster {
+struct PodcastPositions: Equatable, Codable {
+    private var storage: Dictionary<String, Double>
+
+    mutating func set(position: Double, forEpisodeId: String, inPodcastId: String) {
+        let id = inPodcastId + ":" + forEpisodeId
+
+        storage[id] = position
+    }
+
+    func position(forEpisodeId: String, inPodcastId: String) -> Double? {
+        let id = inPodcastId + ":" + forEpisodeId
+
+        return storage[id]
+    }
+
+    public init() {
+        self.storage = .init()
+    }
+}
+
+actor PodcastDataService {
 
     private var filesystem: FileSystem = .default
     private var rootPath = URL(string: "Podcasts")!
@@ -18,8 +38,21 @@ actor PodcastMaster {
         )
     }
 
-    func initialise() async {
+    private lazy var playPositionFile: File = {
+        return File(
+            directory: rootDirectory,
+            name: "podcast_play_positions",
+            fileSystem: filesystem
+        )
+    }()
+
+    private var playPositions: PodcastPositions = .init()
+
+    func initialise(with player: AVAudioPlayer) async {
         try? await rootDirectory.create()
+        bind(to: player)
+
+        playPositions = (try? await playPositionFile.retrieve(as: PodcastPositions.self)) ?? .init()
     }
 
     private static func synthesisePodcast(from url: URL) async throws -> Podcast {
@@ -70,11 +103,11 @@ actor PodcastMaster {
     }
 
     func addPodcast(at url: URL) async throws -> Podcast {
-        let podcast = try await PodcastMaster.synthesisePodcast(from: url)
+        let podcast = try await PodcastDataService.synthesisePodcast(from: url)
 
         let file = try await rootDirectory.file(name: podcast.id.fileNameSanitized())
         guard await !file.exists() else {
-            throw PodcastMasterErrors.podcastAlreadyExists
+            throw PodcastDataServiceErrors.podcastAlreadyExists
         }
 
         try await file.save(podcast)
@@ -88,7 +121,7 @@ actor PodcastMaster {
     }
 
     func refresh(podcastId: String, url: URL) async throws -> Podcast {
-        let podcast = try await PodcastMaster.synthesisePodcast(from: url)
+        let podcast = try await PodcastDataService.synthesisePodcast(from: url)
 
         try Task.checkCancellation()
 
@@ -109,5 +142,44 @@ actor PodcastMaster {
         }
 
         return nilPodcasts.compactMap { $0 }
+    }
+
+    func position(forEpisodeId: String) async -> Double? {
+        playPositions.position(forEpisodeId: forEpisodeId, inPodcastId: "")
+    }
+
+    // Bindings for remembering play positions
+    private var bindTask: Task<(), Never>?
+    private func bind(to player: AVAudioPlayer) {
+        bindTask?.cancel()
+        bindTask = Task { [weak self] in
+            var bindItemCount = 0
+            for await value in player.playingState.values {
+                switch value {
+                case let .playing(.podcastEpisode(episode), _, current, _):
+                    if bindItemCount % 10 == 0 {
+                        await self?.set(position: current.seconds, forEpisodeId: episode.id)
+                    }
+                    bindItemCount += 1
+                default:
+                    break
+                }
+            }
+        }
+    }
+
+    private func set(position: Double, forEpisodeId: String) async {
+        playPositions.set(
+            position: position,
+            forEpisodeId: forEpisodeId,
+            inPodcastId: ""
+        )
+
+        try? await playPositionFile.save(playPositions)
+    }
+
+    // Deinit
+    deinit {
+        bindTask?.cancel()
     }
 }

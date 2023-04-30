@@ -44,7 +44,7 @@ struct PodcastDetails: ReducerProtocol {
     }
 
     @Dependency(\.player) var player
-    @Dependency(\.podcastMaster) var podcastMaster
+    @Dependency(\.podcastDataService) var podcastDataService
 
     var body: some ReducerProtocol<State, Action> {
         Reduce { state, action in
@@ -53,7 +53,7 @@ struct PodcastDetails: ReducerProtocol {
                 guard !state.hasAppeared else { return .none }
                 state.hasAppeared = true
                 return .task { [url = state.contentURL, id = state.id] in
-                    let podcast = try await podcastMaster.refresh(podcastId: id, url: url)
+                    let podcast = try await podcastDataService.refresh(podcastId: id, url: url)
                     return .podcastReloaded(podcast)
                 }
 
@@ -73,7 +73,11 @@ struct PodcastDetails: ReducerProtocol {
                             assertionFailure("Couldn't activate session")
                             return
                         }
-                        player.play(.podcastEpisode(episode))
+
+                        Task {
+                            let position = await podcastDataService.position(forEpisodeId: episode.id)
+                            player.play(.podcastEpisode(episode), fromPosition: position)
+                        }
                     }
                 }
 

@@ -25,7 +25,7 @@ struct AddPodcastFeature: ReducerProtocol {
         case delegate(Delegate)
     }
 
-    @Dependency(\.podcastMaster) var podcastMaster
+    @Dependency(\.podcastDataService) var podcastDataService
 
     var body: some ReducerProtocol<State, Action> {
         Reduce { state, action in
@@ -72,7 +72,7 @@ struct AddPodcastFeature: ReducerProtocol {
 
                 return .task {
                     do {
-                        _ = try await podcastMaster.addPodcast(at: contentURL)
+                        _ = try await podcastDataService.addPodcast(at: contentURL)
 
                         return .podcastAddSuccess
                     } catch {

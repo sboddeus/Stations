@@ -14,24 +14,35 @@ extension DependencyValues {
 }
 
 extension DependencyValues {
-    var streamMaster: StreamMaster {
+    var streamDataService: StreamsDataService {
         get { self[StationMasterKey.self] }
         set { self[StationMasterKey.self] = newValue }
     }
 
     enum StationMasterKey: DependencyKey {
-        static let liveValue: StreamMaster = .init()
+        static let liveValue: StreamsDataService = .init()
     }
 }
 
 extension DependencyValues {
-    var podcastMaster: PodcastMaster {
+    var playStatisticsDataService: PlayStatisticsService {
+        get { self[PlayStatisticsServiceKey.self] }
+        set { self[PlayStatisticsServiceKey.self] = newValue }
+    }
+
+    enum PlayStatisticsServiceKey: DependencyKey {
+        static let liveValue: PlayStatisticsService = .init()
+    }
+}
+
+extension DependencyValues {
+    var podcastDataService: PodcastDataService {
         get { self[PodcastMasterKey.self] }
         set { self[PodcastMasterKey.self] = newValue }
     }
 
     enum PodcastMasterKey: DependencyKey {
-        static let liveValue: PodcastMaster = .init()
+        static let liveValue: PodcastDataService = .init()
     }
 }
 
