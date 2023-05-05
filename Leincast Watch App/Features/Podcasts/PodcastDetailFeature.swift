@@ -21,7 +21,7 @@ struct PodcastDetails: ReducerProtocol {
 
     enum Action: Equatable {
         case onAppear
-        case episodesLoaded([Podcast.Episode], nextCursor: String?)
+        case episodesLoaded([Podcast.Episode], nextCursor: String?, removingCached: Bool)
 
         case episode(id: EpisodeRowFeature.State.ID, action: EpisodeRowFeature.Action)
         case loadNextCursor
@@ -40,18 +40,26 @@ struct PodcastDetails: ReducerProtocol {
                     .concatenate(
                         .task { [state] in
                             let episodes = await podcastDataService.getAllEpisodes(forPodcastId: state.id)
-                            return .episodesLoaded(episodes?.episodes ?? [], nextCursor: episodes?.nextCursor)
+                            return .episodesLoaded(
+                                episodes?.episodes ?? [],
+                                nextCursor: episodes?.nextCursor,
+                                removingCached: true
+                            )
                         },
                         .task { [id = state.id] in
                             _ = try await podcastDataService.refresh(podcastId: id)
                             let episodes = await podcastDataService.getAllEpisodes(forPodcastId: id)
-                            return .episodesLoaded(episodes?.episodes ?? [], nextCursor: episodes?.nextCursor)
+                            return .episodesLoaded(
+                                episodes?.episodes ?? [],
+                                nextCursor: episodes?.nextCursor,
+                                removingCached: true
+                            )
                         }
                     )
 
-            case let .episodesLoaded(episodes, nextCursor):
+            case let .episodesLoaded(episodes, nextCursor, removingCached):
                 state.isLoading = false
-                if state.nextCursor == nil {
+                if removingCached {
                     state.episodes = .init(
                         uniqueElements: episodes.map {
                             .init(episode: $0, activeState: .unselected)
@@ -92,7 +100,11 @@ struct PodcastDetails: ReducerProtocol {
             case .loadNextCursor:
                 return .task { [state] in
                     let episodes = await podcastDataService.getAllEpisodes(forPodcastId: state.id, cursor: state.nextCursor)
-                    return .episodesLoaded(episodes?.episodes ?? [], nextCursor: episodes?.nextCursor)
+                    return .episodesLoaded(
+                        episodes?.episodes ?? [],
+                        nextCursor: episodes?.nextCursor,
+                        removingCached: false
+                    )
                 }
             }
         }
