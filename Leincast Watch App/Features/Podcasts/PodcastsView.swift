@@ -6,8 +6,6 @@ import SDWebImageSwiftUI
 
 struct Podcasts: ReducerProtocol {
     struct State: Equatable {
-        var podcasts: [Podcast] = []
-
         enum Route: Equatable {
             case podcastDetails(PodcastDetails.State)
             case addPodcast(AddPodcastFeature.State)
@@ -52,7 +50,6 @@ struct Podcasts: ReducerProtocol {
                 }
 
             case let .setPodcasts(podcasts):
-                state.podcasts = podcasts
                 state.podcastRows = .init(uniqueElements: podcasts.map {
                     PodcastRowFeature.State(id: $0.id, title: $0.title, imageURL: $0.imageURL)
                 })
@@ -81,8 +78,8 @@ struct Podcasts: ReducerProtocol {
                 }
 
             case let .podcastRow(id, .delegate(.selected)):
-                if let podcast = state.podcasts.first(where: { $0.id == id }) {
-                    state.route = .podcastDetails(.init(podcast: podcast))
+                if let podcast = state.podcastRows[id: id] {
+                    state.route = .podcastDetails(.init(id: podcast.id))
                 }
                 return .none
             }

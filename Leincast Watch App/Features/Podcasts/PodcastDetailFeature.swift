@@ -8,39 +8,23 @@ import SDWebImageSwiftUI
 struct PodcastDetails: ReducerProtocol {
     struct State: Equatable {
         let id: String
-        let contentURL: URL
         var hasAppeared = false
+        var isLoading = true
         var episodes: IdentifiedArrayOf<EpisodeRowFeature.State>
-        var _episodes: [Podcast.Episode]
+        var nextCursor: String?
 
-        init(podcast: Podcast) {
-            id = podcast.id
-            contentURL = podcast.url
-            _episodes = podcast.episodes
-            episodes = .init(
-                uniqueElements: podcast.episodes.map {
-                    EpisodeRowFeature.State(
-                        id: $0.id,
-                        title: $0.title,
-                        imageURL: $0.imageURL,
-                        activeState: .unselected
-                    )
-            })
-        }
-
-        static func == (lhs: State, rhs: State) -> Bool {
-            lhs.id == rhs.id &&
-            lhs.contentURL == rhs.contentURL &&
-            lhs.hasAppeared == rhs.hasAppeared &&
-            lhs.episodes == rhs.episodes
+        init(id: String) {
+            self.id = id
+            self.episodes = []
         }
     }
 
     enum Action: Equatable {
         case onAppear
-        case podcastReloaded(Podcast)
+        case episodesLoaded([Podcast.Episode], nextCursor: String?)
 
         case episode(id: EpisodeRowFeature.State.ID, action: EpisodeRowFeature.Action)
+        case loadNextCursor
     }
 
     @Dependency(\.player) var player
@@ -52,17 +36,38 @@ struct PodcastDetails: ReducerProtocol {
             case .onAppear:
                 guard !state.hasAppeared else { return .none }
                 state.hasAppeared = true
-                return .task { [url = state.contentURL, id = state.id] in
-                    let podcast = try await podcastDataService.refresh(podcastId: id, url: url)
-                    return .podcastReloaded(podcast)
+                return
+                    .concatenate(
+                        .task { [state] in
+                            let episodes = await podcastDataService.getAllEpisodes(forPodcastId: state.id)
+                            return .episodesLoaded(episodes?.episodes ?? [], nextCursor: episodes?.nextCursor)
+                        },
+                        .task { [id = state.id] in
+                            _ = try await podcastDataService.refresh(podcastId: id)
+                            let episodes = await podcastDataService.getAllEpisodes(forPodcastId: id)
+                            return .episodesLoaded(episodes?.episodes ?? [], nextCursor: episodes?.nextCursor)
+                        }
+                    )
+
+            case let .episodesLoaded(episodes, nextCursor):
+                state.isLoading = false
+                if state.nextCursor == nil {
+                    state.episodes = .init(
+                        uniqueElements: episodes.map {
+                            .init(episode: $0, activeState: .unselected)
+                        }
+                    )
+                } else {
+                    episodes.forEach {
+                        state.episodes.updateOrAppend(.init(episode: $0, activeState: .unselected))
+                    }
                 }
 
-            case let .podcastReloaded(podcast):
-                state = .init(podcast: podcast)
+                state.nextCursor = nextCursor
                 return .none
 
             case .episode(id: let id, action: .delegate(.selected)):
-                guard let episode = state._episodes.first(where: { $0.id == id }) else {
+                guard let episode = state.episodes[id: id]?.episode else {
                     return .none
                 }
 
@@ -83,6 +88,12 @@ struct PodcastDetails: ReducerProtocol {
 
             case .episode:
                 return .none
+
+            case .loadNextCursor:
+                return .task { [state] in
+                    let episodes = await podcastDataService.getAllEpisodes(forPodcastId: state.id, cursor: state.nextCursor)
+                    return .episodesLoaded(episodes?.episodes ?? [], nextCursor: episodes?.nextCursor)
+                }
             }
         }
         .forEach(\.episodes, action: /Action.episode(id:action:)) {
@@ -102,11 +113,22 @@ struct PodcastDetailsView: View {
 
     var body: some View {
         List {
-            ForEachStore(self.store.scope(
-                state: \.episodes,
-                action: PodcastDetails.Action.episode(id:action:))
-            ) { store in
-                EpisodeRowView(store: store)
+            if viewStore.isLoading {
+                ProgressView().progressViewStyle(.circular)
+            } else {
+                ForEachStore(self.store.scope(
+                    state: \.episodes,
+                    action: PodcastDetails.Action.episode(id:action:))
+                ) { store in
+                    EpisodeRowView(store: store)
+                }
+
+                if viewStore.nextCursor != nil {
+                    ProgressView().progressViewStyle(.circular)
+                        .onAppear {
+                            viewStore.send(.loadNextCursor)
+                        }
+                }
             }
         }.task {
             await viewStore.send(.onAppear).finish()

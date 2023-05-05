@@ -4,6 +4,7 @@ import Foundation
 
 enum PodcastDataServiceErrors: Error {
     case podcastAlreadyExists
+    case idNotFound
 }
 
 struct PodcastPositions: Equatable, Codable {
@@ -120,15 +121,19 @@ actor PodcastDataService {
         try await file.delete()
     }
 
-    func refresh(podcastId: String, url: URL) async throws -> Podcast {
-        let podcast = try await PodcastDataService.synthesisePodcast(from: url)
+    func refresh(podcastId: String) async throws -> Podcast {
+        guard let podcast = await getAllPodcasts().first(where: { $0.id == podcastId }) else {
+            throw PodcastDataServiceErrors.idNotFound
+        }
+
+        let newPodcast = try await PodcastDataService.synthesisePodcast(from: podcast.url)
 
         try Task.checkCancellation()
 
         let file = try await rootDirectory.file(name: podcastId.fileNameSanitized())
-        try await file.save(podcast)
+        try await file.save(newPodcast)
 
-        return podcast
+        return newPodcast
     }
 
     // Public Functions
@@ -142,6 +147,49 @@ actor PodcastDataService {
         }
 
         return nilPodcasts.compactMap { $0 }
+    }
+
+    struct EpisodesResponse {
+        let nextCursor: String?
+        let episodes: [Podcast.Episode]
+    }
+    func getAllEpisodes(
+        forPodcastId: String,
+        cursor: String? = nil
+    ) async -> EpisodesResponse? {
+        let pageSize = 25
+        let podcasts = await getAllPodcasts()
+
+        if let podcast = podcasts
+            .first(where: { $0.id == forPodcastId }) {
+
+            if let cursor {
+                let episodes = Array(podcast
+                    .episodes
+                    .drop {
+                        return $0.id != cursor
+                    })
+                    .prefix(pageSize)
+
+                if episodes.count < pageSize {
+                    return .init(nextCursor: nil, episodes: Array(episodes))
+                } else {
+                    return .init(nextCursor: episodes.last?.id, episodes: Array(episodes))
+                }
+            } else {
+                let episodes = podcast
+                    .episodes
+                    .prefix(upTo: pageSize)
+
+                if episodes.count < pageSize {
+                    return .init(nextCursor: nil, episodes: Array(episodes))
+                } else {
+                    return .init(nextCursor: episodes.last?.id, episodes: Array(episodes))
+                }
+            }
+        } else {
+            return nil
+        }
     }
 
     func position(forEpisodeId: String) async -> Double? {
