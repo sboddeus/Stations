@@ -151,8 +151,7 @@ struct HomeView: View {
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
             NavigationStack {
-                ScrollView {
-                    VStack(spacing: 20) {
+                TabView {
                         HomeViewSegment(title: "Now Playing") {
                             NowPlayingView(
                                 store: store.scope(
@@ -160,9 +159,11 @@ struct HomeView: View {
                                     action: { Home.Action.nowPlaying($0) }
                                 )
                             ).environment(\.presentationContext, .embedded)
+                            Spacer()
+                                .frame(maxHeight: .infinity)
                         }
-                        
-                        HomeViewSegment(title: "Your Audio") {
+
+                        HomeViewScrollSegment(title: "Your Audio") {
                             Button {
                                 viewStore.send(.showStations)
                             } label: {
@@ -174,8 +175,8 @@ struct HomeView: View {
                                 Text("Podcasts")
                             }
                         }
-                        
-                        HomeViewSegment(title: "Recently Played") {
+
+                        HomeViewScrollSegment(title: "Recently Played") {
                             RecentlyPlayedView(
                                 store: store.scope(
                                     state: \.recentlyPlayed,
@@ -183,8 +184,8 @@ struct HomeView: View {
                                 )
                             )
                         }
-                        
-                        HomeViewSegment(title: "Help and Settings") {
+
+                        HomeViewScrollSegment(title: "Help and Settings") {
                             Button {
                                 viewStore.send(.showMenu)
                             } label: {
@@ -196,8 +197,8 @@ struct HomeView: View {
                                 Text("Help")
                             }
                         }
-                    }
                 }
+                .tabViewStyle(.verticalPage)
                 .navigationDestination(
                     unwrapping: viewStore.binding(
                         get: \.route,
@@ -303,6 +304,7 @@ struct HomeView: View {
 }
 
 
+
 struct HomeViewSegment<Content: View>: View {
     let title: String
     @ViewBuilder
@@ -315,6 +317,20 @@ struct HomeViewSegment<Content: View>: View {
                 .foregroundColor(LeincastColors.brand.color)
             Divider()
             content()
+        }
+        .padding()
+        .containerBackground(LeincastColors.brand.color.gradient, for: .tabView)
+    }
+}
+
+struct HomeViewScrollSegment<Content: View>: View {
+    let title: String
+    @ViewBuilder
+    let content: () -> Content
+
+    var body: some View {
+        ScrollView {
+            HomeViewSegment(title: title, content: content)
         }
     }
 }
