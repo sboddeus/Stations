@@ -1,6 +1,7 @@
 
 import SyndiKit
 import Foundation
+import WatchKit
 
 enum PodcastDataServiceErrors: Error {
     case podcastAlreadyExists

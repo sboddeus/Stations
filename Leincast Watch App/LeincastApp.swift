@@ -26,7 +26,35 @@ struct Leincast_Watch_AppApp: App {
                     initialState: .init(),
                     reducer: Home()
                 )
-            )
+            ).onAppear {
+                // Refresh again later
+                WKApplication.shared().schedulePodcastRefresh()
+            }
+        }.backgroundTask(
+            .appRefresh(BackgroundTaskIdentifiers.podcastRefresh.rawValue)
+        ) { _ in
+            for podcast in await podcastDataService.getAllPodcasts() {
+                _ = try? await podcastDataService.refresh(podcastId: podcast.id)
+            }
+
+            // Refresh again later
+            await WKApplication.shared().schedulePodcastRefresh()
+        }
+    }
+}
+
+extension WKApplication {
+    func schedulePodcastRefresh() {
+        let preferredDate = Date().addingTimeInterval(60*60*12)// 12 hours later
+
+        scheduleBackgroundRefresh(
+            withPreferredDate: preferredDate,
+            userInfo: BackgroundTaskIdentifiers.podcastRefresh.rawValue as NSSecureCoding & NSObjectProtocol
+        ) { error in
+            //TODO: Log error somewhere
+            guard error == nil else {
+                return
+            }
         }
     }
 }

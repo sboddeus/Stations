@@ -55,6 +55,7 @@
 		26C08E4929F37C9100226BE8 /* PodcastDetailFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C08E4829F37C9100226BE8 /* PodcastDetailFeature.swift */; };
 		26C08E4B29F37CB900226BE8 /* AddPodcastFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C08E4A29F37CB900226BE8 /* AddPodcastFeature.swift */; };
 		26C08E4D29F389D200226BE8 /* String+Filenames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C08E4C29F389D200226BE8 /* String+Filenames.swift */; };
+		26D4D9432AE3A82A0032BC6E /* BackgroundTaskIdentifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D4D9422AE3A82A0032BC6E /* BackgroundTaskIdentifiers.swift */; };
 		26EBFF0729F7E12C00D4DA90 /* PodcastRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EBFF0629F7E12C00D4DA90 /* PodcastRow.swift */; };
 		26F13367298DC17C00060890 /* ClipBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26F13366298DC17C00060890 /* ClipBoard.swift */; };
 		26F1336A298DC76100060890 /* ClipBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26F13369298DC76100060890 /* ClipBoardView.swift */; };
@@ -127,6 +128,7 @@
 		26C08E4829F37C9100226BE8 /* PodcastDetailFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastDetailFeature.swift; sourceTree = "<group>"; };
 		26C08E4A29F37CB900226BE8 /* AddPodcastFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPodcastFeature.swift; sourceTree = "<group>"; };
 		26C08E4C29F389D200226BE8 /* String+Filenames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Filenames.swift"; sourceTree = "<group>"; };
+		26D4D9422AE3A82A0032BC6E /* BackgroundTaskIdentifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTaskIdentifiers.swift; sourceTree = "<group>"; };
 		26EBFF0629F7E12C00D4DA90 /* PodcastRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastRow.swift; sourceTree = "<group>"; };
 		26F13366298DC17C00060890 /* ClipBoard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipBoard.swift; sourceTree = "<group>"; };
 		26F13369298DC76100060890 /* ClipBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipBoardView.swift; sourceTree = "<group>"; };
@@ -173,6 +175,7 @@
 			children = (
 				2632CC31298480BB0041BB2D /* Leincast-Watch-App-Info.plist */,
 				2632CB9C29847AFD0041BB2D /* LeincastApp.swift */,
+				26D4D9412AE3A8110032BC6E /* Constants */,
 				2632CC082984805A0041BB2D /* Dependencies */,
 				2632CBEC2984805A0041BB2D /* Design */,
 				2632CC032984805A0041BB2D /* Extensions */,
@@ -378,6 +381,14 @@
 			path = PoscastDataService;
 			sourceTree = "<group>";
 		};
+		26D4D9412AE3A8110032BC6E /* Constants */ = {
+			isa = PBXGroup;
+			children = (
+				26D4D9422AE3A82A0032BC6E /* BackgroundTaskIdentifiers.swift */,
+			);
+			path = Constants;
+			sourceTree = "<group>";
+		};
 		26F13364298DB43700060890 /* Now Playing */ = {
 			isa = PBXGroup;
 			children = (
@@ -518,6 +529,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				26D4D9432AE3A82A0032BC6E /* BackgroundTaskIdentifiers.swift in Sources */,
 				26575E7C29FE84DD0044A8E1 /* PlayStatisticsService.swift in Sources */,
 				2632CC2C2984805A0041BB2D /* File.swift in Sources */,
 				26C08E4D29F389D200226BE8 /* String+Filenames.swift in Sources */,
@@ -697,7 +709,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 32;
+				CURRENT_PROJECT_VERSION = 35;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = QCHSD48ZLT;
 				ENABLE_PREVIEWS = YES;
@@ -710,7 +722,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.6;
+				MARKETING_VERSION = 2.7;
 				PRODUCT_BUNDLE_IDENTIFIER = au.com.syeboddeus.leincast.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -728,7 +740,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 32;
+				CURRENT_PROJECT_VERSION = 35;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = QCHSD48ZLT;
 				ENABLE_PREVIEWS = YES;
@@ -741,7 +753,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.6;
+				MARKETING_VERSION = 2.7;
 				PRODUCT_BUNDLE_IDENTIFIER = au.com.syeboddeus.leincast.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -759,10 +771,10 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 32;
+				CURRENT_PROJECT_VERSION = 35;
 				DEVELOPMENT_TEAM = QCHSD48ZLT;
 				INFOPLIST_KEY_CFBundleDisplayName = Leincast;
-				MARKETING_VERSION = 2.6;
+				MARKETING_VERSION = 2.7;
 				PRODUCT_BUNDLE_IDENTIFIER = au.com.syeboddeus.leincast;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -775,10 +787,10 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 32;
+				CURRENT_PROJECT_VERSION = 35;
 				DEVELOPMENT_TEAM = QCHSD48ZLT;
 				INFOPLIST_KEY_CFBundleDisplayName = Leincast;
-				MARKETING_VERSION = 2.6;
+				MARKETING_VERSION = 2.7;
 				PRODUCT_BUNDLE_IDENTIFIER = au.com.syeboddeus.leincast;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;

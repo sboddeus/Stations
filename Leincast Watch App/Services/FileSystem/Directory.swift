@@ -110,6 +110,11 @@ public extension Directory {
     func duplicate() async throws -> Directory {
         return try await fileSystem.duplicate(directory: self)
     }
+
+    /// Returns the allocated file size for the directory
+    func size() async throws -> UInt64 {
+        return try await fileSystem.sizeOf(directory: self)
+    }
 }
 
 extension Directory: Equatable {

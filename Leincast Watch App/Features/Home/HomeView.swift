@@ -149,126 +149,124 @@ struct HomeView: View {
     }
     
     var body: some View {
-        ZStack(alignment: .bottomTrailing) {
-            NavigationStack {
-                TabView {
-                        HomeViewSegment(title: "Now Playing") {
-                            NowPlayingView(
-                                store: store.scope(
-                                    state: \.nowPlaying,
-                                    action: { Home.Action.nowPlaying($0) }
-                                )
-                            ).environment(\.presentationContext, .embedded)
-                            Spacer()
-                                .frame(maxHeight: .infinity)
-                        }
-
-                        HomeViewScrollSegment(title: "Your Audio") {
-                            Button {
-                                viewStore.send(.showStations)
-                            } label: {
-                                Text("Live Streams")
-                            }
-                            Button {
-                                viewStore.send(.showPodcasts)
-                            } label: {
-                                Text("Podcasts")
-                            }
-                        }
-
-                        HomeViewScrollSegment(title: "Recently Played") {
-                            RecentlyPlayedView(
-                                store: store.scope(
-                                    state: \.recentlyPlayed,
-                                    action: { Home.Action.recentlyPlayed($0) }
-                                )
-                            )
-                        }
-
-                        HomeViewScrollSegment(title: "Help and Settings") {
-                            Button {
-                                viewStore.send(.showMenu)
-                            } label: {
-                                Text("Settings")
-                            }
-                            Button {
-                                viewStore.send(.showHelp)
-                            } label: {
-                                Text("Help")
-                            }
-                        }
-                }
-                .tabViewStyle(.verticalPage)
-                .navigationDestination(
-                    unwrapping: viewStore.binding(
-                        get: \.route,
-                        send: Home.Action.setRoute
-                    ),
-                    case: /Home.State.Route.stations,
-                    destination: { $value in
-                        let store = store.scope(
-                            state: { $0.route.flatMap(/Home.State.Route.stations) ?? value },
-                            action: { Home.Action.routeAction(.stations($0)) }
+        NavigationStack {
+            TabView {
+                HomeViewSegment(title: "Now Playing") {
+                    NowPlayingView(
+                        store: store.scope(
+                            state: \.nowPlaying,
+                            action: { Home.Action.nowPlaying($0) }
                         )
-                        StreamsView(store: store)
-                    }
-                )
-                .navigationDestination(
-                    unwrapping: viewStore.binding(
-                        get: \.route,
-                        send: Home.Action.setRoute
-                    ),
-                    case: /Home.State.Route.podcasts,
-                    destination: { $value in
-                        let store = store.scope(
-                            state: { $0.route.flatMap(/Home.State.Route.podcasts) ?? value },
-                            action: { Home.Action.routeAction(.podcasts($0)) }
-                        )
-                        PodcastsView(store: store)
-                    }
-                )
-                .navigationDestination(
-                    unwrapping: viewStore.binding(
-                        get: \.route,
-                        send: Home.Action.setRoute
-                    ),
-                    case: /Home.State.Route.menu
-                ) { $value in
-                    let store = store.scope(
-                        state: { $0.route.flatMap(/Home.State.Route.menu) ?? value },
-                        action: { Home.Action.routeAction(.menu($0)) }
-                    )
-                    MenuView(store: store)
+                    ).environment(\.presentationContext, .embedded)
+                    Spacer()
+                        .frame(maxHeight: .infinity)
                 }
-                .navigationDestination(
-                    unwrapping: viewStore.binding(
-                        get: \.route,
-                        send: Home.Action.setRoute
-                    ),
-                    case: /Home.State.Route.help
-                ) { $value in
-                    let store = store.scope(
-                        state: { $0.route.flatMap(/Home.State.Route.help) ?? value },
-                        action: { Home.Action.routeAction(.help($0)) }
+
+                HomeViewScrollSegment(title: "Your Audio") {
+                    Button {
+                        viewStore.send(.showStations)
+                    } label: {
+                        Text("Live Streams")
+                    }
+                    Button {
+                        viewStore.send(.showPodcasts)
+                    } label: {
+                        Text("Podcasts")
+                    }
+                }
+
+                HomeViewScrollSegment(title: "Recently Played") {
+                    RecentlyPlayedView(
+                        store: store.scope(
+                            state: \.recentlyPlayed,
+                            action: { Home.Action.recentlyPlayed($0) }
+                        )
                     )
-                    HelpView(store: store)
+                }
+
+                HomeViewScrollSegment(title: "Help and Settings") {
+                    Button {
+                        viewStore.send(.showMenu)
+                    } label: {
+                        Text("Settings")
+                    }
+                    Button {
+                        viewStore.send(.showHelp)
+                    } label: {
+                        Text("Help")
+                    }
                 }
             }
-            switch viewStore.route {
-            case .stations, .help, .podcasts:
-                Button {
-                    viewStore.send(.showNowPlaying(true))
-                } label: {
-                    Image(systemName: "waveform.path")
-                        .foregroundColor(LeincastColors.brand.color)
+            .tabViewStyle(.verticalPage)
+            .navigationDestination(
+                unwrapping: viewStore.binding(
+                    get: \.route,
+                    send: Home.Action.setRoute
+                ),
+                case: /Home.State.Route.stations,
+                destination: { $value in
+                    let store = store.scope(
+                        state: { $0.route.flatMap(/Home.State.Route.stations) ?? value },
+                        action: { Home.Action.routeAction(.stations($0)) }
+                    )
+
+                    HomeDestination {
+                        viewStore.send(.showNowPlaying(true))
+                    } content: {
+                        StreamsView(store: store)
+                    }
                 }
-                .backgroundStyle(.indigo)
-                .frame(width: 30, height: 30)
-                .clipShape(Circle())
-                .padding(.trailing, 5)
-                .offset(y: 10)
-            default:
-                EmptyView()
+            )
+            .navigationDestination(
+                unwrapping: viewStore.binding(
+                    get: \.route,
+                    send: Home.Action.setRoute
+                ),
+                case: /Home.State.Route.podcasts,
+                destination: { $value in
+                    let store = store.scope(
+                        state: { $0.route.flatMap(/Home.State.Route.podcasts) ?? value },
+                        action: { Home.Action.routeAction(.podcasts($0)) }
+                    )
+
+                    HomeDestination {
+                        viewStore.send(.showNowPlaying(true))
+                    } content: {
+                        PodcastsView(store: store)
+                    }
+                }
+            )
+            .navigationDestination(
+                unwrapping: viewStore.binding(
+                    get: \.route,
+                    send: Home.Action.setRoute
+                ),
+                case: /Home.State.Route.menu
+            ) { $value in
+                let store = store.scope(
+                    state: { $0.route.flatMap(/Home.State.Route.menu) ?? value },
+                    action: { Home.Action.routeAction(.menu($0)) }
+                )
+                
+                MenuView(store: store)
+            }
+            .navigationDestination(
+                unwrapping: viewStore.binding(
+                    get: \.route,
+                    send: Home.Action.setRoute
+                ),
+                case: /Home.State.Route.help
+            ) { $value in
+                let store = store.scope(
+                    state: { $0.route.flatMap(/Home.State.Route.help) ?? value },
+                    action: { Home.Action.routeAction(.help($0)) }
+                )
+
+                HomeDestination {
+                    viewStore.send(.showNowPlaying(true))
+                } content: {
+                    HelpView(store: store)
+                }
             }
         }
         .task {
@@ -304,6 +302,34 @@ struct HomeView: View {
 }
 
 
+
+// Helpers
+
+struct HomeDestination<Content: View>: View {
+    let action: () -> ()
+
+    @ViewBuilder
+    let content: () -> Content
+
+    var body: some View {
+        content()
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        action()
+                    } label: {
+                        Image(systemName: "waveform.path")
+                            .foregroundColor(LeincastColors.brand.color)
+                    }
+                    .backgroundStyle(.indigo)
+                    .frame(width: 30, height: 30)
+                    .clipShape(Circle())
+                    .padding(.trailing, 5)
+                    .offset(y: 10)
+                }
+            }
+    }
+}
 
 struct HomeViewSegment<Content: View>: View {
     let title: String

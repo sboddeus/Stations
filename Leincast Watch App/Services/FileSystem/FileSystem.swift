@@ -293,6 +293,11 @@ extension FileSystem {
             return Directory(baseDirectory: directory.baseDirectory, path: intoURL, fileSystem: directory.fileSystem)
     }
 
+    nonisolated func sizeOf(directory: Directory) async throws -> UInt64 {
+        let url = try await directory.url(fileManager: fileManager)
+        return try fileManager.allocatedSizeOfDirectory(at: url)
+    }
+
     // Returns BOOL indicating whether the file exists
     nonisolated func exists(_ file: File) async -> Bool {
         do {
