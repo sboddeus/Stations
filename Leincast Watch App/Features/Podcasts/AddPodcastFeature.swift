@@ -5,6 +5,7 @@ import ComposableArchitecture
 struct AddPodcastFeature: Reducer {
     struct State: Equatable {
         var url: String = ""
+        var isLoadingPodcast = false
         @PresentationState var alert: AlertState<Never>?
     }
 
@@ -40,9 +41,11 @@ struct AddPodcastFeature: Reducer {
                 return .none
 
             case .podcastAddSuccess:
+                state.isLoadingPodcast = false
                 return .send(.delegate(.addedPodcast))
 
             case .podcastAddFailure:
+                state.isLoadingPodcast = false
                 state.alert = .init(
                     title: .init("Podcast Issue"),
                     message: .init("Ensure this podcast has not been added before and that the URL points to a valid RSS feed."),
@@ -69,6 +72,7 @@ struct AddPodcastFeature: Reducer {
                     }
                 }
 
+                state.isLoadingPodcast = true
                 return .run { send in
                     do {
                         _ = try await podcastDataService.addPodcast(at: contentURL)
@@ -109,11 +113,15 @@ struct AddPodcast: View {
 
             Spacer()
 
-            Button {
-                viewStore.send(.addPodcast)
-            } label: {
-                Text("Create")
-                    .foregroundColor(.indigo)
+            if viewStore.isLoadingPodcast {
+                ProgressView()
+            } else {
+                Button {
+                    viewStore.send(.addPodcast)
+                } label: {
+                    Text("Create")
+                        .foregroundColor(.indigo)
+                }
             }
         }
         .alert(
