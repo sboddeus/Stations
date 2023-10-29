@@ -5,7 +5,7 @@ import SwiftUINavigation
 import AVFoundation
 import WatchKit
 
-struct Home: ReducerProtocol {
+struct Home: Reducer {
     struct State: Equatable {
         enum Route: Equatable {
             case menu(Menu.State)
@@ -20,7 +20,7 @@ struct Home: ReducerProtocol {
         
         var showFullScreenNowPlaying = false
         
-        var alert: AlertState<Action>?
+        @PresentationState var alert: AlertState<Never>?
     }
     
     enum Action: Equatable {
@@ -56,7 +56,7 @@ struct Home: ReducerProtocol {
     @Dependency(\.player) var player
     @Dependency(\.streamDataService) var streamDataService
     
-    var body: some ReducerProtocol<State, Action> {
+    var body: some Reducer<State, Action> {
         Scope(state: \.nowPlaying, action: /Action.nowPlaying) {
             NowPlaying()
         }
@@ -74,9 +74,9 @@ struct Home: ReducerProtocol {
                     }
                 }
             case .showStations:
-                return .task {
+                return .run { send in
                     let rootDir = await streamDataService.rootDirectory
-                    return .setRoute(.stations(Streams.State(rootDirectory: rootDir)))
+                    await send(.setRoute(.stations(Streams.State(rootDirectory: rootDir))))
                 }
 
             case .showPodcasts:
@@ -112,8 +112,7 @@ struct Home: ReducerProtocol {
                     title: .init("Could not load stream"),
                     message: .init("Ensure the stream url is correct and is a HLS stream. (They ususally end in .m3u8). See help for more details"),
                     dismissButton: .default(
-                        .init("Ok"),
-                        action: .send(.alertDismissed)
+                        .init("Ok")
                     )
                 )
                 return .none
@@ -273,9 +272,7 @@ struct HomeView: View {
             await viewStore.send(.playerBinding).finish()
         }
         .alert(
-            self.store.scope(
-                state: \.alert),
-            dismiss: Home.Action.alertDismissed
+            store: self.store.scope(state: \.$alert, action: { _ in .alertDismissed })
         )
         .fullScreenCover(isPresented: viewStore.binding(
             get: \.showFullScreenNowPlaying,

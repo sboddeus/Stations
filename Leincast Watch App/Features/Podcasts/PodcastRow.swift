@@ -4,7 +4,7 @@ import SwiftUI
 import ComposableArchitecture
 import SDWebImageSwiftUI
 
-struct PodcastRowFeature: ReducerProtocol {
+struct PodcastRowFeature: Reducer {
     struct State: Equatable, Identifiable {
         let id: String
         let title: String
@@ -20,7 +20,7 @@ struct PodcastRowFeature: ReducerProtocol {
         case delegate(Delegate)
     }
 
-    var body: some ReducerProtocol<State, Action> {
+    var body: some Reducer<State, Action> {
         Reduce { state, action in
             return .none
         }

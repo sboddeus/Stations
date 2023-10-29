@@ -4,7 +4,7 @@ import ComposableArchitecture
 import SDWebImageSwiftUI
 import AVFAudio
 
-struct NowPlaying: ReducerProtocol {
+struct NowPlaying: Reducer {
     struct State: Equatable {
         enum Status: Equatable {
             case isPlaying(MediaItem)
@@ -41,7 +41,7 @@ struct NowPlaying: ReducerProtocol {
     
     static let volumeCaptionUserDefaultsKey = "volume.caption"
     
-    var body: some ReducerProtocol<State, Action> {
+    var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {
             case let .updatePlayPosition(position):
@@ -91,14 +91,14 @@ struct NowPlaying: ReducerProtocol {
                 return .none
                 
             case .togglePlay:
-                return .fireAndForget {
+                return .run { _ in
                     player.togglePlay()
                 }
                 
             case .toggleVolumeControl:
                 state.showVolumeCaption = false
                 state.isVolumeFocused.toggle()
-                return .fireAndForget {
+                return .run { _ in
                     userDefaults.set(false, forKey: Self.volumeCaptionUserDefaultsKey)
                 }
                 
@@ -107,12 +107,12 @@ struct NowPlaying: ReducerProtocol {
                 return .none
 
             case .skipBackward:
-                return .fireAndForget {
+                return .run { _ in
                     player.seekBackward()
                 }
 
             case .skipForward:
-                return .fireAndForget {
+                return .run { _ in
                     player.seekForward()
                 }
             }

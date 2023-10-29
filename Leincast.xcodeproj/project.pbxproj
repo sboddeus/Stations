@@ -709,7 +709,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 35;
+				CURRENT_PROJECT_VERSION = 36;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = QCHSD48ZLT;
 				ENABLE_PREVIEWS = YES;
@@ -740,7 +740,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 35;
+				CURRENT_PROJECT_VERSION = 36;
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = QCHSD48ZLT;
 				ENABLE_PREVIEWS = YES;
@@ -771,7 +771,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 35;
+				CURRENT_PROJECT_VERSION = 36;
 				DEVELOPMENT_TEAM = QCHSD48ZLT;
 				INFOPLIST_KEY_CFBundleDisplayName = Leincast;
 				MARKETING_VERSION = 2.7;
@@ -787,7 +787,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 35;
+				CURRENT_PROJECT_VERSION = 36;
 				DEVELOPMENT_TEAM = QCHSD48ZLT;
 				INFOPLIST_KEY_CFBundleDisplayName = Leincast;
 				MARKETING_VERSION = 2.7;
@@ -837,7 +837,7 @@
 			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.49.2;
+				minimumVersion = 1.0.0;
 			};
 		};
 		2632CBB229847CB70041BB2D /* XCRemoteSwiftPackageReference "swiftui-navigation" */ = {
@@ -845,7 +845,7 @@
 			repositoryURL = "https://github.com/pointfreeco/swiftui-navigation";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.6.0;
+				minimumVersion = 1.0.0;
 			};
 		};
 		2632CBB529847CDD0041BB2D /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {

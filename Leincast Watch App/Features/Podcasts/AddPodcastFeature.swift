@@ -2,10 +2,10 @@
 import SwiftUI
 import ComposableArchitecture
 
-struct AddPodcastFeature: ReducerProtocol {
+struct AddPodcastFeature: Reducer {
     struct State: Equatable {
         var url: String = ""
-        var alert: AlertState<Action>?
+        @PresentationState var alert: AlertState<Never>?
     }
 
     enum Action: Equatable {
@@ -16,6 +16,7 @@ struct AddPodcastFeature: ReducerProtocol {
         case podcastAddSuccess
         case podcastAddFailure
         case showInvalidContentURLAlert
+
         case alertDismissed
 
         // Delegate
@@ -27,7 +28,7 @@ struct AddPodcastFeature: ReducerProtocol {
 
     @Dependency(\.podcastDataService) var podcastDataService
 
-    var body: some ReducerProtocol<State, Action> {
+    var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {
             case .alertDismissed:
@@ -46,8 +47,7 @@ struct AddPodcastFeature: ReducerProtocol {
                     title: .init("Podcast Issue"),
                     message: .init("Ensure this podcast has not been added before and that the URL points to a valid RSS feed."),
                     dismissButton: .default(
-                        .init("Ok"),
-                        action: .send(.alertDismissed)
+                        .init("Ok")
                     )
                 )
                 return .none
@@ -57,26 +57,25 @@ struct AddPodcastFeature: ReducerProtocol {
                     title: .init("Invalid podcast URL"),
                     message: .init("Ensure the url points to an RSS feed for a podcast"),
                     dismissButton: .default(
-                        .init("Ok"),
-                        action: .send(.alertDismissed)
+                        .init("Ok")
                     )
                 )
                 return .none
 
             case .addPodcast:
                 guard !state.url.isEmpty, let contentURL = URL(string: state.url) else {
-                    return .task {
-                        return .showInvalidContentURLAlert
+                    return .run { send in
+                        await send(.showInvalidContentURLAlert)
                     }
                 }
 
-                return .task {
+                return .run { send in
                     do {
                         _ = try await podcastDataService.addPodcast(at: contentURL)
 
-                        return .podcastAddSuccess
+                        await send(.podcastAddSuccess)
                     } catch {
-                        return .podcastAddFailure
+                        await send(.podcastAddFailure)
                     }
                 }
 
@@ -116,11 +115,9 @@ struct AddPodcast: View {
                 Text("Create")
                     .foregroundColor(.indigo)
             }
-        }.alert(
-            self.store.scope(
-                state: \.alert
-            ),
-            dismiss: AddPodcastFeature.Action.alertDismissed
+        }
+        .alert(
+            store: self.store.scope(state: \.$alert, action: { _ in .alertDismissed })
         )
     }
 }

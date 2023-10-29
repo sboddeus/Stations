@@ -4,7 +4,7 @@ import SwiftUI
 import ComposableArchitecture
 import SDWebImageSwiftUI
 
-struct Podcasts: ReducerProtocol {
+struct Podcasts: Reducer {
     struct State: Equatable {
         enum Route: Equatable {
             case podcastDetails(PodcastDetails.State)
@@ -39,14 +39,14 @@ struct Podcasts: ReducerProtocol {
 
     @Dependency(\.podcastDataService) var podcastDataService
 
-    var body: some ReducerProtocol<State, Action> {
+    var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {
             case .onAppear:
-                return .task {
+                return .run { send in
                     let podcasts = await podcastDataService.getAllPodcasts()
 
-                    return .setPodcasts(podcasts)
+                    await send(.setPodcasts(podcasts))
                 }
 
             case let .setPodcasts(podcasts):
@@ -72,9 +72,9 @@ struct Podcasts: ReducerProtocol {
 
 
             case let .podcastRow(id, .delegate(.deleted)):
-                return .task {
+                return .run { send in
                     try await  podcastDataService.delete(podcastId: id)
-                    return .onAppear
+                    await send(.onAppear)
                 }
 
             case let .podcastRow(id, .delegate(.selected)):

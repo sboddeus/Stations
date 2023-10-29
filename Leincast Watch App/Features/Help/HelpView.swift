@@ -2,7 +2,7 @@
 import SwiftUI
 import ComposableArchitecture
 
-struct Help: ReducerProtocol {
+struct Help: Reducer {
     struct State: Equatable {
         
     }
@@ -11,7 +11,7 @@ struct Help: ReducerProtocol {
         
     }
     
-    var body: some ReducerProtocol<State, Action> {
+    var body: some Reducer<State, Action> {
         Reduce { state, action in
             return .none
         }

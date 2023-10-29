@@ -3,7 +3,7 @@ import Foundation
 import SwiftUI
 import ComposableArchitecture
 
-struct DirectoryRow: ReducerProtocol {
+struct DirectoryRow: Reducer {
     struct State: Equatable, Identifiable {
         let directory: Directory
         
@@ -23,7 +23,7 @@ struct DirectoryRow: ReducerProtocol {
         case delegate(Delegate)
     }
     
-    var body: some ReducerProtocol<State, Action> {
+    var body: some Reducer<State, Action> {
         Reduce { state, action in
             return .none
         }

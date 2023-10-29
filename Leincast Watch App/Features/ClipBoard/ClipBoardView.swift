@@ -2,7 +2,7 @@
 import SwiftUI
 import ComposableArchitecture
 
-struct ClipBoardReducer: ReducerProtocol {
+struct ClipBoardReducer: Reducer {
     struct State: Equatable {
         var content: IdentifiedArrayOf<ClipBoard.ContentType> = []
     }
@@ -21,13 +21,13 @@ struct ClipBoardReducer: ReducerProtocol {
 
     @Dependency(\.clipBoard) var clipBoard
 
-    var body: some ReducerProtocol<State, Action> {
+    var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {
             case .onAppear:
-                return .task {
+                return .run { send in
                     let content = await clipBoard.content()
-                    return .setContent(content)
+                    await send(.setContent(content))
                 }
             case let .setContent(content):
                 state.content = IdentifiedArrayOf(uniqueElements: content)

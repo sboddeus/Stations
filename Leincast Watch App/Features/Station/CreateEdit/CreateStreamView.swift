@@ -2,15 +2,15 @@
 import SwiftUI
 import ComposableArchitecture
 
-struct CreateStream: ReducerProtocol {
+struct CreateStream: Reducer {
     struct State: Equatable {
         let containingDirectory: Directory
         var title: String = ""
         var url: String = ""
         var description: String = ""
         var imageURL: String = ""
-        var alert: AlertState<Action>?
-        
+        @PresentationState var alert: AlertState<Never>?
+
         enum Mode: Equatable {
             case edit(Stream)
             case create
@@ -57,7 +57,7 @@ struct CreateStream: ReducerProtocol {
         case delegate(Delegate)
     }
         
-    var body: some ReducerProtocol<State, Action> {
+    var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {
             case let .setTitle(title):
@@ -81,9 +81,7 @@ struct CreateStream: ReducerProtocol {
                     title: .init("Invalid Image URL"),
                     message: .init("Ensure the image url is a valid URL and is a file of type PNG or JPEG"),
                     dismissButton: .default(
-                        .init("Ok"),
-                        action: .send(.alertDismissed)
-                    )
+                        .init("Ok")                    )
                 )
                 return .none
                 
@@ -92,9 +90,7 @@ struct CreateStream: ReducerProtocol {
                     title: .init("Invalid stream URL"),
                     message: .init("Ensure the stream url is a valid URL and is a HLS stream. Which usually ends in .m3u8"),
                     dismissButton: .default(
-                        .init("Ok"),
-                        action: .send(.alertDismissed)
-                    )
+                        .init("Ok")                    )
                 )
                 return .none
                 
@@ -103,9 +99,7 @@ struct CreateStream: ReducerProtocol {
                     title: .init("Empty Title"),
                     message: .init("Ensure your stream has a name 😬"),
                     dismissButton: .default(
-                        .init("Ok"),
-                        action: .send(.alertDismissed)
-                    )
+                        .init("Ok")                    )
                 )
                 return .none
                 
@@ -115,26 +109,26 @@ struct CreateStream: ReducerProtocol {
                 
             case .addStation:
                 guard !state.title.isEmpty else {
-                    return .task {
-                        return .showEmptyTitleAlert
+                    return .run { send in
+                        await send(.showEmptyTitleAlert)
                     }
                 }
                 
                 guard !state.url.isEmpty, let contentURL = URL(string: state.url) else {
-                    return .task {
-                        return .showInvalidContentURLAlert
+                    return .run { send in
+                        await send(.showInvalidContentURLAlert)
                     }
                 }
                 
                 if !state.imageURL.isEmpty {
                     guard URL(string: state.imageURL) != nil else {
-                        return .task {
-                            return .showInvalidImageURLAlert
+                        return .run { send in
+                            await send(.showInvalidImageURLAlert)
                         }
                     }
                 }
                 
-                return .task { [state] in
+                return .run { [state] send in
                     let id: String
                     switch state.mode {
                     case let .edit(stream):
@@ -156,7 +150,7 @@ struct CreateStream: ReducerProtocol {
                     )
                     try await file.save(station)
                     
-                    return .delegate(.stationAdded)
+                    await send(.delegate(.stationAdded))
                 }
                 
             case .delegate:
@@ -232,11 +226,9 @@ struct CreateStreamView: View {
                     
                 }
             }
-        }.alert(
-            self.store.scope(
-                state: \.alert
-            ),
-            dismiss: CreateStream.Action.alertDismissed
+        }
+        .alert(
+            store: self.store.scope(state: \.$alert, action: { _ in .alertDismissed })
         )
     }
 }

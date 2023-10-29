@@ -5,7 +5,7 @@ import AVFAudio
 import SwiftUINavigation
 import SDWebImageSwiftUI
 
-struct Streams: ReducerProtocol {
+struct Streams: Reducer {
     struct State: Equatable {
         var rootDirectory: Directory
         
@@ -27,7 +27,7 @@ struct Streams: ReducerProtocol {
         }
         var route: Route?
 
-        var alert: AlertState<Action>?
+        @PresentationState var alert: AlertState<Never>?
     }
     
     indirect enum Action: Equatable {
@@ -64,7 +64,7 @@ struct Streams: ReducerProtocol {
     @Dependency(\.player) var player
     @Dependency(\.clipBoard) var clipBoard
     
-    private var core: some ReducerProtocol<State, Action> {
+    private var core: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {
             case .alertDismissed:
@@ -85,8 +85,7 @@ struct Streams: ReducerProtocol {
                     title: .init("Could not paste item"),
                     message: .init("Ensure the folder has a unique name and that device storage is not full."),
                     dismissButton: .default(
-                        .init("Ok"),
-                        action: .send(.alertDismissed)
+                        .init("Ok")
                     )
                 )
                 return .none
@@ -97,15 +96,14 @@ struct Streams: ReducerProtocol {
                     title: .init("Could not copy item"),
                     message: .init(verbatim: message),
                     dismissButton: .default(
-                        .init("Ok"),
-                        action: .send(.alertDismissed)
+                        .init("Ok")
                     )
                 )
                 return .none
              
                 // MARK: - Station actions
             case let .station(id, action: .delegate(.delete)):
-                return .task { [state] in
+                return .run { [state] send in
                     // Stop playing the station if it is playing
                     if player.currentItem?.id == id {
                         player.stop()
@@ -114,7 +112,7 @@ struct Streams: ReducerProtocol {
                     // TODO: Deal with error
                     try await state.rootDirectory.file(name: id).delete()
                     
-                    return .onAppear
+                    await send(.onAppear)
                 }
                 
             case let .station(id, action: .delegate(.selected)):
@@ -150,16 +148,16 @@ struct Streams: ReducerProtocol {
                 
             case let .station(id, action: .delegate(.copy)):
                 if let station = state.stations[id: id]?.station {
-                    return .task {
+                    return .run { send in
                         await clipBoard.add(stream: station)
-                        return .station(id: id, action: .delegate(.delete))
+                        await send(.station(id: id, action: .delegate(.delete)))
                     }
                 }
                 return .none
 
             case let .station(id, action: .delegate(.duplicate)):
                 if let station = state.stations[id: id]?.station {
-                    return .task { [state] in
+                    return .run { [state] send in
                         let newStream = Stream(
                             id: UUID().uuidString,
                             title: station.title + " (copy)",
@@ -173,7 +171,7 @@ struct Streams: ReducerProtocol {
                         )
                         try await file.save(newStream)
 
-                        return .onAppear
+                        await send(.onAppear)
                     }
                 }
                 return .none
@@ -182,7 +180,7 @@ struct Streams: ReducerProtocol {
                 return .none
                 
             case .onAppear:
-                struct OnAppearID {}
+                struct OnAppearID: Hashable {}
                 return .run { [directory = state.rootDirectory] send in
                     let stations = await directory.getAllStations().sorted(by: { $0.title < $1.title })
                     
@@ -191,8 +189,8 @@ struct Streams: ReducerProtocol {
                     let directories = (try? await directory.retrieveAllSubDirectories().sorted(by: { $0.name < $1.name })) ?? []
                     
                     await send(.loadedSubDirectories(directories))
-                }.cancellable(id: OnAppearID.self, cancelInFlight: true)
-                
+                }.cancellable(id: OnAppearID(), cancelInFlight: true)
+
             case let .loadedStations(stations):
                 state.stations = .init(
                     uniqueElements: stations.map { .init(
@@ -285,20 +283,20 @@ struct Streams: ReducerProtocol {
                 
             case .routeAction(.createStation(.delegate(.stationAdded))):
                 state.route = nil
-                return .task { .onAppear }
-                
+                return .send(.onAppear)
+
             case .routeAction(.editDirectory(.delegate(.directoryEdited))):
                 state.route = nil
-                return .task { .onAppear }
+                return .send(.onAppear)
 
             case .routeAction(.createDirectory(.delegate(.directoryAdded))):
                 state.route = nil
-                return .task { .onAppear }
+                return .send(.onAppear)
 
             case let .routeAction(.subDirectory(.delegate(.selected(station)))):
                 // Propogate selected station
-                return .task { .delegate(.selected(station)) }
-                
+                return .send(.delegate(.selected(station)))
+
             case .routeAction:
                 return .none
                 
@@ -315,13 +313,13 @@ struct Streams: ReducerProtocol {
                 return .none
  
             case let .directory(id, .delegate(.delete)):
-                return .task { [state] in
+                return .run { [state] send in
                     // TODO: Deal with error
                     // TODO: Recursively check folders if they contain the station currently playing,
                     // If yes, stop playing first. (This doesn't have to be recursion. Could be done based on the file path)
                     try await state.directories[id: id]?.directory.remove()
                     
-                    return .onAppear
+                    await send(.onAppear)
                 }
                 
             case let .directory(id, .delegate(.copy)):
@@ -329,15 +327,15 @@ struct Streams: ReducerProtocol {
                     return .none
                 }
                                 
-                return .task {
+                return .run { send in
                     // TODO: Recursively check folders if they contain the station currently playing,
                     // If yes, stop playing first. (This doesn't have to be recursion. Could be done based on the file path)
                     do {
                         try await clipBoard.add(directory: dir.directory)
 
-                        return .onAppear
+                        await send(.onAppear)
                     } catch {
-                        return .showClipboardCopyError(error.localizedDescription)
+                        await send(.showClipboardCopyError(error.localizedDescription))
                     }
                 }
                 
@@ -352,46 +350,46 @@ struct Streams: ReducerProtocol {
                 guard let dir = state.directories[id: id] else {
                     return .none
                 }
-                return .task {
+                return .run { send in
                     _ = try await dir.directory.duplicate()
-                    return .onAppear
+                    await send(.onAppear)
                 }
             }
         }
     }
     
-    private var createStation: some ReducerProtocol<Streams.State.Route, Streams.Action.RouteAction> {
+    private var createStation: some Reducer<Streams.State.Route, Streams.Action.RouteAction> {
         Scope(state: /State.Route.createStation, action: /Action.RouteAction.createStation) {
             CreateStream()
         }
     }
-    private var createDirectory: some ReducerProtocol<Streams.State.Route, Streams.Action.RouteAction> {
+    private var createDirectory: some Reducer<Streams.State.Route, Streams.Action.RouteAction> {
         Scope(state: /State.Route.createDirectory, action: /Action.RouteAction.createDirectory) {
             CreateDirectory()
         }
     }
-    private var editDirectory: some ReducerProtocol<Streams.State.Route, Streams.Action.RouteAction> {
+    private var editDirectory: some Reducer<Streams.State.Route, Streams.Action.RouteAction> {
         Scope(state: /State.Route.editDirectory, action: /Action.RouteAction.editDirectory) {
             EditDirectory()
         }
     }
-    private var subDirectory: some ReducerProtocol<Streams.State.Route, Streams.Action.RouteAction> {
+    private var subDirectory: some Reducer<Streams.State.Route, Streams.Action.RouteAction> {
         Scope(state: /State.Route.subDirectory, action: /Action.RouteAction.subDirectory) {
             Streams()
         }
     }
-    private var editMenu: some ReducerProtocol<Streams.State.Route, Streams.Action.RouteAction> {
+    private var editMenu: some Reducer<Streams.State.Route, Streams.Action.RouteAction> {
         Scope(state: /State.Route.editMenu, action: /Action.RouteAction.editMenu) {
             EditMenu()
         }
     }
-    private var clipBoardReducer: some ReducerProtocol<Streams.State.Route, Streams.Action.RouteAction> {
+    private var clipBoardReducer: some Reducer<Streams.State.Route, Streams.Action.RouteAction> {
         Scope(state: /State.Route.clipBoard, action: /Action.RouteAction.clipBoard) {
             ClipBoardReducer()
         }
     }
     
-    var body: some ReducerProtocol<State, Action> {
+    var body: some Reducer<State, Action> {
         core
         .forEach(\.stations, action: /Action.station) {
             StreamRow()
@@ -461,8 +459,7 @@ struct StreamsView: View {
             viewStore.send(.onAppear)
         }
         .alert(
-            self.store.scope(state: \.alert),
-            dismiss: Streams.Action.alertDismissed
+            store: self.store.scope(state: \.$alert, action: { _ in .alertDismissed })
         )
         .navigationDestination(
             unwrapping: viewStore.binding(

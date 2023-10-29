@@ -11,7 +11,9 @@ struct Leincast_Watch_AppApp: App {
     @Dependency(\.playStatisticsDataService) var playStatisticsDataService
     @Dependency(\.clipBoard) var clipBoard
     @Dependency(\.podcastDataService) var podcastDataService
-    
+
+    let store: StoreOf<Home> = .init(initialState: .init(), reducer: { Home() })
+
     init() {
         nowPlaying.bind(toPlayer: .shared!)
         Task { [playStatisticsDataService, clipBoard, podcastDataService] in
@@ -23,12 +25,7 @@ struct Leincast_Watch_AppApp: App {
     
     var body: some Scene {
         WindowGroup {
-            HomeView(
-                store: .init(
-                    initialState: .init(),
-                    reducer: Home()
-                )
-            )
+            HomeView(store: store)
         }
         .onChange(of: scenePhase, { _, newPhase in
             if newPhase == .background {

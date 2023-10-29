@@ -3,7 +3,7 @@ import SwiftUI
 import ComposableArchitecture
 import AVFAudio
 
-struct RecentlyPlayed: ReducerProtocol {
+struct RecentlyPlayed: Reducer {
     struct State: Equatable {
         var items: IdentifiedArrayOf<RecentlyPlayedRowFeature.State> = []
     }
@@ -17,13 +17,13 @@ struct RecentlyPlayed: ReducerProtocol {
     @Dependency(\.playStatisticsDataService) var playStatisticsDataService
     @Dependency(\.player) var player
     
-    var body: some ReducerProtocol<State, Action> {
+    var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {
             case .onAppear:
-                return .task {
+                return .run { send in
                     let recents = await playStatisticsDataService.recents()
-                    return .update(recents)
+                    await send(.update(recents))
                 }
             case let .update(items):
                 state.items = IdentifiedArray(
@@ -34,7 +34,7 @@ struct RecentlyPlayed: ReducerProtocol {
                 return .none
             case let .item(id, .delegate(.selected)):
                 if let item = state.items[id: id] {
-                    return .fireAndForget {
+                    return .run { _ in
                         AVAudioSession.sharedInstance().activate { _, error in
                             guard error == nil else {
                                 // TODO: Deal with error
@@ -89,7 +89,7 @@ struct RecentlyPlayedView: View {
 
 import SDWebImageSwiftUI
 
-struct RecentlyPlayedRowFeature: ReducerProtocol {
+struct RecentlyPlayedRowFeature: Reducer {
     struct State: Equatable, Identifiable {
         let item: MediaItem
 
@@ -122,7 +122,7 @@ struct RecentlyPlayedRowFeature: ReducerProtocol {
 
     @Dependency(\.player) var player
 
-    var body: some ReducerProtocol<State, Action> {
+    var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {
             case let .setActiveState(activeState):
@@ -130,12 +130,12 @@ struct RecentlyPlayedRowFeature: ReducerProtocol {
                 return .none
 
             case .play:
-                return .fireAndForget {
+                return .run { _ in
                     player.play()
                 }
 
             case .pause:
-                return .fireAndForget {
+                return .run { _ in
                     player.pause()
                 }
 
@@ -147,19 +147,19 @@ struct RecentlyPlayedRowFeature: ReducerProtocol {
                 return .run { send in
                     for await value in player.playingState.values {
                         guard value.stationId == stationId else {
-                            await send.send(.setActiveState(.unselected))
+                            await send(.setActiveState(.unselected))
                             continue
                         }
 
                         switch value {
                         case .loading:
-                            await send.send(.setActiveState(.loading))
+                            await send(.setActiveState(.loading))
                         case .paused:
-                            await send.send(.setActiveState(.paused))
+                            await send(.setActiveState(.paused))
                         case .playing:
-                            await send.send(.setActiveState(.playing))
+                            await send(.setActiveState(.playing))
                         case .initial, .stopped:
-                            await send.send(.setActiveState(.unselected))
+                            await send(.setActiveState(.unselected))
                         }
                     }
                 }

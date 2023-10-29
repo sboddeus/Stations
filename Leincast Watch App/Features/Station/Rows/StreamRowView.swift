@@ -3,7 +3,7 @@ import SwiftUI
 import ComposableArchitecture
 import SDWebImageSwiftUI
 
-struct StreamRow: ReducerProtocol {
+struct StreamRow: Reducer {
     struct State: Equatable, Identifiable {
         let station: Stream
         
@@ -40,18 +40,18 @@ struct StreamRow: ReducerProtocol {
     
     @Dependency(\.player) var player
     
-    var body: some ReducerProtocol<State, Action> {
+    var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {
             case let .setActiveState(activeState):
                 state.activeState = activeState
                 return .none
             case .play:
-                return .fireAndForget {
+                return .run { _ in
                     player.play()
                 }
             case .pause:
-                return .fireAndForget {
+                return .run { _ in
                     player.pause()
                 }
             case .delegate:
@@ -62,19 +62,19 @@ struct StreamRow: ReducerProtocol {
                 return .run { send in
                     for await value in player.playingState.values {
                         guard value.stationId == stationId else {
-                            await send.send(.setActiveState(.unselected))
+                            await send(.setActiveState(.unselected))
                             continue
                         }
                         
                         switch value {
                         case .loading:
-                            await send.send(.setActiveState(.loading))
+                            await send(.setActiveState(.loading))
                         case .paused:
-                            await send.send(.setActiveState(.paused))
+                            await send(.setActiveState(.paused))
                         case .playing:
-                            await send.send(.setActiveState(.playing))
+                            await send(.setActiveState(.playing))
                         case .initial, .stopped:
-                            await send.send(.setActiveState(.unselected))
+                            await send(.setActiveState(.unselected))
                         }
                     }
                 }

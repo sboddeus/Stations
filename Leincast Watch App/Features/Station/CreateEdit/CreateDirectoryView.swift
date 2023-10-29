@@ -6,11 +6,11 @@ enum CreateDirectoryError: Error {
     case couldntCreateValidURL
 }
 
-struct CreateDirectory: ReducerProtocol {
+struct CreateDirectory: Reducer {
     struct State: Equatable {
         let containingDirectory: Directory
         var title: String = ""
-        var alert: AlertState<Action>?
+        @PresentationState var alert: AlertState<Never>?
     }
     
     enum Action: Equatable {
@@ -25,7 +25,7 @@ struct CreateDirectory: ReducerProtocol {
         case delegate(Delegate)
     }
     
-    var body: some ReducerProtocol<State, Action> {
+    var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {
             case let .setTitle(title):
@@ -41,14 +41,13 @@ struct CreateDirectory: ReducerProtocol {
                     title: .init("Could not create folder"),
                     message: .init("Ensure the folder has a unique name and that device storage is not full."),
                     dismissButton: .default(
-                        .init("Ok"),
-                        action: .send(.alertDismissed)
+                        .init("Ok")
                     )
                 )
                 return .none
 
             case .addDirectory:
-                return .task { [state] in
+                return .run { [state] send in
                     do {
                         guard let stringPath = state.title
                             .trimmingCharacters(
@@ -67,9 +66,9 @@ struct CreateDirectory: ReducerProtocol {
                             .directory(path: path)
                             .create()
 
-                        return .delegate(.directoryAdded)
+                        await send(.delegate(.directoryAdded))
                     } catch {
-                        return .showDirectoryAlert
+                        await send(.showDirectoryAlert)
                     }
                 }
                 
@@ -109,9 +108,9 @@ struct CreateDirectoryView: View {
                         .foregroundColor(.indigo)
                 }.disabled(viewStore.title.isEmpty)
             }
-        }.alert(
-            self.store.scope(state: \.alert),
-            dismiss: CreateDirectory.Action.alertDismissed
+        }
+        .alert(
+            store: self.store.scope(state: \.$alert, action: { _ in .alertDismissed })
         )
     }
 }

@@ -3,7 +3,7 @@ import Foundation
 import SwiftUI
 import ComposableArchitecture
 
-struct Menu: ReducerProtocol {
+struct Menu: Reducer {
     struct State: Equatable {
         enum Route: Equatable {
             case debug
@@ -15,7 +15,7 @@ struct Menu: ReducerProtocol {
         case setRoute(State.Route?)
     }
     
-    var body: some ReducerProtocol<State, Action> {
+    var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {
             case let .setRoute(route):

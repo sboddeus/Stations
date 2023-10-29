@@ -3,7 +3,7 @@ import Foundation
 import SwiftUI
 import ComposableArchitecture
 
-struct EditMenu: ReducerProtocol {
+struct EditMenu: Reducer {
     struct State: Equatable {
         var showPasteOption = false
     }
@@ -22,13 +22,13 @@ struct EditMenu: ReducerProtocol {
     
     @Dependency(\.clipBoard) var clipBoard
     
-    var body: some ReducerProtocol<State, Action> {
+    var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {
             case .onAppear:
-                return .task {
+                return .run { send in
                     let show = await !clipBoard.content().isEmpty
-                    return .setShowPasteOption(show)
+                    await send(.setShowPasteOption(show))
                 }
                 
             case let .setShowPasteOption(show):

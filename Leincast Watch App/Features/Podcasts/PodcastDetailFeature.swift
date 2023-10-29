@@ -5,7 +5,7 @@ import AVFAudio
 import ComposableArchitecture
 import SDWebImageSwiftUI
 
-struct PodcastDetails: ReducerProtocol {
+struct PodcastDetails: Reducer {
     struct State: Equatable {
         let id: String
         var hasAppeared = false
@@ -30,7 +30,7 @@ struct PodcastDetails: ReducerProtocol {
     @Dependency(\.player) var player
     @Dependency(\.podcastDataService) var podcastDataService
 
-    var body: some ReducerProtocol<State, Action> {
+    var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {
             case .onAppear:
@@ -38,22 +38,22 @@ struct PodcastDetails: ReducerProtocol {
                 state.hasAppeared = true
                 return
                     .concatenate(
-                        .task { [state] in
+                        .run { [state] send in
                             let episodes = await podcastDataService.getAllEpisodes(forPodcastId: state.id)
-                            return .episodesLoaded(
+                            await send(.episodesLoaded(
                                 episodes?.episodes ?? [],
                                 nextCursor: episodes?.nextCursor,
                                 removingCached: true
-                            )
+                            ))
                         },
-                        .task { [id = state.id] in
+                        .run { [id = state.id] send in
                             _ = try await podcastDataService.refresh(podcastId: id)
                             let episodes = await podcastDataService.getAllEpisodes(forPodcastId: id)
-                            return .episodesLoaded(
+                            await send(.episodesLoaded(
                                 episodes?.episodes ?? [],
                                 nextCursor: episodes?.nextCursor,
                                 removingCached: true
-                            )
+                            ))
                         }
                     )
 
@@ -79,7 +79,7 @@ struct PodcastDetails: ReducerProtocol {
                     return .none
                 }
 
-                return .fireAndForget {
+                return .run { _ in
                     AVAudioSession.sharedInstance().activate { _, error in
                         guard error == nil else {
                             // TODO: Deal with error
@@ -98,13 +98,13 @@ struct PodcastDetails: ReducerProtocol {
                 return .none
 
             case .loadNextCursor:
-                return .task { [state] in
+                return .run { [state] send in
                     let episodes = await podcastDataService.getAllEpisodes(forPodcastId: state.id, cursor: state.nextCursor)
-                    return .episodesLoaded(
+                    await send(.episodesLoaded(
                         episodes?.episodes ?? [],
                         nextCursor: episodes?.nextCursor,
                         removingCached: false
-                    )
+                    ))
                 }
             }
         }

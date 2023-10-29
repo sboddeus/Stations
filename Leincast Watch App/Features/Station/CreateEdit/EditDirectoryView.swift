@@ -2,7 +2,7 @@
 import SwiftUI
 import ComposableArchitecture
 
-struct EditDirectory: ReducerProtocol {
+struct EditDirectory: Reducer {
     struct State: Equatable {
         let editedDirectory: Directory
         var title: String = ""
@@ -23,7 +23,7 @@ struct EditDirectory: ReducerProtocol {
         case delegate(Delegate)
     }
     
-    var body: some ReducerProtocol<State, Action> {
+    var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {
             case let .setTitle(title):
@@ -31,13 +31,13 @@ struct EditDirectory: ReducerProtocol {
                 return .none
                 
             case .editDirectory:
-                return .task { [state] in
+                return .run { [state] send in
                     let dir = try await state.editedDirectory
                         .rename(
                             to: state.title
                         )
                     
-                    return .delegate(.directoryEdited(dir))
+                     await send(.delegate(.directoryEdited(dir)))
                 }
             case .delegate:
                 return .none

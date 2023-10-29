@@ -3,7 +3,7 @@ import SwiftUI
 import ComposableArchitecture
 import SDWebImageSwiftUI
 
-struct EpisodeRowFeature: ReducerProtocol {
+struct EpisodeRowFeature: Reducer {
     struct State: Equatable, Identifiable {
         let episode: Podcast.Episode
 
@@ -37,7 +37,7 @@ struct EpisodeRowFeature: ReducerProtocol {
 
     @Dependency(\.player) var player
 
-    var body: some ReducerProtocol<State, Action> {
+    var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {
             case let .setActiveState(activeState):
@@ -45,12 +45,12 @@ struct EpisodeRowFeature: ReducerProtocol {
                 return .none
 
             case .play:
-                return .fireAndForget {
+                return .run { _ in
                     player.play()
                 }
 
             case .pause:
-                return .fireAndForget {
+                return .run { _ in
                     player.pause()
                 }
 
@@ -59,19 +59,19 @@ struct EpisodeRowFeature: ReducerProtocol {
                 return .run { send in
                     for await value in player.playingState.values {
                         guard value.stationId == itemId else {
-                            await send.send(.setActiveState(.unselected))
+                            await send(.setActiveState(.unselected))
                             continue
                         }
 
                         switch value {
                         case .loading:
-                            await send.send(.setActiveState(.loading))
+                            await send(.setActiveState(.loading))
                         case .paused:
-                            await send.send(.setActiveState(.paused))
+                            await send(.setActiveState(.paused))
                         case .playing:
-                            await send.send(.setActiveState(.playing))
+                            await send(.setActiveState(.playing))
                         case .initial, .stopped:
-                            await send.send(.setActiveState(.unselected))
+                            await send(.setActiveState(.unselected))
                         }
                     }
                 }
