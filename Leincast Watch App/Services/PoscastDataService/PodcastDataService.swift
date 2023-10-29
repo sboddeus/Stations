@@ -180,7 +180,7 @@ actor PodcastDataService {
             } else {
                 let episodes = podcast
                     .episodes
-                    .prefix(upTo: pageSize)
+                    .prefix(pageSize)
 
                 if episodes.count < pageSize {
                     return .init(nextCursor: nil, episodes: Array(episodes))
